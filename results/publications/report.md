@@ -1,6 +1,6 @@
 <!-- Markdown sibling of XAJ-Snow report. HTML/PDF are the fully self-contained deliverables (base64 figures + inline CSS). This Markdown keeps relative image paths for in-repo reading. -->
 
-Hydromodel 0.3.2 · XAJ-Snow 完整科研报告 · 2026-08-16 15:01 · 仅本地研究交付
+Hydromodel 0.3.2 · XAJ-Snow 完整科研报告 · 2026-08-17 01:15 · 研究报告（可含工程细节）
 
   完整科研报告 · 正式学术风格 · 自包含 HTML
 
@@ -137,6 +137,8 @@ SWE ← SWE + snow；G ← min(0, CTG·G + (1−CTG)·T)
 
 Gratio ← min(1, SWE/Gthreshold)；M ← min(SWE, (0.9·Gratio+0.1)·MeltPot)
 
+未外供数组时，Gthreshold 在**每一次**雪模块调用内按该次降雪序列估计为 0.9×年均降雪（雪无流域有极小地板）。因训练/测试分段加载，pilot 会在各时段分别重算阈值，而非把训练期阈值冻结到评价期——属须披露的协议选择，而非率定参数向量中的隐变量。
+
 NSE/KGE 越接近 1 越好；NSE<0 表示不如用观测均值作预报。本实验主目标函数为训练期 KGE，报告测试期 NSE 与 KGE。
 Kf≈3.5 落在文献常见度日量级（约 2–6）且未贴边，但在无 SWE 约束时仍是**有效参数**而非独立物理辨识。
 
@@ -144,7 +146,9 @@ Kf≈3.5 落在文献常见度日量级（约 2–6）且未贴边，但在无 S
 
 算法 SCE-UA（spotpy），目标 KGE；两模型两流域均用 medium 设置 `rep`=800、`ngs`=15（成对可比）。
 **注意：**匹配预算≠已证明收敛公平；更高 rep、多种子、固定雪参消融等仍为“待补充”，不得把 rep=800 写成充分公平基线。
-smoke 曾用 rep=120 仅验证流水线。可选 scipy NSE 精修配置已存在但**尚未运行**（待补充）。
+smoke 曾用 rep=120 仅验证流水线。
+**已完成补充：**01013500 上 SciPy NSE refine（Snow NSE=0.8779；MZ NSE=0.1393）；rep=2000 敏感性（MZ NSE=-0.3106；Snow NSE=0.7318）；batch1 n=14 @rep=200 分层 first-look。
+**仍未完成：**rep=5000；143@rep=2000；冻结 80 站 medium 全量；SWE 一致性；factorial。
 
 ### 5.4 模型结构对比
 
@@ -167,15 +171,17 @@ smoke 曾用 rep=120 仅验证流水线。可选 scipy NSE 精修配置已存在
 
   - medium（rep=800）正式 go/no-go：雪区大幅提升、负对照中性。
 
-  - SciencePlots 出图；本脚本汇总为正式报告与论文初稿。
+  - 010 SciPy NSE refine 完成；rep=2000（仅 010）完成；batch1 n=14 @rep=200 完成。
+
+  - SciencePlots 出图；本脚本汇总为正式报告与论文初稿；consultation 简报供外部顾问阅读。
 
 | 研究问题 | 证据 | 当前状态 |
 | --- | --- | --- |
 | 雪区是否因无融雪而失效？ | 010 ΔNSE≈+0.96；过程线春峰改善 | 成对协议下支持 |
-| 是否到处虚假增益？ | 143 ΔNSE≈−0.006 | 单对照支持中性 |
-| 大样本适用边界？ | — | 待补充：分层批量 |
+| 是否到处虚假增益？ | 143 ΔNSE≈−0.006；batch1 无雪中位≈−0.007 | 单对照+first-look 支持中性 |
+| 大样本适用边界？ | batch1 分层中位；冻结 80 站未全跑 | 待补充：冻结样本 medium |
 | SWE 状态一致性？ | — | 待补充 |
-| 优化预算/自由度公平性？ | — | 待补充 factorial |
+| 优化预算/自由度公平性？ | 010@2000 部分完成 | 待补充 factorial / 5000 |
 
 ## 7. 结果展示
 
@@ -197,10 +203,19 @@ smoke 曾用 rep=120 仅验证流水线。可选 scipy NSE 精修配置已存在
 
 参数来源：basins_denorm_params.csv
 
+**补充表：01013500 SciPy NSE refine（真实 CSV）**
+
+| 模型 | NSE | KGE | 备注 |
+| --- | --- | --- | --- |
+| XAJ-Snow refine | 0.8779 | 0.9374 | 补充展示，非成对主结论 |
+| XAJ-MZ refine | 0.1393 | 0.0856 | 同左 |
+
+**Batch1 first-look（n=14，rep=200）分层中位 ΔNSE**：雪区≥0.1 → 0.5461（n=9）；无雪<0.1 → -0.0068（n=5）；S2>0.3 → 0.5835。来源：batch1_paired_metrics.csv / applicability_first_look.md。
+
 ![Go/no-go 成对样本外 NSE 与 KGE 柱状对比](../figures/fig_go_nogo_metrics_bar.png)
 
   **图 1.** Go/no-go 成对样本外 NSE 与 KGE 柱状对比.
-  Data source: basins_metrics.csv under results/xaj_snow_go_nogo/*/evaluation_test/.
+  Data source: paired go/no-go basins_metrics.csv (SCE-UA+KGE, rep=800).
 
 #### 图 1 超详细解读（来龙去脉）
 
@@ -219,7 +234,7 @@ smoke 曾用 rep=120 仅验证流水线。可选 scipy NSE 精修配置已存在
 ![雪影响流域 01013500 全测试期水文过程线](../figures/fig_01013500_hydrograph_mz_vs_snow.png)
 
   **图 2.** 雪影响流域 01013500 全测试期水文过程线.
-  Data source: xaj_*_evaluation_results.nc (test window after warmup).
+  Data source: evaluation NetCDF for the test window after warmup.
 
 #### 图 2 超详细解读（来龙去脉）
 
@@ -238,7 +253,7 @@ smoke 曾用 rep=120 仅验证流水线。可选 scipy NSE 精修配置已存在
 ![01013500 春季放大过程线（2010–2012）](../figures/fig_01013500_hydrograph_spring_zoom_2010_2012.png)
 
   **图 3.** 01013500 春季放大过程线（2010–2012）.
-  Data source: same NetCDF as Fig. 2; Mar–May spring shading.
+  Data source: same evaluation series as Fig. 2; Mar–May spring shading.
 
 #### 图 3 超详细解读（来龙去脉）
 
@@ -257,7 +272,7 @@ smoke 曾用 rep=120 仅验证流水线。可选 scipy NSE 精修配置已存在
 ![低雪负对照流域 14306500 水文过程线](../figures/fig_14306500_hydrograph_mz_vs_snow.png)
 
   **图 4.** 低雪负对照流域 14306500 水文过程线.
-  Data source: xaj_*_evaluation_results.nc for camels_14306500.
+  Data source: evaluation NetCDF for camels_14306500.
 
 #### 图 4 超详细解读（来龙去脉）
 
@@ -276,7 +291,7 @@ smoke 曾用 rep=120 仅验证流水线。可选 scipy NSE 精修配置已存在
 ![01013500 观测–模拟散点图](../figures/fig_01013500_obs_sim_scatter.png)
 
   **图 5.** 01013500 观测–模拟散点图.
-  Data source: paired daily Q from evaluation NetCDF.
+  Data source: paired daily discharge from the evaluation series.
 
 #### 图 5 超详细解读（来龙去脉）
 
@@ -292,11 +307,44 @@ smoke 曾用 rep=120 仅验证流水线。可选 scipy NSE 精修配置已存在
 
 **通俗解释：**像打靶：橙点更靠近靶心对角线，蓝点更“散弹”。
 
+![Batch1 ΔNSE 随 frac_snow 散点（n=14，rep=200）](../figures/fig_batch_delta_nse_vs_frac_snow.png)
+
+  **图 6.** Batch1 ΔNSE 随 frac_snow 散点（n=14，rep=200）.
+  Data source: results/diagnostics/batch1_paired_metrics.csv.
+
+#### 图 6 超详细解读（来龙去脉）
+
+**背景与目的：**把 batch1（n=14，rep=200）的成对 ΔNSE 放到雪量梯度上，检验 pilot 方向是否在更多 CAMELS 站重复。
+
+**全篇作用：**extended pilot / first-look；不是多区域适用边界终结论。
+
+**如何阅读：**横轴 frac_snow，纵轴 ΔNSE=NSE_snow−NSE_mz；正值表示雪模块增益。
+
+**可看出：**高雪站多为大正 ΔNSE；低雪站贴近 0 或略负。
+
+**不能看出：**不能外推到冻结的 80 站总体；rep=200 轻于 pilot medium。
+
+![Batch1 ΔNSE 按雪量分箱（n=14，rep=200）](../figures/fig_batch_delta_nse_by_snow_bin.png)
+
+  **图 7.** Batch1 ΔNSE 按雪量分箱（n=14，rep=200）.
+  Data source: results/diagnostics/batch1_paired_metrics.csv.
+
+#### 图 7 超详细解读（来龙去脉）
+
+**背景与目的：**按雪量分箱汇总 batch1 ΔNSE，突出分层中位数。
+
+**全篇作用：**解释为何全文中位数接近 0（双模型失败站下拉），论文应主报分层中位数。
+
+**如何阅读：**各箱的分布与中位线；对照 applicability_first_look.md 表。
+
+**可看出：**雪影响箱中位 ΔNSE 大幅为正；无雪箱接近 0。
+
+**不能看出：**分箱宽度与样本量仍小，置信区间未估计。
+
 ## 8. 图表超详细解释（汇总说明）
 
-上一节已对图 1–5 逐图给出“背景—读法—能看出/不能看出—通俗解释”。
-子图若在单张 PNG 内以多面板出现，读图时仍按颜色语义（黑=观测，蓝=XAJ-MZ，橙=XAJ-Snow）与指标柱组对照。
-本报告**不新造**无数据支撑的示意图。
+上一节已对图 1–7 逐图给出解读。图 1–5 为双站 pilot；图 6–7 为 batch1 first-look。
+本报告**不新造**无数据支撑的示意图。工程命令与长跑续跑说明见 diagnostics 下 long-run 文档。
 
 ## 9. 分析与讨论
 
@@ -311,7 +359,9 @@ Chen et al.（2025）已证明大样本上加 CemaNeige/可微学习可抬高中
 
   - 负对照 14306500 上技巧基本不变（ΔNSE≈-0.006），支持选择性增益。
 
-  - 工程上判定 GO，可进入分层大样本；科学上尚不能给出全球/多区域适用边界终结论。
+  - Batch1（n=14，rep=200）雪区中位 ΔNSE≈0.55，无雪≈-0.007——仅作 first-look。
+
+  - 工程上判定 GO，可继续冻结样本 medium；科学上尚不能给出全球/多区域适用边界终结论。
 
 ## 11. 局限与展望
 
@@ -319,19 +369,23 @@ Chen et al.（2025）已证明大样本上加 CemaNeige/可微学习可抬高中
 
 | 实验 | 目的 | 状态 |
 | --- | --- | --- |
-| 分层 0/低/中/高雪批量率定 | RQ1–RQ2 总体推断 | 未完成（仅有抽样脚本骨架） |
+| 分层冻结样本 medium 率定 | RQ1–RQ2 总体推断 | 已冻结 80 站；全量未完成（batch1=14@200 完成） |
 | ERA5-Land SWE 辅助一致性 | 状态约束，非独立验证 | 未完成 |
-| 优化预算倍数 × seeds | 公平性 | 未完成 |
+| 优化预算倍数 × seeds | 公平性 | 部分：010@2000 完成；5000 / 143@2000 未跑 |
 | 固定雪参 vs 自由雪参 | 额外自由度 | 未完成 |
-| scipy NSE refine | 补充展示 | 配置有，未跑 |
+| scipy NSE refine | 补充展示 | 已完成（010） |
 | 属性→ΔKGE 适用边界 | RQ3 | 未完成 |
 | optimizer×sharing factorial | 归因分离 | 可选，未做则不出图 |
 
-实现局限：单高程带；Ts/Tr 固定；Gthreshold 由当前序列估计；17 vs 15 参数。
+实现局限：单高程带；Ts/Tr 固定；Gthreshold 默认按**当次调用**降雪序列估计（训练/测试分段加载时各自重算，未冻结训练值）；17 vs 15 参数。
 
 ## 12. 软件与可复现性
 
-cd d:\Projects\hydromodel-0.3.2\hydromodel-0.3.2
+公开快照：[https://github.com/Coucou2016/hydromodel-xaj-snow](https://github.com/Coucou2016/hydromodel-xaj-snow)
+（`master` @ 生成时 `5da6a04`；含源码/docs/figures/publications/consultation/配置/测试与生成脚本；不含大体积 nc、`_portable_data`/hydrodata，亦不含完整 SpotPy 率定 dump 树）。
+用户须本地准备 Caravan/CAMELS 数据；细节见 `docs/local/github_public_repo.md`。
+
+# after cloning the public snapshot and placing Caravan/CAMELS caches locally
 $env:HOME = (Get-Location).Path
 $env:HYDRO_SETTING_FILE = Join-Path $env:HOME "hydro_setting.yml"
 python -m pytest test/test_snow.py -v
@@ -339,7 +393,7 @@ python -m pytest test/test_snow.py -v
 .\RUN_GO_NOGO_XAJ_SNOW.ps1 medium
 python scripts/generate_publication_outputs.py
 
-关键源码：hydromodel/models/snow.py, xaj_snow.py, xaj.py, model_config.py。本脚本不修改模型计算逻辑。
+关键源码：hydromodel/models/snow.py, xaj_snow.py, xaj.py, model_config.py。本脚本不修改模型计算逻辑。Zenodo DOI：待提交前铸造。
 
 ## 13. 参考文献
 
@@ -396,6 +450,6 @@ python scripts/generate_publication_outputs.py
 
   - HTML 图片均为 data URI；CSS 内联；无 CDN
 
-  - Git：仅本地，未 commit/push/PR（按用户要求）
+  - Git：本轮允许 commit/push 公开仓（不含大 nc / hydrodata）
 
-生成时间 2026-08-16 15:01。数字来自真实 evaluation CSV；待补充项已显式标注。
+生成时间 2026-08-17 01:15。数字来自真实 evaluation CSV；待补充项已显式标注。

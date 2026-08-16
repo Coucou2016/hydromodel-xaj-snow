@@ -35,6 +35,15 @@ PARAM_PATHS = {
     "14306500": REPO
     / "results/xaj_snow_go_nogo/camels_14306500_xaj_snow/xaj_snow_SCE_UA/evaluation_test/basins_denorm_params.csv",
 }
+REFINE_PATHS = {
+    ("01013500", "mz"): REPO
+    / "results/xaj_snow_go_nogo/camels_01013500_xaj_mz_refine_scipy/xaj_mz_scipy/evaluation_test/basins_metrics.csv",
+    ("01013500", "snow"): REPO
+    / "results/xaj_snow_go_nogo/camels_01013500_xaj_snow_refine_scipy/xaj_snow_scipy/evaluation_test/basins_metrics.csv",
+}
+BATCH1_CSV = REPO / "results/diagnostics/batch1_paired_metrics.csv"
+APPLICABILITY_MD = REPO / "results/diagnostics/applicability_first_look.md"
+REP_BUDGET_CSV = REPO / "results/diagnostics/rep_budget_sensitivity.csv"
 
 FIGURES = [
     {
@@ -42,35 +51,49 @@ FIGURES = [
         "file": "fig_go_nogo_metrics_bar.png",
         "ms_title": "Paired out-of-sample NSE and KGE for the go/no-go pilot basins",
         "rep_title": "Go/no-go 成对样本外 NSE 与 KGE 柱状对比",
-        "source": "basins_metrics.csv under results/xaj_snow_go_nogo/*/evaluation_test/",
+        "source": "paired go/no-go basins_metrics.csv (SCE-UA+KGE, rep=800)",
     },
     {
         "id": "fig2",
         "file": "fig_01013500_hydrograph_mz_vs_snow.png",
         "ms_title": "Full test-period hydrograph for snow-affected basin 01013500",
         "rep_title": "雪影响流域 01013500 全测试期水文过程线",
-        "source": "xaj_*_evaluation_results.nc (test window after warmup)",
+        "source": "evaluation NetCDF for the test window after warmup",
     },
     {
         "id": "fig3",
         "file": "fig_01013500_hydrograph_spring_zoom_2010_2012.png",
         "ms_title": "Spring zoom (2010–2012) for basin 01013500",
         "rep_title": "01013500 春季放大过程线（2010–2012）",
-        "source": "same NetCDF as Fig. 2; Mar–May spring shading",
+        "source": "same evaluation series as Fig. 2; Mar–May spring shading",
     },
     {
         "id": "fig4",
         "file": "fig_14306500_hydrograph_mz_vs_snow.png",
         "ms_title": "Negative-control hydrograph for low-snow basin 14306500",
         "rep_title": "低雪负对照流域 14306500 水文过程线",
-        "source": "xaj_*_evaluation_results.nc for camels_14306500",
+        "source": "evaluation NetCDF for camels_14306500",
     },
     {
         "id": "fig5",
         "file": "fig_01013500_obs_sim_scatter.png",
         "ms_title": "Observed–simulated scatter for basin 01013500",
         "rep_title": "01013500 观测–模拟散点图",
-        "source": "paired daily Q from evaluation NetCDF",
+        "source": "paired daily discharge from the evaluation series",
+    },
+    {
+        "id": "fig6",
+        "file": "fig_batch_delta_nse_vs_frac_snow.png",
+        "ms_title": "First-look batch ΔNSE versus catchment snow fraction (n=14, rep=200)",
+        "rep_title": "Batch1 ΔNSE 随 frac_snow 散点（n=14，rep=200）",
+        "source": "results/diagnostics/batch1_paired_metrics.csv",
+    },
+    {
+        "id": "fig7",
+        "file": "fig_batch_delta_nse_by_snow_bin.png",
+        "ms_title": "First-look batch ΔNSE by snow-fraction bin (n=14, rep=200)",
+        "rep_title": "Batch1 ΔNSE 按雪量分箱（n=14，rep=200）",
+        "source": "results/diagnostics/batch1_paired_metrics.csv",
     },
 ]
 
@@ -276,9 +299,93 @@ a.ref { color: var(--accent); }
 """
 
 
+def _median(vals: list[float]) -> float:
+    s = sorted(vals)
+    n = len(s)
+    if n == 0:
+        raise RuntimeError("empty median")
+    mid = n // 2
+    return s[mid] if n % 2 else 0.5 * (s[mid - 1] + s[mid])
+
+
+def load_batch1_summary() -> dict:
+    if not BATCH1_CSV.exists():
+        raise FileNotFoundError(BATCH1_CSV)
+    rows = []
+    with BATCH1_CSV.open(newline="", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            rows.append(
+                {
+                    "basin_id": row["basin_id"],
+                    "frac_snow": float(row["frac_snow"]),
+                    "delta_NSE": float(row["delta_NSE"]),
+                    "NSE_snow": float(row["NSE_xaj_snow"]),
+                    "NSE_mz": float(row["NSE_xaj_mz"]),
+                }
+            )
+    if len(rows) != 14:
+        raise RuntimeError(f"expected 14 batch1 rows, got {len(rows)}")
+
+    def subset(pred):
+        return [r for r in rows if pred(r)]
+
+    snow_ge = subset(lambda r: r["frac_snow"] >= 0.1)
+    snow_lt = subset(lambda r: r["frac_snow"] < 0.1)
+    s2 = subset(lambda r: r["frac_snow"] > 0.3)
+    summary = {
+        "n": len(rows),
+        "all_med_d": _median([r["delta_NSE"] for r in rows]),
+        "snow_ge_n": len(snow_ge),
+        "snow_ge_med_d": _median([r["delta_NSE"] for r in snow_ge]),
+        "snow_ge_med_sn": _median([r["NSE_snow"] for r in snow_ge]),
+        "snow_ge_med_mz": _median([r["NSE_mz"] for r in snow_ge]),
+        "snow_lt_n": len(snow_lt),
+        "snow_lt_med_d": _median([r["delta_NSE"] for r in snow_lt]),
+        "s2_n": len(s2),
+        "s2_med_d": _median([r["delta_NSE"] for r in s2]),
+    }
+    # Cross-check published first-look medians
+    assert abs(summary["snow_ge_med_d"] - 0.5461) < 0.001
+    assert abs(summary["snow_lt_med_d"] - (-0.0068)) < 0.001
+    assert abs(summary["s2_med_d"] - 0.5835) < 0.001
+    return summary
+
+
+def load_rep_budget_010() -> dict:
+    """Partial fairness: rep=2000 on 010 only (5000 / 143@2000 not run)."""
+    out = {}
+    if not REP_BUDGET_CSV.exists():
+        return out
+    with REP_BUDGET_CSV.open(newline="", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            if row.get("status") != "ok":
+                continue
+            key = (row["basin_id"].replace("camels_", ""), row["model"], int(row["rep"]))
+            out[key] = float(row["NSE"])
+    # verified completed cells
+    assert abs(out[("01013500", "xaj_mz", 2000)] - (-0.3106)) < 0.001
+    assert abs(out[("01013500", "xaj_snow", 2000)] - 0.7318) < 0.001
+    return out
+
+
+def git_short_hash() -> str:
+    try:
+        return subprocess.check_output(
+            ["git", "rev-parse", "--short", "HEAD"],
+            cwd=str(REPO),
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+    except Exception:
+        return "unknown"
+
+
 def load_all() -> dict:
     metrics = {k: read_metrics(p) for k, p in METRIC_PATHS.items()}
+    refine = {k: read_metrics(p) for k, p in REFINE_PATHS.items()}
     params = {k: read_params(p) for k, p in PARAM_PATHS.items()}
+    batch1 = load_batch1_summary()
+    rep_budget = load_rep_budget_010()
     images = {}
     for fig in FIGURES:
         p = FIG / fig["file"]
@@ -290,10 +397,16 @@ def load_all() -> dict:
     assert abs(metrics[("01013500", "snow")]["NSE"] - 0.7318) < 0.001
     assert abs(metrics[("14306500", "mz")]["NSE"] - 0.7106) < 0.001
     assert abs(metrics[("14306500", "snow")]["NSE"] - 0.7043) < 0.001
+    assert abs(refine[("01013500", "snow")]["NSE"] - 0.8779) < 0.001
+    assert abs(refine[("01013500", "mz")]["NSE"] - 0.1393) < 0.001
     return {
         "metrics": metrics,
+        "refine": refine,
         "params": params,
+        "batch1": batch1,
+        "rep_budget": rep_budget,
         "images": images,
+        "git": git_short_hash(),
         "generated": datetime.now().strftime("%Y-%m-%d %H:%M"),
     }
 
@@ -411,6 +524,8 @@ def refs_html() -> str:
 
 def build_manuscript_html(data: dict) -> str:
     m = data["metrics"]
+    rf = data["refine"]
+    b1 = data["batch1"]
     p010 = data["params"]["01013500"]
     nse_mz = m[("01013500", "mz")]["NSE"]
     nse_sn = m[("01013500", "snow")]["NSE"]
@@ -420,17 +535,20 @@ def build_manuscript_html(data: dict) -> str:
     nse_c_sn = m[("14306500", "snow")]["NSE"]
     kge_c_mz = m[("14306500", "mz")]["KGE"]
     kge_c_sn = m[("14306500", "snow")]["KGE"]
-
-    figs = "".join(figure_block("ms", data, f, "en") for f in FIGURES)
-    # detailed but manuscript-length captions after each fig inserted in body below
+    nse_rf_mz = rf[("01013500", "mz")]["NSE"]
+    nse_rf_sn = rf[("01013500", "snow")]["NSE"]
+    kge_rf_mz = rf[("01013500", "mz")]["KGE"]
+    kge_rf_sn = rf[("01013500", "snow")]["KGE"]
+    nse_mz_2000 = data["rep_budget"].get(("01013500", "xaj_mz", 2000))
+    nse_sn_2000 = data["rep_budget"].get(("01013500", "xaj_snow", 2000))
 
     body = f"""
 <div class="header-bar">Hydromodel 0.3.2 · XAJ-Snow manuscript draft · generated {esc(data['generated'])} · for HESS-oriented polishing</div>
 <article class="page">
 <section class="cover">
   <div class="eyebrow">Manuscript draft · Hydrology and Earth System Sciences (target)</div>
-  <h1>Diagnosing snow-related structural limitations of the Xinanjiang model: a parsimonious snow extension and a two-basin engineering pilot</h1>
-  <p class="subtitle">Working title (avoid “global / first” until stratified large-sample results exist). Status: <span class="badge">pilot evidence complete</span><span class="badge">large-sample pending</span></p>
+  <h1>Diagnosing snow-related structural limitations of the Xinanjiang model: a parsimonious snow extension, an engineering pilot, and a first-look multi-basin extension</h1>
+  <p class="subtitle">Working title (avoid “global / first” until the frozen stratified sample is fully calibrated). Status: <span class="badge">pilot complete</span><span class="badge">batch1 first-look</span><span class="badge">large-sample pending</span></p>
   <p class="meta">Authors: <em>to be completed</em> · Affiliations: <em>to be completed</em> · Correspondence: <em>to be completed</em></p>
   <p class="meta">Software context: hydromodel v0.3.2; model names XAJ-MZ and XAJ-Snow; Caravan CAMELS subsets.</p>
 </section>
@@ -461,12 +579,14 @@ What remains under-documented in the HESS-facing literature is a diagnosis-first
 </p>
 <p>
 Here we implement XAJ-Snow: a single-band, CemaNeige-style degree-day layer with two free parameters—degree-day factor <em>K</em><sub>f</sub> (mm °C<sup>−1</sup> d<sup>−1</sup>) and cold-content coefficient CTG [-]—placed upstream of an otherwise unchanged XAJ-MZ core.
-This draft reports an <strong>engineering go/no-go pilot</strong> (not a population inference): using Caravan forcing for two CAMELS basins under an identical Shuffled Complex Evolution–University of Arizona (SCE-UA) calibration against the Kling–Gupta efficiency (KGE) with a matched medium budget (spotpy <code>rep</code>=800, <code>ngs</code>=15),
+We report an <strong>engineering go/no-go pilot</strong> under identical Shuffled Complex Evolution–University of Arizona (SCE-UA) calibration against the Kling–Gupta efficiency (KGE) with matched medium budget (<code>rep</code>=800, <code>ngs</code>=15):
 out-of-sample Nash–Sutcliffe efficiency (NSE) on snow-affected basin 01013500 (fraction of precipitation falling as snow ≈ 0.37) rises from {fmt(nse_mz,3)} (XAJ-MZ) to {fmt(nse_sn,3)} (XAJ-Snow), while KGE rises from {fmt(kge_mz,3)} to {fmt(kge_sn,3)};
 on low-snow negative-control basin 14306500, NSE changes only from {fmt(nse_c_mz,3)} to {fmt(nse_c_sn,3)} (Δ ≈ {delta(nse_c_sn, nse_c_mz)}).
 Calibrated snow parameters on 01013500 remain interior (<em>K</em><sub>f</sub> ≈ {fmt(p010['Kf'],2)}, CTG ≈ {fmt(p010['CTG'],3)}).
+A supplementary SciPy NSE refine on 01013500 raises XAJ-Snow test NSE to {fmt(nse_rf_sn,3)} versus {fmt(nse_rf_mz,3)} for refined XAJ-MZ.
+A first-look paired batch of {b1['n']} CAMELS basins at lighter budget (<code>rep</code>=200) yields median ΔNSE ≈ {fmt(b1['snow_ge_med_d'],2)} for snow-affected basins (frac_snow ≥ 0.1, n={b1['snow_ge_n']}) and ≈ {fmt(b1['snow_lt_med_d'],3)} for low-snow basins (n={b1['snow_lt_n']}).
 </p>
-<div class="todo"><strong>Pending (do not treat as completed Results):</strong> stratified multi-basin sample; snow-water-equivalent (SWE) auxiliary consistency; optimizer-budget / parameter-freedom factorial that would test whether <code>rep</code>=800 is a fair baseline; cross-region applicability regression. Until those experiments finish, the pilot must not be extrapolated to a global claim.</div>
+<div class="todo"><strong>Pending (do not treat as completed Results):</strong> full calibration of the frozen stratified sample (currently 80 basins frozen; longer-term target ~500); snow-water-equivalent (SWE) auxiliary consistency; complete optimizer-budget / parameter-freedom factorial (including <code>rep</code>=5000 and multi-seed; only a partial <code>rep</code>=2000 check on 01013500 is available); cross-region applicability regression. Until those experiments finish, do not extrapolate to a global claim.</div>
 </section>
 
 <section id="sec1">
@@ -495,8 +615,8 @@ Research questions guiding the full study:
   <li>RQ3 — Are gains robust to optimizer budget and the extra two parameters, and can an applicability boundary be predicted from catchment attributes?</li>
 </ol>
 <p>
-The present draft reports the engineering pilot that unlocked the go decision for stratified sampling.
-Large-sample answers to RQ1–RQ3 remain placeholders below.
+The present draft reports the engineering pilot that unlocked the go decision for stratified sampling, plus a cautious first-look multi-basin extension at reduced calibration budget.
+Full answers to RQ1–RQ3 on the frozen stratified sample remain incomplete.
 </p>
 </section>
 
@@ -506,7 +626,7 @@ Large-sample answers to RQ1–RQ3 remain placeholders below.
 <p>
 Forcing and discharge come from the Caravan community dataset (Kratzert et al., 2023).
 Caravan harmonizes multi-source CAMELS-family basins but its meteorological forcing is not identical to the original CAMELS products; this difference can change conceptual-model skill and must be stated explicitly (Clerc-Schwarzenbach et al., 2024).
-Potential evapotranspiration (PET) in the local diagnosis uses FAO Penman–Monteith attributes supplied with Caravan.
+Potential evapotranspiration (PET) uses FAO Penman–Monteith attributes supplied with Caravan.
 </p>
 <p>
 Pilot basins (roles fixed a priori):
@@ -516,7 +636,7 @@ Pilot basins (roles fixed a priori):
 <tr><td>camels_01013500</td><td>Snow-affected diagnosis target</td><td class="num">≈0.37</td><td class="num">2298</td><td class="num">0.49</td><td class="num">30.6</td></tr>
 <tr><td>camels_14306500</td><td>Low-snow negative control</td><td class="num">≈0.0</td><td class="num">859</td><td class="num">0.49</td><td class="num">34.3</td></tr>
 </table>
-<p class="src">Attribute source: results/diagnostics/basin_alignment_01013500_vs_14306500.md (Caravan attributes). Human activity alone cannot explain the skill contrast (similar footprint; control even slightly higher).</p>
+<p class="src">Catchment attributes from the Caravan attribute table used in the public diagnostic note for this basin pair. Human activity alone cannot explain the skill contrast (similar footprint; control even slightly higher).</p>
 <p>
 Periods (identical for both models and both basins): training 1985-10-01–1995-09-30; testing 2005-10-01–2014-09-30; warmup length 365 days.
 Daily variables: precipitation <em>P</em>, PET, discharge <em>Q</em>, and for XAJ-Snow also 2 m air temperature <em>T</em>.
@@ -540,12 +660,16 @@ Free snow parameters:
 </ul>
 <p>
 Mass symbols used in the module: precipitation <em>P</em>, temperature <em>T</em>, snow water equivalent SWE, thermal state <em>G</em>, melt potential MeltPot, snow-cover factor Gratio, and melt <em>M</em>.
-A schematic daily update (implementation in <code>hydromodel/models/snow.py</code>) is:
+A schematic daily update is:
 </p>
 <p class="eq">rain, snow ← partition(<em>P</em>, <em>T</em>; <em>T</em><sub>s</sub>, <em>T</em><sub>r</sub>)</p>
 <p class="eq">SWE ← SWE + snow; <em>G</em> ← min(0, CTG·<em>G</em> + (1−CTG)·<em>T</em>)</p>
 <p class="eq">MeltPot ← min(SWE, max(0, <em>K</em><sub>f</sub>·<em>T</em>)) only if the pack is isothermal (<em>G</em> ≈ 0); else MeltPot = 0</p>
 <p class="eq">Gratio ← min(1, SWE / G<sub>threshold</sub>); <em>M</em> ← min(SWE, (0.9·Gratio + 0.1)·MeltPot)</p>
+<p>
+Unless an external array is supplied, <em>G</em><sub>threshold</sub> is estimated inside each snow-module call as 0.9 × mean annual snowfall from the snowfall series of <em>that same call</em> (CemaNeige-style default; tiny floor for snow-free basins).
+Because train and test periods are loaded separately, the pilot therefore recomputes <em>G</em><sub>threshold</sub> from each period’s forcing rather than freezing a training-derived value into evaluation—an explicit protocol choice to disclose, not a hidden degree of freedom in the calibrated parameter vector.
+</p>
 <p>
 We describe the layer as <em>CemaNeige-style / single-band</em>, not as a strict airGR reproduction (airGR defaults use multiple elevation bands and different temperature bands).
 <em>K</em><sub>f</sub> ≈ 3.5 mm °C<sup>−1</sup> d<sup>−1</sup> on the snow pilot is interior to the search range and within commonly reported degree-day magnitudes (~2–6), but without SWE constraints it remains an effective parameter rather than a physically identified melt coefficient.
@@ -554,9 +678,11 @@ We describe the layer as <em>CemaNeige-style / single-band</em>, not as a strict
 <h3>2.4 Calibration and metrics</h3>
 <p>
 Optimizer: SCE-UA maximizing KGE on the training window.
-The local medium protocol uses spotpy SCE-UA settings <code>rep</code>=800 and <code>ngs</code>=15 for <em>both</em> models and both basins (identical budget by configuration).
-<strong>Important:</strong> this matched budget is a controlled engineering comparison; it is <em>not</em> yet demonstrated to be a converged or “fair” optimum versus higher <code>rep</code>, multiple seeds, or fixed-snow-parameter ablations.
-Those fairness checks remain pending and must precede any claim that gains are independent of optimization budget or the two extra degrees of freedom (17 vs 15 parameters).
+The pilot medium protocol uses SCE-UA settings <code>rep</code>=800 and <code>ngs</code>=15 for <em>both</em> models and both basins (identical budget by configuration).
+The first-look multi-basin batch uses the same objective and periods but a lighter budget (<code>rep</code>=200) for screening.
+A partial higher-budget check on snow-affected 01013500 at <code>rep</code>=2000 is available (XAJ-MZ test NSE {fmt(nse_mz_2000,4)}; XAJ-Snow {fmt(nse_sn_2000,4)}); <code>rep</code>=5000 and the control basin at <code>rep</code>=2000 remain incomplete.
+<strong>Important:</strong> matched budgets support controlled comparison; they do <em>not</em> yet constitute a full fairness proof versus multi-seed searches or fixed-snow-parameter ablations.
+Those checks must precede any claim that gains are independent of optimization budget or the two extra degrees of freedom (17 vs 15 parameters).
 Reported skill uses the independent test window.
 NSE and KGE are defined in the conventional forms:
 </p>
@@ -574,7 +700,7 @@ Basin 14306500 (frac_snow ≈ 0) is the negative control: a useful snow layer sh
 Human-footprint attributes are similar across the pair, which previously falsified a pure “human disturbance” explanation for 01013500’s poor XAJ-MZ skill.
 </p>
 
-<div class="todo"><strong>Pending methods blocks:</strong> stratified 0/low/mid/high snow sample construction; SWE auxiliary consistency against ERA5-Land (consistency only, not independent ground validation); optimizer×parameter-freedom factorial; attribute-based ΔKGE applicability models with grouped cross-validation.</div>
+<div class="todo"><strong>Pending methods blocks:</strong> full calibration of the frozen stratified sample (80 basins frozen; expansion toward ~500 planned); SWE auxiliary consistency against ERA5-Land (consistency only, not independent ground validation); complete optimizer×parameter-freedom factorial; attribute-based ΔKGE applicability models with grouped cross-validation.</div>
 </section>
 
 <section id="sec3">
@@ -589,12 +715,17 @@ Table 1 lists paired test-period metrics read directly from <code>basins_metrics
 On 01013500, XAJ-Snow improves NSE by Δ = {delta(nse_sn, nse_mz)} and KGE by Δ = {delta(kge_sn, kge_mz)}.
 On 14306500, ΔNSE = {delta(nse_c_sn, nse_c_mz)} and ΔKGE = {delta(kge_c_sn, kge_c_mz)}, i.e. within a few thousandths—consistent with a non-inflating negative control.
 Denormalized snow parameters on 01013500: <em>K</em><sub>f</sub> = {fmt(p010['Kf'],4)} mm °C<sup>−1</sup> d<sup>−1</sup>, CTG = {fmt(p010['CTG'],6)} (interior of [0,10]×[0,1]).
-Unit tests for the snow module: 8/8 passed (<code>pytest test/test_snow.py</code>).
 </p>
 
-<h3>3.2 Pilot figures</h3>
+<h3>3.2 Supplementary SciPy refine on 01013500</h3>
 <p>
-Figures 1–5 document the pilot. They support an engineering GO decision and method readiness; they are <strong>not</strong> a substitute for stratified population inference.
+After the matched SCE-UA runs, a SciPy local refine against NSE on 01013500 yields test NSE/KGE of {fmt(nse_rf_sn,4)}/{fmt(kge_rf_sn,4)} for XAJ-Snow versus {fmt(nse_rf_mz,4)}/{fmt(kge_rf_mz,4)} for XAJ-MZ.
+We treat refine as <strong>supplementary illustration</strong> of headroom under a different objective/search stage—not as a replacement for the matched SCE-UA go/no-go comparison and not as a fairness proof.
+</p>
+
+<h3>3.3 Pilot figures</h3>
+<p>
+Figures 1–5 document the two-basin pilot. They support an engineering GO decision and method readiness; they are <strong>not</strong> a substitute for stratified population inference.
 </p>
 """
     # insert figures with short academic analysis
@@ -628,8 +759,36 @@ This panel guards against “any extra parameters help everywhere” interpretat
 XAJ-Snow points hug the diagonal more tightly (higher correlation / lower error), while XAJ-MZ shows larger scatter and bias.
 Scatter plots compress timing information—pair with Figures 2–3 for hydrograph timing.</p>
 </div>""",
+        "fig6": """
+<div class="explain">
+<p><strong>Reading Figure 6.</strong> Each point is one CAMELS basin in the first-look batch (<code>rep</code>=200).
+Positive ΔNSE indicates XAJ-Snow outperforming XAJ-MZ on the independent test window.
+The pattern is consistent with larger gains at higher snow fractions, but n=14 and the lighter budget forbid population inference.</p>
+</div>""",
+        "fig7": """
+<div class="explain">
+<p><strong>Reading Figure 7.</strong> Box/summary view of ΔNSE by snow-fraction bin for the same first-look batch.
+Lead with stratified medians (snow-affected vs low-snow) rather than the all-sample median, which is depressed by dual-model failures.</p>
+</div>""",
     }
     for fig in FIGURES:
+        if fig["id"] in ("fig6", "fig7"):
+            continue  # placed after batch1 section
+        body += figure_block("ms", data, fig, "en")
+        body += analyses_en[fig["id"]]
+
+    body += f"""
+<h3>3.4 First-look multi-basin extension (batch1, n={b1['n']}, <code>rep</code>=200)</h3>
+<p>
+As an <strong>extended pilot / first look</strong>—not a multi-region applicability map—we calibrated XAJ-MZ and XAJ-Snow on {b1['n']} CAMELS basins under the same periods and SCE-UA+KGE objective but with a lighter screening budget (<code>rep</code>=200).
+Stratified medians of test ΔNSE (XAJ-Snow − XAJ-MZ) are {fmt(b1['snow_ge_med_d'],4)} for frac_snow ≥ 0.1 (n={b1['snow_ge_n']}) and {fmt(b1['snow_lt_med_d'],4)} for frac_snow &lt; 0.1 (n={b1['snow_lt_n']}); the high-snow bin S2 (frac_snow &gt; 0.3, n={b1['s2_n']}) has median ΔNSE {fmt(b1['s2_med_d'],4)}.
+The all-sample median ({fmt(b1['all_med_d'],4)}) is near zero because a minority of basins fail for <em>both</em> models; manuscript emphasis therefore stays on stratified summaries.
+Figures 6–7 visualize ΔNSE against snow fraction and by bin.
+</p>
+"""
+    for fig in FIGURES:
+        if fig["id"] not in ("fig6", "fig7"):
+            continue
         body += figure_block("ms", data, fig, "en")
         body += analyses_en[fig["id"]]
 
@@ -637,10 +796,10 @@ Scatter plots compress timing information—pair with Figures 2–3 for hydrogra
 <div class="todo" id="pending-results">
 <strong>Pending Results (fill after experiments):</strong>
 <ul>
-<li>Population distribution of XAJ-MZ inadequacy vs snow fraction and covariates.</li>
-<li>Paired ΔNSE/ΔKGE across stratified basins; negative-control cohort statistics.</li>
+<li>Paired calibration of the frozen stratified sample (80 basins frozen; not yet fully run at medium budget).</li>
+<li>Population distribution of XAJ-MZ inadequacy vs snow fraction and covariates across regions.</li>
 <li>SWE auxiliary consistency diagnostics (ERA5-Land), clearly labelled as non-independent.</li>
-<li>Optimizer-budget and fixed-vs-free snow-parameter robustness.</li>
+<li>Complete optimizer-budget and fixed-vs-free snow-parameter robustness (<code>rep</code>=5000; multi-seed; control basin at higher <code>rep</code>).</li>
 <li>Applicability boundary model (e.g. GAM / RF+SHAP) with region-grouped CV.</li>
 <li>Optional factorial separating optimizer mechanism from parameter sharing.</li>
 </ul>
@@ -671,21 +830,25 @@ Interior <em>K</em><sub>f</sub>/CTG values support numerical stability of the se
 <h2>5 Conclusions</h2>
 <p>
 Under a paired SCE-UA+KGE protocol, a two-parameter CemaNeige-style layer converts a strongly negative out-of-sample NSE on snow-affected basin 01013500 into a clearly positive score, while leaving a low-snow control essentially unchanged.
-This supports an engineering GO for stratified large-sample XAJ-Snow experiments.
+A first-look 14-basin CAMELS batch at lighter budget shows the same directional pattern in stratified medians, without authorizing a multi-region applicability map.
+This supports an engineering GO for completing the frozen stratified sample.
 It does <em>not</em> yet establish a global applicability map, independent SWE validation, or optimizer-versus-complexity attribution.
 </p>
 <p>
-Next steps: freeze Caravan version and screening rules; run stratified batches; add SWE consistency and fairness controls; then rewrite Abstract/Results without pilot-only extrapolation.
+Next steps: finish medium-budget calibration on the frozen sample; add SWE consistency and fairness controls; then rewrite Abstract/Results without pilot-only extrapolation.
 </p>
 </section>
 
 <section id="avail">
 <h2>Code and data availability</h2>
 <p>
-<strong>To be completed before submission.</strong>
-Local research code lives in hydromodel 0.3.2 (<code>hydromodel/models/snow.py</code>, <code>xaj_snow.py</code>).
-Caravan data follow Kratzert et al. (2023) licensing; local caches under <code>_portable_data</code> are not redistributed here.
-Public repository / DOI / Zenodo package: pending.
+Research code, curated figures, diagnostics notes, consultation briefings, and publication drafts are publicly available at
+<a href="https://github.com/Coucou2016/hydromodel-xaj-snow">https://github.com/Coucou2016/hydromodel-xaj-snow</a>
+(branch <code>master</code>; generator snapshot commit <code>{esc(data['git'])}</code>).
+Core modules include the snow accounting layer and XAJ-Snow wrapper registered in the hydromodel model dictionary; matched pilot configurations, unit tests, and the publication generator are included.
+Caravan / CAMELS forcing and discharge follow Kratzert et al. (2023) licensing; large NetCDF caches and portable hydrodata trees are <strong>not</strong> redistributed in the public snapshot.
+Full optimizer dump trees are also excluded; curated metric tables and figures remain.
+Zenodo archival DOI: pending (to be minted before journal submission).
 </p>
 </section>
 
@@ -705,13 +868,13 @@ Public repository / DOI / Zenodo package: pending.
 <section id="si">
 <h2>Supplementary note on pilot figures</h2>
 <p>
-Figure files: <code>results/figures/fig_*.png</code> (SciencePlots + Times New Roman, ≥300 dpi).
-Metric provenance: <code>results/diagnostics/xaj_snow_go_nogo.md</code>.
-This HTML is self-contained (CSS inline; figures as base64). Markdown/PDF siblings are generated by <code>scripts/generate_publication_outputs.py</code>.
+Figures use SciencePlots styling (≥300 dpi PNG siblings in the public snapshot).
+Metric provenance is documented in the repository diagnostics tables accompanying the go/no-go, refine, rep-budget, and batch1 CSV files.
+This HTML is self-contained (CSS inline; figures as base64).
 </p>
 </section>
 
-<div class="footer-note">Generated {esc(data['generated'])} from real CSV/NetCDF-backed figures. No fabricated metrics. Large-sample claims remain pending.</div>
+<div class="footer-note">Generated {esc(data['generated'])} from real CSV-backed metrics and figures. No fabricated metrics. Claims beyond completed evidence remain pending.</div>
 </article>
 """
     return (
@@ -779,12 +942,32 @@ def report_figure_explain(fig_id: str) -> str:
 <p><strong>不能看出：</strong>看不出洪峰迟到还是早到（需过程线）；也看不出季节分层误差。</p>
 <p><strong>通俗解释：</strong>像打靶：橙点更靠近靶心对角线，蓝点更“散弹”。</p>
 </div>""",
+        "fig6": """
+<div class="explain">
+<h4>图 6 超详细解读（来龙去脉）</h4>
+<p><strong>背景与目的：</strong>把 batch1（n=14，rep=200）的成对 ΔNSE 放到雪量梯度上，检验 pilot 方向是否在更多 CAMELS 站重复。</p>
+<p><strong>全篇作用：</strong>extended pilot / first-look；不是多区域适用边界终结论。</p>
+<p><strong>如何阅读：</strong>横轴 frac_snow，纵轴 ΔNSE=NSE_snow−NSE_mz；正值表示雪模块增益。</p>
+<p><strong>可看出：</strong>高雪站多为大正 ΔNSE；低雪站贴近 0 或略负。</p>
+<p><strong>不能看出：</strong>不能外推到冻结的 80 站总体；rep=200 轻于 pilot medium。</p>
+</div>""",
+        "fig7": """
+<div class="explain">
+<h4>图 7 超详细解读（来龙去脉）</h4>
+<p><strong>背景与目的：</strong>按雪量分箱汇总 batch1 ΔNSE，突出分层中位数。</p>
+<p><strong>全篇作用：</strong>解释为何全文中位数接近 0（双模型失败站下拉），论文应主报分层中位数。</p>
+<p><strong>如何阅读：</strong>各箱的分布与中位线；对照 applicability_first_look.md 表。</p>
+<p><strong>可看出：</strong>雪影响箱中位 ΔNSE 大幅为正；无雪箱接近 0。</p>
+<p><strong>不能看出：</strong>分箱宽度与样本量仍小，置信区间未估计。</p>
+</div>""",
     }
     return blocks[fig_id]
 
 
 def build_report_html(data: dict) -> str:
     m = data["metrics"]
+    rf = data["refine"]
+    b1 = data["batch1"]
     p010 = data["params"]["01013500"]
     p143 = data["params"]["14306500"]
     nse_mz = m[("01013500", "mz")]["NSE"]
@@ -793,9 +976,13 @@ def build_report_html(data: dict) -> str:
     kge_sn = m[("01013500", "snow")]["KGE"]
     nse_c_mz = m[("14306500", "mz")]["NSE"]
     nse_c_sn = m[("14306500", "snow")]["NSE"]
+    nse_rf_mz = rf[("01013500", "mz")]["NSE"]
+    nse_rf_sn = rf[("01013500", "snow")]["NSE"]
+    nse_mz_2000 = data["rep_budget"].get(("01013500", "xaj_mz", 2000))
+    nse_sn_2000 = data["rep_budget"].get(("01013500", "xaj_snow", 2000))
 
     body = f"""
-<div class="header-bar">Hydromodel 0.3.2 · XAJ-Snow 完整科研报告 · {esc(data['generated'])} · 仅本地研究交付</div>
+<div class="header-bar">Hydromodel 0.3.2 · XAJ-Snow 完整科研报告 · {esc(data['generated'])} · 研究报告（可含工程细节）</div>
 <article class="page">
 <section class="cover" id="cover">
   <div class="eyebrow">完整科研报告 · 正式学术风格 · 自包含 HTML</div>
@@ -927,6 +1114,9 @@ XAJ-Snow 在 XAJ-MZ 前增加集总单带度日融雪层（Valéry et al., 2014�
 <p class="eq">仅当等温（G≈0）时 MeltPot ← min(SWE, max(0, Kf·T))；否则 MeltPot=0</p>
 <p class="eq">Gratio ← min(1, SWE/G<sub>threshold</sub>)；M ← min(SWE, (0.9·Gratio+0.1)·MeltPot)</p>
 <p>
+未外供数组时，G<sub>threshold</sub> 在<strong>每一次</strong>雪模块调用内按该次降雪序列估计为 0.9×年均降雪（雪无流域有极小地板）。因训练/测试分段加载，pilot 会在各时段分别重算阈值，而非把训练期阈值冻结到评价期——属须披露的协议选择，而非率定参数向量中的隐变量。
+</p>
+<p>
 NSE/KGE 越接近 1 越好；NSE&lt;0 表示不如用观测均值作预报。本实验主目标函数为训练期 KGE，报告测试期 NSE 与 KGE。
 Kf≈3.5 落在文献常见度日量级（约 2–6）且未贴边，但在无 SWE 约束时仍是<strong>有效参数</strong>而非独立物理辨识。
 </p>
@@ -934,7 +1124,9 @@ Kf≈3.5 落在文献常见度日量级（约 2–6）且未贴边，但在无 S
 <p>
 算法 SCE-UA（spotpy），目标 KGE；两模型两流域均用 medium 设置 <code>rep</code>=800、<code>ngs</code>=15（成对可比）。
 <strong>注意：</strong>匹配预算≠已证明收敛公平；更高 rep、多种子、固定雪参消融等仍为“待补充”，不得把 rep=800 写成充分公平基线。
-smoke 曾用 rep=120 仅验证流水线。可选 scipy NSE 精修配置已存在但<strong>尚未运行</strong>（待补充）。
+smoke 曾用 rep=120 仅验证流水线。
+<strong>已完成补充：</strong>01013500 上 SciPy NSE refine（Snow NSE={fmt(nse_rf_sn,4)}；MZ NSE={fmt(nse_rf_mz,4)}）；rep=2000 敏感性（MZ NSE={fmt(nse_mz_2000,4)}；Snow NSE={fmt(nse_sn_2000,4)}）；batch1 n=14 @rep=200 分层 first-look。
+<strong>仍未完成：</strong>rep=5000；143@rep=2000；冻结 80 站 medium 全量；SWE 一致性；factorial。
 </p>
 <h3>5.4 模型结构对比</h3>
 <table>
@@ -954,15 +1146,16 @@ smoke 曾用 rep=120 仅验证流水线。可选 scipy NSE 精修配置已存在
   <li>实现 snow.py / xaj_snow.py 并注册模型；单元测试 8/8。</li>
   <li>smoke（rep=120）验证 pipeline：010 snow NSE 已升至约 0.436。</li>
   <li>medium（rep=800）正式 go/no-go：雪区大幅提升、负对照中性。</li>
-  <li>SciencePlots 出图；本脚本汇总为正式报告与论文初稿。</li>
+  <li>010 SciPy NSE refine 完成；rep=2000（仅 010）完成；batch1 n=14 @rep=200 完成。</li>
+  <li>SciencePlots 出图；本脚本汇总为正式报告与论文初稿；consultation 简报供外部顾问阅读。</li>
 </ol>
 <table>
 <tr><th>研究问题</th><th>证据</th><th>当前状态</th></tr>
 <tr><td>雪区是否因无融雪而失效？</td><td>010 ΔNSE≈+0.96；过程线春峰改善</td><td>成对协议下支持</td></tr>
-<tr><td>是否到处虚假增益？</td><td>143 ΔNSE≈−0.006</td><td>单对照支持中性</td></tr>
-<tr><td>大样本适用边界？</td><td>—</td><td class="todo">待补充：分层批量</td></tr>
+<tr><td>是否到处虚假增益？</td><td>143 ΔNSE≈−0.006；batch1 无雪中位≈−0.007</td><td>单对照+first-look 支持中性</td></tr>
+<tr><td>大样本适用边界？</td><td>batch1 分层中位；冻结 80 站未全跑</td><td class="todo">待补充：冻结样本 medium</td></tr>
 <tr><td>SWE 状态一致性？</td><td>—</td><td class="todo">待补充</td></tr>
-<tr><td>优化预算/自由度公平性？</td><td>—</td><td class="todo">待补充 factorial</td></tr>
+<tr><td>优化预算/自由度公平性？</td><td>010@2000 部分完成</td><td class="todo">待补充 factorial / 5000</td></tr>
 </table>
 </section>
 
@@ -976,6 +1169,13 @@ smoke 曾用 rep=120 仅验证流水线。可选 scipy NSE 精修配置已存在
 <tr><td>14306500</td><td class="num">{fmt(p143['Kf'],4)}</td><td class="num">{fmt(p143['CTG'],6)}</td><td>负对照；无雪时参数可退化/欠约束</td></tr>
 </table>
 <p class="src">参数来源：basins_denorm_params.csv</p>
+<p><strong>补充表：01013500 SciPy NSE refine（真实 CSV）</strong></p>
+<table>
+<tr><th>模型</th><th>NSE</th><th>KGE</th><th>备注</th></tr>
+<tr><td>XAJ-Snow refine</td><td class="num">{fmt(nse_rf_sn,4)}</td><td class="num">{fmt(rf[("01013500","snow")]["KGE"],4)}</td><td>补充展示，非成对主结论</td></tr>
+<tr><td>XAJ-MZ refine</td><td class="num">{fmt(nse_rf_mz,4)}</td><td class="num">{fmt(rf[("01013500","mz")]["KGE"],4)}</td><td>同左</td></tr>
+</table>
+<p><strong>Batch1 first-look（n={b1['n']}，rep=200）分层中位 ΔNSE</strong>：雪区≥0.1 → {fmt(b1['snow_ge_med_d'],4)}（n={b1['snow_ge_n']}）；无雪&lt;0.1 → {fmt(b1['snow_lt_med_d'],4)}（n={b1['snow_lt_n']}）；S2&gt;0.3 → {fmt(b1['s2_med_d'],4)}。来源：batch1_paired_metrics.csv / applicability_first_look.md。</p>
 """
     for fig in FIGURES:
         body += figure_block("rep", data, fig, "zh")
@@ -987,9 +1187,8 @@ smoke 曾用 rep=120 仅验证流水线。可选 scipy NSE 精修配置已存在
 <section id="figdetail">
 <h2>8. 图表超详细解释（汇总说明）</h2>
 <p>
-上一节已对图 1–5 逐图给出“背景—读法—能看出/不能看出—通俗解释”。
-子图若在单张 PNG 内以多面板出现，读图时仍按颜色语义（黑=观测，蓝=XAJ-MZ，橙=XAJ-Snow）与指标柱组对照。
-本报告<strong>不新造</strong>无数据支撑的示意图。
+上一节已对图 1–7 逐图给出解读。图 1–5 为双站 pilot；图 6–7 为 batch1 first-look。
+本报告<strong>不新造</strong>无数据支撑的示意图。工程命令与长跑续跑说明见 diagnostics 下 long-run 文档。
 </p>
 </section>
 
@@ -1008,7 +1207,8 @@ Chen et al.（2025）已证明大样本上加 CemaNeige/可微学习可抬高中
 <ol>
   <li>在成对 SCE-UA+KGE（rep=800）协议下，XAJ-Snow 使 01013500 测试 NSE 从 {fmt(nse_mz,3)} 提升至 {fmt(nse_sn,3)}，KGE 从 {fmt(kge_mz,3)} 至 {fmt(kge_sn,3)}。</li>
   <li>负对照 14306500 上技巧基本不变（ΔNSE≈{delta(nse_c_sn,nse_c_mz)}），支持选择性增益。</li>
-  <li>工程上判定 GO，可进入分层大样本；科学上尚不能给出全球/多区域适用边界终结论。</li>
+  <li>Batch1（n=14，rep=200）雪区中位 ΔNSE≈{fmt(b1['snow_ge_med_d'],2)}，无雪≈{fmt(b1['snow_lt_med_d'],3)}——仅作 first-look。</li>
+  <li>工程上判定 GO，可继续冻结样本 medium；科学上尚不能给出全球/多区域适用边界终结论。</li>
 </ol>
 </section>
 
@@ -1018,22 +1218,27 @@ Chen et al.（2025）已证明大样本上加 CemaNeige/可微学习可抬高中
 <strong>待补充实验矩阵</strong>
 <table>
 <tr><th>实验</th><th>目的</th><th>状态</th></tr>
-<tr><td>分层 0/低/中/高雪批量率定</td><td>RQ1–RQ2 总体推断</td><td>未完成（仅有抽样脚本骨架）</td></tr>
+<tr><td>分层冻结样本 medium 率定</td><td>RQ1–RQ2 总体推断</td><td>已冻结 80 站；全量未完成（batch1=14@200 完成）</td></tr>
 <tr><td>ERA5-Land SWE 辅助一致性</td><td>状态约束，非独立验证</td><td>未完成</td></tr>
-<tr><td>优化预算倍数 × seeds</td><td>公平性</td><td>未完成</td></tr>
+<tr><td>优化预算倍数 × seeds</td><td>公平性</td><td>部分：010@2000 完成；5000 / 143@2000 未跑</td></tr>
 <tr><td>固定雪参 vs 自由雪参</td><td>额外自由度</td><td>未完成</td></tr>
-<tr><td>scipy NSE refine</td><td>补充展示</td><td>配置有，未跑</td></tr>
+<tr><td>scipy NSE refine</td><td>补充展示</td><td><strong>已完成</strong>（010）</td></tr>
 <tr><td>属性→ΔKGE 适用边界</td><td>RQ3</td><td>未完成</td></tr>
 <tr><td>optimizer×sharing factorial</td><td>归因分离</td><td>可选，未做则不出图</td></tr>
 </table>
 </div>
-<p>实现局限：单高程带；Ts/Tr 固定；Gthreshold 由当前序列估计；17 vs 15 参数。</p>
+<p>实现局限：单高程带；Ts/Tr 固定；Gthreshold 默认按<strong>当次调用</strong>降雪序列估计（训练/测试分段加载时各自重算，未冻结训练值）；17 vs 15 参数。</p>
 </section>
 
 <section id="repro">
 <h2>12. 软件与可复现性</h2>
+<p>
+公开快照：<a href="https://github.com/Coucou2016/hydromodel-xaj-snow">https://github.com/Coucou2016/hydromodel-xaj-snow</a>
+（<code>master</code> @ 生成时 <code>{esc(data['git'])}</code>；含源码/docs/figures/publications/consultation/配置/测试与生成脚本；不含大体积 nc、<code>_portable_data</code>/hydrodata，亦不含完整 SpotPy 率定 dump 树）。
+用户须本地准备 Caravan/CAMELS 数据；细节见 <code>docs/local/github_public_repo.md</code>。
+</p>
 <pre style="white-space:pre-wrap;background:#f6f6f6;border:1px solid #ddd;padding:0.8em;font-size:0.86rem;">
-cd d:\\Projects\\hydromodel-0.3.2\\hydromodel-0.3.2
+# after cloning the public snapshot and placing Caravan/CAMELS caches locally
 $env:HOME = (Get-Location).Path
 $env:HYDRO_SETTING_FILE = Join-Path $env:HOME "hydro_setting.yml"
 python -m pytest test/test_snow.py -v
@@ -1041,7 +1246,7 @@ python -m pytest test/test_snow.py -v
 .\\RUN_GO_NOGO_XAJ_SNOW.ps1 medium
 python scripts/generate_publication_outputs.py
 </pre>
-<p>关键源码：hydromodel/models/snow.py, xaj_snow.py, xaj.py, model_config.py。本脚本不修改模型计算逻辑。</p>
+<p>关键源码：hydromodel/models/snow.py, xaj_snow.py, xaj.py, model_config.py。本脚本不修改模型计算逻辑。Zenodo DOI：待提交前铸造。</p>
 </section>
 
 <section id="refs">
@@ -1076,7 +1281,7 @@ python scripts/generate_publication_outputs.py
 <ul>
   <li>指标与 CSV 一致（脚本启动时 assert）</li>
   <li>HTML 图片均为 data URI；CSS 内联；无 CDN</li>
-  <li>Git：仅本地，未 commit/push/PR（按用户要求）</li>
+  <li>Git：本轮允许 commit/push 公开仓（不含大 nc / hydrodata）</li>
 </ul>
 </section>
 

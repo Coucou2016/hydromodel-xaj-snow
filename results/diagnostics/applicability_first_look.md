@@ -1,33 +1,26 @@
-# Applicability first look (batch)
+# Applicability first look (batch1, n=14 paired)
 
-- Source metrics: `results/batch/metrics_summary.csv`（真实 SCE-UA rep=200 小批次）
-- Paired basins with both models: **6**（`sample_batch1.csv` 的前 6 站；偏无雪/中雪，尚未含 S2_gt0.3）
-- Median ΔNSE (snow−mz) overall: `-0.0640`
-- Snowy (frac_snow≥0.1) n=2 median ΔNSE=`-0.8653` median NSE_snow=`-1.2726` median NSE_mz=`-0.4074`
-- Low-snow (frac_snow<0.1) n=4 median ΔNSE=`-0.0640` median NSE_snow=`0.2037` median NSE_mz=`0.2674`
+- Source: `results/batch/metrics_summary.csv`（SCE-UA + KGE, **rep=200**, train/test 与 pilot 相同）
+- Sample: `results/sampling/sample_batch1.csv`（CAMELS-US 14 站，含雪/无雪）
+- Paired table: `results/diagnostics/batch1_paired_metrics.csv`
 
-## 单站要点（来自同一 CSV）
+## 汇总（真实中位数）
 
-| basin | frac_snow | NSE_mz | NSE_snow | ΔNSE |
-|-------|----------:|-------:|---------:|-----:|
-| camels_04057800 | 0.291 | 0.042 | 0.689 | **+0.647** |
-| camels_03368000 | 0.071 | 0.474 | 0.470 | -0.004 |
-| camels_02149000 | 0.000 | 0.475 | 0.353 | -0.121 |
-| camels_08086290 | 0.000 | 0.061 | 0.054 | -0.007 |
-| camels_05123400 | 0.216 | -0.856 | -3.234 | -2.377（两模型均失败） |
-| camels_14362250 | 0.000 | -20.4 | -27.0 | -6.55（两模型均崩溃） |
+| 分组 | n | med ΔNSE (snow−mz) | med NSE_snow | med NSE_mz |
+|------|--:|-------------------:|-------------:|-----------:|
+| 全部 | 14 | 0.0088 | 0.4118 | 0.0119 |
+| frac_snow≥0.1 | 9 | **0.5461** | 0.5468 | −0.0734 |
+| frac_snow<0.1 | 5 | −0.0068 | 0.3534 | 0.4739 |
+| S2 (frac_snow>0.3) | 5 | **0.5835** | 0.5712 | 0.0119 |
+| S0 (frac_snow<0.1) | 5 | −0.0068 | 0.3534 | 0.4739 |
 
-解读：中雪站 `04057800` 出现与 pilot 同向的大幅增益；无雪站大体中性/略负；整体中位数被两失败站拉低——需在后续批次强制纳入 S2 并提高 rep（800）后再下结论。
+## 解读
 
-## Region counts
-
-region_folder
-camels    6
+- 高雪档（S2）与中雪档中，多数站出现与 pilot 同向的大幅 ΔNSE（如 `10348850` +0.62、`09223000` +0.55、`04057800` +0.65、`01031500` +0.58、`01013500` +0.80 @rep=200）。
+- 无雪对照 ΔNSE 接近 0 或略负，未见系统性虚假增益。
+- 少数站两模型均失败（如 `14362250`、`05123400`），会拉低全样本中位数；论文主文应以分层中位数 + 失败筛除规则报告。
 
 ## Figures
 
-- `results/figures/fig_batch_delta_nse_vs_frac_snow.png`
-- `results/figures/fig_batch_delta_nse_by_snow_bin.png`
-
-## Data table
-`results/diagnostics/applicability_first_look.csv`
+- `results/figures/fig_batch_delta_nse_vs_frac_snow.png/.pdf`
+- `results/figures/fig_batch_delta_nse_by_snow_bin.png/.pdf`

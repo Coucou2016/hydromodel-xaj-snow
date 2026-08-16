@@ -57,3 +57,26 @@ Overall：以当前双站 pilot 形态 **reconsider / reject-and-resubmit**；�
 - `docs/local/literature_review_xaj_snow.md`
 - `docs/local/chatgpt_consultation_xaj_snow.md`
 - 重新生成 `results/publications/*`
+
+---
+
+## 第 1 轮续：公开 GitHub 快照 FOLLOW-UP（2026-08-16）
+
+- 事实：https://github.com/Coucou2016/hydromodel-xaj-snow @ `master` / `5da6a04`（含源码/docs/figures/publications；不含 hydrodata/_portable_data/大 nc）
+- ChatGPT：同线程 FOLLOW-UP + CONTINUE；网页搜索开启；最终 Major/Minor **正文被限流截断**；思考面板与本地核验见 `docs/local/_chatgpt_raw_hess_followup_github.txt`
+
+### 增量处置
+
+| 关切 | 核验 | 处置 |
+|------|------|------|
+| 公开仓是否撤销既有 Major | 否：仍是双站 pilot；Chen 2025 / fair budget / 17vs15 未因开源消失 | **保持** M1–M5 |
+| 可复现性是否改善 | 是：pinned 源码/配置/测试/生成脚本在仓 | **采纳**：Availability 指向 GitHub + `5da6a04` |
+| 剩余 Availability gaps | 无大 nc / `_portable_data` / hydrodata；无完整 SpotPy dump；Zenodo pending | **写入** Code/data availability 与报告 §12 |
+| `g_threshold` 按序列估计 | `snow.py` 缺省从当次 snowfall 估计；train/test 分段 → 各自重算 | **披露** Methods（英）+ 报告方法/局限（中）；**不改**实现 |
+
+### 否决
+
+| 建议倾向 | 否决理由 |
+|----------|----------|
+| 因开源仓而把 pilot 升格为 HESS-ready | 证据层级未变 |
+| 本轮立刻改冻结 Gthreshold 逻辑 | 会破坏与既有 medium 协议可比；属后续 paper-grade 增强 |

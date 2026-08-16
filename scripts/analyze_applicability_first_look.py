@@ -110,7 +110,11 @@ def main() -> int:
         out["snow_bin_plot"] = pd.cut(out["frac_snow"], bins=bins, labels=labels)
         fig, ax = plt.subplots(figsize=(4.0, 3.2))
         data = [out.loc[out["snow_bin_plot"] == lab, "delta_NSE"].dropna().values for lab in labels]
-        parts = ax.boxplot(data, labels=labels, patch_artist=True)
+        parts = ax.boxplot(
+            data,
+            tick_labels=labels,
+            patch_artist=True,
+        )
         for box in parts["boxes"]:
             box.set_facecolor("#F0F0F0")
             box.set_edgecolor(COLORS["mz"])
@@ -124,7 +128,7 @@ def main() -> int:
             fig, ax = plt.subplots(figsize=(5.0, 3.2))
             order = sorted(out["region_folder"].dropna().unique())
             data = [out.loc[out["region_folder"] == r, "delta_NSE"].dropna().values for r in order]
-            ax.boxplot(data, labels=order, patch_artist=True)
+            ax.boxplot(data, tick_labels=order, patch_artist=True)
             ax.axhline(0.0, color=COLORS["grid"], lw=0.8)
             ax.set_ylabel(r"$\Delta$NSE")
             ax.set_title("ΔNSE by region")

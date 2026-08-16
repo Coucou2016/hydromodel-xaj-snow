@@ -152,3 +152,36 @@
 - 修订 `scripts/generate_publication_outputs.py` 并重生成六份交付物。  
 - 更新框架/文献/咨询/审稿处置 md。  
 - 指标仍只读 `basins_metrics.csv`，不改模型/不跑批量率定。
+
+---
+
+## 对话 D 续（GitHub 公开快照 FOLLOW-UP）
+
+| 项 | 值 |
+|----|-----|
+| URL | 同对话 D：https://chatgpt.com/c/6a815caf-d6ac-83ea-8e50-9d8250f07bba |
+| 日期 | 2026-08-16（续） |
+| 模式 | 网页搜索开启；粘贴 GitHub URL + FOLLOW-UP/CONTINUE 文本；**无附件** |
+| 原始摘录 | `docs/local/_chatgpt_raw_hess_followup_github.txt` |
+| UI 阻塞 | 多次「请求过于频繁」→ 点「明白了」；最终答复气泡两次塌缩为 citation chips；**无**登录/验证码/密码索取 |
+
+### 顾问侧（思考面板可提取；正式 Major/Minor 正文未完整生成）
+
+1. 以 pinned commit `5da6a04` 评估，不把 moving `master` 当证据。  
+2. 公开快照**显著改善**可复现性评估（17 参包装、雨雪分割、热状态/融雪方程、固定 Ts/Tr、成对配置、lockfile、测试、出版物生成脚本）。  
+3. **不**因仓库公开而撤销双站推断局限 / Chen et al. 2025 新颖性边界等既有 Major。  
+4. 须披露：`g_threshold` 缺省时由**当次调用**降雪序列估计；需确认评价是否用测试强迫重算而非冻结训练值。
+
+### 本地独立核验与处置
+
+| 项 | 证据 | 处置 |
+|----|------|------|
+| 公开仓内容/排除 | README + `docs/local/github_public_repo.md`（raw GitHub） | 采纳：Availability 写清含/不含与 Zenodo pending |
+| `g_threshold` 按调用估计 | `snow.py` `estimate_g_threshold`；`apply_snow_to_forcing` 未传入冻结值；train/test 分段加载 | **采纳披露**：英/中 Methods + 报告局限；**本轮不改代码**（与对话 A 一致：paper-grade 冻结属后续协议增强） |
+| 正式 Major/Minor 列表 | CONTINUE 仍被限流截断 | **不以编造补全**；用思考面板 + 本地核验闭环 |
+| 双站 / Chen 2025 / fair budget | 与第 1 轮一致 | **保持**既有 Major 处置，不因 GitHub 降级 |
+
+### 落地文件
+
+- 再生成 `results/publications/{xaj_snow_manuscript,report}.{html,md,pdf}`  
+- 更新本文件与 `manuscript_review_round1.md`

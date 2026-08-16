@@ -1,6 +1,6 @@
 # XAJ-Snow go/no-go 诊断
 
-- 生成时间：2026-08-16 11:11
+- 生成时间：2026-08-16 11:11（表内 medium 指标）；2026-08-17 复核 refine 行
 - 指标均来自 `evaluation_test/basins_metrics.csv`，禁止口算编造。
 - 训练期 1985-10-01–1995-09-30；测试期 2005-10-01–2014-09-30；warmup=365。
 - 主线目标函数：SCE-UA + KGE。historical 对照为 v2 scipy(NSE) 精修。
@@ -20,7 +20,8 @@
 | smoke_010_snow | camels_01013500 | XAJ-Snow smoke | 120 | 0.4364 | 0.7059 | 1.5181 | `results/xaj_snow_go_nogo/smoke_camels_01013500_xaj_snow/xaj_snow_SCE_UA/evaluation_test/basins_metrics.csv` |
 | med_010_mz | camels_01013500 | XAJ-MZ | 800 | -0.2321 | 0.2096 | 2.2446 | `results/xaj_snow_go_nogo/camels_01013500_xaj_mz/xaj_mz_SCE_UA/evaluation_test/basins_metrics.csv` |
 | med_010_snow | camels_01013500 | XAJ-Snow | 800 | 0.7318 | 0.7764 | 1.0473 | `results/xaj_snow_go_nogo/camels_01013500_xaj_snow/xaj_snow_SCE_UA/evaluation_test/basins_metrics.csv` |
-| refine_010_snow | camels_01013500 | XAJ-Snow scipy refine | scipy | — | — | — | `（尚未运行）` |
+| refine_010_snow | camels_01013500 | XAJ-Snow scipy refine | scipy | 0.8779 | 0.9374 | 0.7066 | `results/xaj_snow_go_nogo/camels_01013500_xaj_snow_refine_scipy/xaj_snow_scipy/evaluation_test/basins_metrics.csv` |
+| refine_010_mz | camels_01013500 | XAJ-MZ scipy refine | scipy | 0.1393 | 0.0856 | 1.8760 | `results/xaj_snow_go_nogo/camels_01013500_xaj_mz_refine_scipy/xaj_mz_scipy/evaluation_test/basins_metrics.csv` |
 | hist_143_mz_scipy | camels_14306500 | XAJ-MZ (historical scipy) | v2 refine | 0.8014 | 0.6598 | 2.5323 | `results/multi_basin_global_then_refine_v2/camels_14306500/xaj_mz_scipy/evaluation_test/basins_metrics.csv` |
 | med_143_mz | camels_14306500 | XAJ-MZ | 800 | 0.7106 | 0.7815 | 3.0565 | `results/xaj_snow_go_nogo/camels_14306500_xaj_mz/xaj_mz_SCE_UA/evaluation_test/basins_metrics.csv` |
 | med_143_snow | camels_14306500 | XAJ-Snow | 800 | 0.7043 | 0.7795 | 3.0895 | `results/xaj_snow_go_nogo/camels_14306500_xaj_snow/xaj_snow_SCE_UA/evaluation_test/basins_metrics.csv` |
@@ -31,9 +32,4 @@
 
 ## 下一步命令
 
-```powershell
-cd d:\Projects\hydromodel-0.3.2\hydromodel-0.3.2
-.\RUN_GO_NOGO_XAJ_SNOW.ps1 smoke    # 验证 pipeline
-.\RUN_GO_NOGO_XAJ_SNOW.ps1 medium   # rep=800 成对对比
-.\RUN_GO_NOGO_XAJ_SNOW.ps1 refine   # 可选 scipy NSE 精修
-```
+见 `results/diagnostics/large_n_long_run_commands.md`（报告可记工程命令；论文勿堆砌）。
