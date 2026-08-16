@@ -185,3 +185,34 @@
 
 - 再生成 `results/publications/{xaj_snow_manuscript,report}.{html,md,pdf}`  
 - 更新本文件与 `manuscript_review_round1.md`
+
+---
+
+## 对话 E（consultation raw-URL 评审；2026-08-17）
+
+| 项 | 值 |
+|----|-----|
+| 意图 URL | 新建聊天（拟续 HESS 审稿线程） |
+| 公开仓 tip | `f44426c` |
+| 模式 | 拟开启网页搜索；仅粘贴 GitHub raw/blob；无附件 |
+| UI 阻塞 | **「请求过于频繁」**（访问对话记录临时限制）；点「明白了」后仍反复触发；**无**登录/验证码/密码索取 → **按规则停止**，待用户解除限流后手动粘贴下方草稿 |
+
+### 已推送供顾问阅读的简报
+
+目录：`docs/consultation/`
+
+- https://raw.githubusercontent.com/Coucou2016/hydromodel-xaj-snow/master/docs/consultation/00_briefing_index.md
+- https://raw.githubusercontent.com/Coucou2016/hydromodel-xaj-snow/master/docs/consultation/01_project_status_and_evidence.md
+- https://raw.githubusercontent.com/Coucou2016/hydromodel-xaj-snow/master/docs/consultation/02_paper_vs_report_boundary.md
+- https://raw.githubusercontent.com/Coucou2016/hydromodel-xaj-snow/master/docs/consultation/03_manuscript_excerpt_for_review.md
+- https://raw.githubusercontent.com/Coucou2016/hydromodel-xaj-snow/master/docs/consultation/04_requested_review_tasks.md
+
+### 建议用户粘贴的提示草稿
+
+见本轮交付报告；限流解除后新建聊天 → 开启网页搜索 → 粘贴草稿 → 本地再核验 ADOPT/VERIFY/REJECT。
+
+### 本地本轮已独立完成（不等待顾问）
+
+- 核验 refine / rep=2000 / batch1 真实 CSV；修正过时“未完成/未运行”表述  
+- 论文写入 batch1 first-look + refine 补充；报告保留工程细节  
+- 重生自包含六文件并 push

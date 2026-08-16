@@ -104,9 +104,9 @@ Figures (SciencePlots): `results/figures/fig_batch_delta_nse_vs_frac_snow.png`, 
 - Cross-region applicability regression with grouped CV
 - Zenodo DOI
 
-## G. Public GitHub tip (at briefing authoring)
+## G. Public GitHub tip
 
-Previous public tip was `5da6a04`. Local work may include newer commits after this briefing is pushed; always check the repository tip before citing a SHA in Availability.
+Current public tip at briefing push: **`f44426c`** (supersedes earlier `5da6a04`). Always check the repository tip before citing a SHA in Availability.
 
 ## H. Prior ChatGPT threads (context only; re-verify)
 

@@ -1,6 +1,6 @@
 <!-- Markdown sibling of XAJ-Snow manuscript. HTML/PDF are the fully self-contained deliverables (base64 figures + inline CSS). This Markdown keeps relative image paths for in-repo reading. -->
 
-Hydromodel 0.3.2 · XAJ-Snow manuscript draft · generated 2026-08-17 01:15 · for HESS-oriented polishing
+Hydromodel 0.3.2 · XAJ-Snow manuscript draft · generated 2026-08-17 01:21 · for HESS-oriented polishing
 
   Manuscript draft · Hydrology and Earth System Sciences (target)
 
@@ -295,7 +295,7 @@ Next steps: finish medium-budget calibration on the frozen sample; add SWE consi
 
 Research code, curated figures, diagnostics notes, consultation briefings, and publication drafts are publicly available at
 [https://github.com/Coucou2016/hydromodel-xaj-snow](https://github.com/Coucou2016/hydromodel-xaj-snow)
-(branch `master`; generator snapshot commit `5da6a04`).
+(branch `master`; generator snapshot commit `f44426c`).
 Core modules include the snow accounting layer and XAJ-Snow wrapper registered in the hydromodel model dictionary; matched pilot configurations, unit tests, and the publication generator are included.
 Caravan / CAMELS forcing and discharge follow Kratzert et al. (2023) licensing; large NetCDF caches and portable hydrodata trees are **not** redistributed in the public snapshot.
 Full optimizer dump trees are also excluded; curated metric tables and figures remain.
@@ -340,4 +340,4 @@ Figures use SciencePlots styling (≥300 dpi PNG siblings in the public snapshot
 Metric provenance is documented in the repository diagnostics tables accompanying the go/no-go, refine, rep-budget, and batch1 CSV files.
 This HTML is self-contained (CSS inline; figures as base64).
 
-Generated 2026-08-17 01:15 from real CSV-backed metrics and figures. No fabricated metrics. Claims beyond completed evidence remain pending.
+Generated 2026-08-17 01:21 from real CSV-backed metrics and figures. No fabricated metrics. Claims beyond completed evidence remain pending.
