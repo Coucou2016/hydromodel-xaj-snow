@@ -1,0 +1,40 @@
+# Stage-2 scipy refine after extended_sceua; warm-start from extended SCE-UA calibration_results.json
+
+data:
+  dataset: "caravan"
+  path: null
+  basin_ids: ["camels_01013500"]
+  warmup_length: 365
+  variables: ["precipitation", "potential_evapotranspiration", "streamflow"]
+  datasource_kwargs:
+    region: "US"
+
+  train_period: ["1985-10-01", "1995-09-30"]
+  test_period: ["2005-10-01", "2014-09-30"]
+
+  output_dir: "results/real_caravan_camels_01013500_extended_refine_scipy"
+
+model:
+  name: "xaj_mz"
+  params:
+    source_type: "sources"
+    source_book: "HF"
+    kernel_size: 15
+  output_variable: "qsim"
+
+training:
+  algorithm: "scipy"
+  scipy:
+    method: "L-BFGS-B"
+    max_iterations: 500
+    ftol: 1e-7
+    gtol: 1e-6
+    n_starts: 3
+    initial_params_from: "results/real_caravan_camels_01013500_extended_sceua/xaj_mz_SCE_UA/calibration_results.json"
+  loss: "NSE"
+  save_config: true
+
+evaluation:
+  metrics: ["NSE", "KGE", "RMSE", "PBIAS"]
+  save_results: true
+  plot_results: true

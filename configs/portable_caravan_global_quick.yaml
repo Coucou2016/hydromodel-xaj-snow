@@ -1,0 +1,50 @@
+# Portable quickstart: CARAVAN (Global) + XAJ-MZ (fast settings for a first run)
+#
+# Data paths are picked up from ./hydro_setting.yml in the repo root.
+#
+# IMPORTANT:
+# - You must set a valid basin id that exists in your CARAVAN download.
+# - You can list some IDs by running:
+#     python scripts/portable_download_caravan.py --region Global
+#
+
+data:
+  dataset: "caravan"
+  path: null
+  # Replace this with a valid ID from your local CARAVAN dataset.
+  basin_ids: ["REPLACE_WITH_CARAVAN_BASIN_ID"]
+  warmup_length: 365
+  variables: ["precipitation", "potential_evapotranspiration", "streamflow"]
+
+  # CARAVAN default coverage is 1981-01-01 .. 2020-12-31 (varies by region/source).
+  train_period: ["1985-01-01", "1995-12-31"]
+  test_period: ["2005-01-01", "2014-12-31"]
+
+  # All outputs under the repo for portability
+  output_dir: "results/portable_caravan_global"
+
+model:
+  name: "xaj_mz"
+  params:
+    source_type: "sources"
+    source_book: "HF"
+    kernel_size: 15
+  output_variable: "qsim"
+
+training:
+  algorithm: "SCE_UA"
+  SCE_UA:
+    rep: 300
+    ngs: 20
+    kstop: 50
+    peps: 0.1
+    pcento: 0.1
+    random_seed: 1234
+  loss: "RMSE"
+  save_config: true
+
+evaluation:
+  metrics: ["NSE", "KGE", "RMSE", "PBIAS"]
+  save_results: true
+  plot_results: true
+

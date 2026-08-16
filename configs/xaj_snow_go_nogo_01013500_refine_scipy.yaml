@@ -1,0 +1,44 @@
+# Optional scipy NSE refine after medium SCE-UA (XAJ-Snow, 01013500)
+
+data:
+  dataset: "caravan"
+  path: null
+  basin_ids: ["camels_01013500"]
+  warmup_length: 365
+  variables:
+    - precipitation
+    - potential_evapotranspiration
+    - streamflow
+    - temperature_mean
+  datasource_kwargs:
+    region: "US"
+  train_period: ["1985-10-01", "1995-09-30"]
+  test_period: ["2005-10-01", "2014-09-30"]
+  output_dir: "results/xaj_snow_go_nogo/camels_01013500_xaj_snow_refine_scipy"
+
+model:
+  name: "xaj_snow"
+  params:
+    source_type: "sources"
+    source_book: "HF"
+    kernel_size: 15
+  output_variable: "qsim"
+
+training:
+  algorithm: "scipy"
+  scipy:
+    method: "L-BFGS-B"
+    # Note: tqdm counts function evaluations (incl. FD gradients), not L-BFGS iters.
+    # Keep local polish tractable while still improving on SCE-UA init.
+    max_iterations: 80
+    ftol: 1e-7
+    gtol: 1e-6
+    n_starts: 1
+    initial_params_from: "results/xaj_snow_go_nogo/camels_01013500_xaj_snow/xaj_snow_SCE_UA/calibration_results.json"
+  loss: "NSE"
+  save_config: true
+
+evaluation:
+  metrics: ["NSE", "KGE", "RMSE", "PBIAS"]
+  save_results: true
+  plot_results: true

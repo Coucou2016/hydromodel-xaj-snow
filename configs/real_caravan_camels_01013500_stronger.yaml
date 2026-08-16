@@ -1,0 +1,43 @@
+# Stronger calibration budget on real CARAVAN data (one basin)
+
+data:
+  dataset: "caravan"
+  path: null
+  basin_ids: ["camels_01013500"]
+  warmup_length: 365
+  variables: ["precipitation", "potential_evapotranspiration", "streamflow"]
+  datasource_kwargs:
+    region: "US"
+
+  train_period: ["1985-10-01", "1995-09-30"]
+  test_period: ["2005-10-01", "2014-09-30"]
+
+  output_dir: "results/real_caravan_camels_01013500_stronger"
+
+model:
+  name: "xaj_mz"
+  params:
+    source_type: "sources"
+    source_book: "HF"
+    kernel_size: 15
+  output_variable: "qsim"
+
+training:
+  algorithm: "SCE_UA"
+  # Increase search budget; expect longer runtime.
+  SCE_UA:
+    rep: 3000
+    ngs: 50
+    kstop: 100
+    peps: 0.1
+    pcento: 0.1
+    random_seed: 1234
+  # Try KGE-oriented calibration first (minimizes 1-KGE).
+  loss: "KGE"
+  save_config: true
+
+evaluation:
+  metrics: ["NSE", "KGE", "RMSE", "PBIAS"]
+  save_results: true
+  plot_results: true
+

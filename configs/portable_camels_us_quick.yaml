@@ -1,0 +1,47 @@
+# Portable quickstart: CAMELS-US + XAJ-MZ (fast settings for a first run)
+#
+# This uses the simplified 4-section format consumed by:
+#   python scripts/run_xaj_calibration.py --config <this_file>
+#
+# Data paths are picked up from ./hydro_setting.yml in the repo root.
+
+data:
+  dataset: "camels_us"
+  path: null
+  basin_ids: ["01013500"]
+  warmup_length: 365
+  variables: ["precipitation", "potential_evapotranspiration", "streamflow"]
+
+  # Periods (CAMELS-US standard coverage supports these)
+  train_period: ["1985-10-01", "1995-09-30"]
+  test_period: ["2005-10-01", "2014-09-30"]
+
+  # All outputs under the repo for portability
+  output_dir: "results/portable_camels_us_01013500"
+
+model:
+  name: "xaj_mz"
+  params:
+    source_type: "sources"
+    source_book: "HF"
+    kernel_size: 15
+  output_variable: "qsim"
+
+training:
+  algorithm: "SCE_UA"
+  # Keep it small for a first successful run. Increase later for better performance.
+  SCE_UA:
+    rep: 300
+    ngs: 20
+    kstop: 50
+    peps: 0.1
+    pcento: 0.1
+    random_seed: 1234
+  loss: "RMSE"
+  save_config: true
+
+evaluation:
+  metrics: ["NSE", "KGE", "RMSE", "PBIAS"]
+  save_results: true
+  plot_results: true
+

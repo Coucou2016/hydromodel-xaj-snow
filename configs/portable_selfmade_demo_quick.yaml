@@ -1,0 +1,42 @@
+# Portable offline demo: selfmadehydrodataset (generated locally) + XAJ-MZ
+#
+# Run:
+#   python scripts/generate_demo_selfmade_dataset.py
+#   python scripts/run_xaj_calibration.py --config configs/portable_selfmade_demo_quick.yaml
+
+data:
+  dataset: "selfmadehydrodataset"
+  path: null
+  dataset_name: "demo_selfmade"
+  time_unit: ["1D"]
+  basin_ids: ["basin_001"]
+  warmup_length: 30
+  variables: ["prcp", "PET", "streamflow"]
+
+  train_period: ["2000-01-01", "2003-12-31"]
+  test_period: ["2004-01-01", "2005-12-31"]
+
+  output_dir: "results/portable_demo_selfmade"
+
+model:
+  name: "xaj_mz"
+  params:
+    source_type: "sources"
+    source_book: "HF"
+    kernel_size: 15
+  output_variable: "qsim"
+
+training:
+  algorithm: "scipy"
+  scipy:
+    method: "SLSQP"
+    max_iterations: 60
+  loss: "RMSE"
+  random_seed: 1234
+  save_config: true
+
+evaluation:
+  metrics: ["NSE", "KGE", "RMSE", "PBIAS"]
+  save_results: true
+  plot_results: true
+

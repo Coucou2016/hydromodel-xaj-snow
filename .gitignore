@@ -1,0 +1,151 @@
+﻿# Created by .ignore support plugin (hsz.mobi)
+### Python template
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django / Flask / Scrapy
+*.log
+local_settings.py
+db.sqlite3
+instance/
+.webassets-cache
+.scrapy
+
+# Sphinx / docs build
+docs/_build/
+/site
+
+# PyBuilder / Jupyter / pyenv
+target/
+.ipynb_checkpoints
+.python-version
+
+# celery / SageMath
+celerybeat-schedule
+*.sage.py
+
+# Environments & secrets
+.env
+.env.*
+!.env.example
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.spyderproject
+.spyproject
+.ropeproject
+.idea
+*.xlsx
+.vscode
+.mypy_cache/
+.matplotlib/
+
+# Assistant local notes (optional keep out)
+CLAUDE.md
+.claude/*
+GEMINI.md
+
+### JetBrains remnant patterns (keep minimal)
+.idea/**/workspace.xml
+out/
+*.iws
+
+# Local example / test heavy outputs
+/test/SCEUA_*.csv
+/test/SCEUA_*
+/hydromodel/app/*.csv
+/test/test_data_camels_cc.py
+/hydromodel/example/*
+!/hydromodel/example/example
+hydromodel/example/example/*
+!/hydromodel/example/example/basins_lump_p_pe_q_*.npy
+!/hydromodel/example/example/data_info_*.json
+!/hydromodel/example/daily_flow_27071.txt
+!/hydromodel/example/daily_rainfall_27071.txt
+/data/*
+!/data/dhf_data.json
+outputs/
+result/
+result_old/
+
+# === Large local data: NEVER upload ===
+_portable_data/
+/_portable_data/
+hydrodata/
+/hydrodata/
+../hydrodata/
+
+# Archives & NetCDF caches (evaluate locally; see docs/local/github_public_repo.md)
+*.nc
+*.zip
+*.tar.xz
+*.tar.gz
+*.tmp
+*.zip.tmp
+
+# SpotPy / SCE-UA giant traces (keep small metrics csv via results allowlist)
+**/SCEUA_*.csv
+**/*_sceua.csv
+**/*_SCEUA.csv
+
+# Results: deny-by-default; allow figures, publications, small diagnostics only
+results/**
+!results/figures/
+!results/figures/**
+!results/publications/
+!results/publications/**
+!results/diagnostics/
+!results/diagnostics/*.md
+!results/diagnostics/*.csv
+!results/diagnostics/*.txt
+# Nested calibration dumps under diagnostics (rep budget runs, logs)
+results/diagnostics/rep_budget/
+results/diagnostics/*.log
+results/diagnostics/*.cmd

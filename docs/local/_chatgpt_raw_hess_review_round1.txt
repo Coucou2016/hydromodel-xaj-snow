@@ -1,0 +1,1009 @@
+﻿HESS-style referee report
+
+Overall recommendation: reconsider after major extension / reject-and-resubmit in its present pilot form.
+
+The two-basin experiment is internally useful and, importantly, the authors are already avoiding the weakest novelty claim (“first XAJ snow model”). Basin A provides a strong proof-of-concept signal: adding the minimal snow routine changes test NSE from −0.232 to 0.732 and KGE from 0.210 to 0.776, whereas the snow-free Basin B remains essentially unchanged. That is a good reason to proceed with the study.
+
+However, it is not yet enough for the paper that the Introduction currently wants to become. The central scientific contribution is explicitly multi-regional failure diagnosis, selective structural repair, and an applicability boundary. Those are exactly the analyses that remain pending. With only one snow basin and one negative control, the manuscript currently demonstrates a compelling case study, not a population-level diagnosis or an applicability boundary.
+
+The novelty bar is also higher than the draft currently assumes. Most importantly, Chen and Zhao (2025) have already coupled CemaNeige directly to XAJ and evaluated variants across 531 CAMELS catchments, reporting an increase in median KGE from 0.58 to 0.68 attributable to adding CemaNeige, with further gains from differentiable parameter learning. Thus, “multi-basin XAJ + CemaNeige” is no longer a defensible novelty claim by itself. 
+国家公共卫生应急管理中心
++1
+ Wu et al. (2025) likewise developed GXAJ-S and GXAJ-S-SF to represent snow and frozen-ground processes, while Tan et al. and Ju et al. had already developed snow/ice-enhanced XAJ variants. 
+HESS
++2
+MDPI
++2
+
+I nevertheless think a good HESS paper remains possible. The defensible contribution should be narrowed to:
+
+not whether a snow module improves XAJ, but when the absence of snow storage produces a systematic XAJ failure mode, whether a deliberately minimal snow intervention selectively repairs that failure without producing generic gains from added flexibility, and whether the transition can be quantified as an empirical applicability boundary.
+
+That is a substantially more interesting diagnostic question, but the large-sample and fairness experiments need to become the paper rather than future work.
+
+1. Major concerns
+Major Concern 1 — The principal claim is population-level, but the evidence is two basins
+
+The largest problem is not the performance of the pilot; it is the inferential scale.
+
+One basin with snow fraction ≈0.37 and one with ≈0 provide evidence for:
+
+“the proposed modification can produce a very large improvement in one snow-influenced basin”; and
+
+“it did not produce a detectable improvement in one snow-free basin.”
+
+They do not establish:
+
+that snow omission is a systematic XAJ failure mode;
+
+that ΔKGE or ΔNSE varies systematically with snow fraction;
+
+that there is an applicability boundary;
+
+that snow-free basins generally remain unaffected;
+
+or that snow fraction, rather than correlated climate/topographic characteristics, explains the contrast.
+
+Matching approximately on aridity and human-footprint index is helpful, but it is not a controlled experiment. The basins still differ in area and presumably in temperature regime, elevation, precipitation seasonality, soils, geology, vegetation, regulation, and forcing quality.
+
+The full paper needs a predefined stratified large-sample experiment, with enough basins spanning at least:
+
+essentially snow-free;
+
+weakly snow-influenced;
+
+moderately snow-influenced;
+
+strongly snow-dominated conditions.
+
+The strongest analysis would not simply bin basins. Model the paired improvement
+
+ΔKGE
+i
+	​
+
+=KGE
+Snow,i
+	​
+
+−KGE
+MZ,i
+	​
+
+
+and similarly ΔNSE as functions of snow fraction while accounting for major confounders such as aridity, mean temperature/elevation, precipitation seasonality, basin area and human influence. A GAM, robust regression, hierarchical model, or similarly interpretable approach would be sufficient; a complicated ML attribution model is not required.
+
+Santos et al. (2025) and Husic et al. (2025) make the broader point that large-sample diagnosis of model deficiencies and their hydroclimatic controls is itself already an active research direction. 
+HESS
++1
+ Therefore, the manuscript needs to demonstrate a specific XAJ snow-related falsification experiment, rather than claiming novelty from “large-sample diagnosis” alone.
+
+Required before HESS submission: the pending stratified analysis is central, not optional.
+
+Major Concern 2 — Chen & Zhao (2025) substantially narrows the novelty claim
+
+This is the closest prior work I found and should be treated prominently, not buried in Discussion.
+
+Chen and Zhao (2025), Advances in Water Science, DOI 10.14042/j.cnki.32.1309.2025.02.003, developed a differentiable XAJ coupled with CemaNeige and evaluated four configurations across 531 CAMELS catchments. Their reported median KGE rose from 0.58 to 0.68 when CemaNeige was included; differentiable/local and regional variants achieved still higher median values. 
+国家公共卫生应急管理中心
++1
+
+This means the manuscript should not say or imply:
+
+Previous XAJ-snow studies are regional, whereas we provide the first multi-regional XAJ+CemaNeige assessment.
+
+That claim is no longer sustainable.
+
+The distinction needs instead to be conceptual:
+
+Chen & Zhao: snow augmentation + differentiable parameter learning + large-sample predictive performance.
+
+Your proposed manuscript: failure localization + deliberately minimal structural intervention + negative controls + complexity/optimizer attribution + empirical applicability boundary.
+
+That difference could be real, but only after the pending experiments are performed.
+
+The Introduction also needs to position against:
+
+Tan et al. (2023), regional XAJ with a snowmelt runoff module, DOI 10.3390/w15193401. 
+MDPI
+
+Ju et al. (2024), distributed XAJ with degree-day treatment of ice/snow melt, Journal of Hydrology: Regional Studies, DOI 10.1016/j.ejrh.2023.101638. 
+科学直达
+
+Wu et al. (2025), GXAJ-S and GXAJ-S-SF, HESS, DOI 10.5194/hess-29-3703-2025. 
+HESS
+
+Ke et al. (2024), Xinanjiang-based streamflow framework including a snowmelt module, Water Resources Management, DOI 10.1007/s11269-024-03909-6. 
+IDEAS/RePEc
+
+Thus the manuscript's minimality is an experimental design choice, not a model-development novelty.
+
+Major Concern 3 — rep=800 does not yet establish a fair comparison between the 15- and 17-parameter models
+
+I agree with the authors' own caution here. “Both models received 800 SCE-UA repetitions/evaluations” is not by itself a fairness argument.
+
+There are two distinct issues:
+
+Optimization fairness. A 17-dimensional search can require a different effective budget from a 15-dimensional search. Depending on the specific SCE-UA implementation, dimensionality may also influence population construction and hence how much of a fixed budget is spent before convergence. Therefore equal nominal rep is not necessarily equal convergence.
+
+Structural-flexibility fairness. Even with complete convergence, XAJ-Snow has two additional calibrated degrees of freedom. A snow-free negative control helps test whether those extra parameters indiscriminately improve streamflow, but one control basin cannot rule this out generally.
+
+I would require a compact optimizer × parameter-freedom experiment. At minimum:
+
+Experiment	XAJ parameters	Snow parameters	Purpose
+MZ	optimize 15	absent	baseline
+Snow-freeze-XAJ	freeze at MZ optimum	optimize Kf, CTG	isolates snow intervention
+Snow-fixed	optimize 15	fixed/predefined Kf, CTG	tests structural addition without two locally optimized freedoms
+Snow-joint	optimize 15	optimize Kf, CTG	full proposed model
+
+The particularly valuable arm is freeze the non-snow parameters and calibrate only the snow coefficient(s). Premier et al. (2026) provides a relevant methodological precedent for testing snow-process parameters while holding the rest of a hydrological model calibration fixed. 
+HESS
+
+For optimization robustness, repeat at increasing budgets—for example 800, 1600 and 3200 or until an empirical plateau is visible—and use multiple independent seeds. The exact values can differ; what matters is showing that the sign and magnitude of ΔKGE are not a consequence of premature convergence.
+
+I would not demand that every production basin receive an enormous budget if a pilot convergence analysis demonstrates that 800 is adequate. But that evidence needs to exist.
+
+Major Concern 4 — The improvement is consistent with a snow-storage deficiency, but does not yet identify that mechanism
+
+The current Discussion comes too close to causal attribution.
+
+The contrast
+
+A improves dramatically, B does not
+
+is certainly consistent with the omitted-snow-storage hypothesis.
+
+It does not prove it.
+
+XAJ-Snow differs from XAJ-MZ in more than an internal storage equation: it explicitly consumes temperature information to partition and delay precipitation. Thus the comparison simultaneously changes:
+
+process structure;
+
+meteorological input use;
+
+temporal precipitation-to-runoff transformation;
+
+two calibrated parameters.
+
+Moreover, the manuscript uses Caravan forcing, and Clerc-Schwarzenbach et al. showed that differences between Caravan and original CAMELS meteorological forcing can substantially affect model calibration, with precipitation differences responsible for much of the performance degradation and large differences also occurring in PET. 
+HESS
+
+The striking correlation increase in Basin A—from 0.255 to 0.903—is strong evidence that the temporal correspondence changes substantially, but it cannot by itself demonstrate that internal SWE dynamics are physically correct.
+
+The manuscript should therefore consistently say:
+
+“consistent with an omitted snow-storage failure mode”
+
+rather than:
+
+“demonstrates/proves that the baseline failure is caused by the absence of snow storage.”
+
+A process-state check is needed. ERA5-Land SWE is useful, but—as you correctly state—it should be called a consistency evaluation, not independent validation. Ideally include remotely sensed snow-cover area or another observational product for at least a subset of suitable basins. Ruelland's work is relevant here because it explicitly examines how snow information can constrain snow-model behaviour beyond streamflow-only calibration. 
+hydroGR
+
+Major Concern 5 — Kf≈3.50 and CTG≈0.116 cannot yet be described as physically validated or even strongly identified
+
+There are three different claims that should not be conflated:
+
+numerically interior to the imposed bounds;
+
+consistent with common CemaNeige parameter ranges;
+
+physically identified/validated.
+
+You have evidence for (1), and some support for (2), but not for (3).
+
+INRAE describes CemaNeige's CTG as a dimensionless thermal-state weighting coefficient bounded between 0 and 1 and Kf as the degree-day melt coefficient; documentation and associated material describe typical Kf values of roughly 2–6 mm °C⁻¹ d⁻¹. Thus Kf≈3.50 is conventionally plausible. 
+INRAE
++1
+
+However:
+
+your routine is explicitly CemaNeige-style, not CemaNeige-identical;
+
+it is single-band;
+
+the equations differ from the standard airGR implementation;
+
+Kf and CTG are calibrated only against runoff;
+
+snow-state validation is absent.
+
+Accordingly I recommend:
+
+“The calibrated Kf was within a conventional CemaNeige degree-day range and both parameters were interior to their imposed bounds. We therefore found no obvious boundary-seeking behaviour, but we do not interpret these runoff-calibrated effective parameters as independent evidence of physically correct snow states.”
+
+That is defensible.
+
+Do not write:
+
+“The physically reasonable Kf and CTG confirm the snow mechanism.”
+
+They do not.
+
+Major Concern 6 — The “CemaNeige-style” routine is not yet reproducible from the Methods description
+
+Section 2.3 needs to become sufficiently explicit that another group can implement exactly the same update.
+
+At present I would need clarification on all of the following:
+
+exact snowfall/rainfall partition for 0<T<1
+∘
+C;
+
+whether T is mean, minimum, maximum or another daily statistic;
+
+time-step and units of Kf;
+
+precise sequence: partition → SWE addition → thermal state → melt → routing;
+
+initial SWE;
+
+initial G;
+
+exact definition and units of G
+thr
+	​
+
+;
+
+how G
+ratio
+	​
+
+ is calculated when G
+thr
+	​
+
+=0;
+
+whether G
+thr
+	​
+
+ varies by basin;
+
+whether it is derived from a climatology;
+
+critically, whether calculation of G
+thr
+	​
+
+ ever uses test-period information;
+
+exact numerical criterion for “isothermal” (G == 0, tolerance, etc.);
+
+whether melt may occur on the same day as new snowfall;
+
+treatment of negative/zero precipitation;
+
+handling of missing temperature;
+
+whether rain + melt are simply summed and supplied to XAJ as effective liquid input;
+
+whether PET is modified by snow cover;
+
+whether interception or evaporation from the snowpack is absent;
+
+how warm-up states are initialized.
+
+Because the implementation is deliberately non-standard, I would add a small table:
+
+Standard CemaNeige component | implementation here | reason for deviation.
+
+That would prevent reviewers from assuming equivalence to Valéry et al.'s routine. CemaNeige itself is conventionally applied with elevation discretization, whereas the present implementation is deliberately single-band. 
+hydroGR
++1
+
+One particularly important issue is G
+thr
+	​
+
+. If this threshold is estimated from long-term snowfall statistics, the authors must guarantee that test-period information is not used to derive it.
+
+Major Concern 7 — The applicability boundary needs to be defined statistically, not visually
+
+“Snow fraction ≈0.37 works; zero does not” does not imply a threshold.
+
+Before running the large-sample experiment, define:
+
+what exactly “snow fraction” means;
+
+numerator and denominator;
+
+data source;
+
+period used;
+
+whether it is computed from the same Caravan temperature/precipitation data;
+
+whether any test-period information enters the predictor;
+
+whether it is basin mean or elevation-weighted;
+
+whether the intended boundary refers to snowfall fraction, snow-cover persistence, or another cryospheric index.
+
+Then estimate the relationship between snow influence and Δskill with uncertainty.
+
+A useful end product would be something like:
+
+P(ΔKGE>0.05∣f
+snow
+	​
+
+,X)
+
+or an estimated partial-effect curve rather than an arbitrarily declared threshold.
+
+If a threshold emerges, provide confidence intervals and sensitivity to:
+
+metric;
+
+optimization budget;
+
+forcing product;
+
+basin subset.
+
+The paper becomes considerably stronger if it concludes:
+
+“the probability/magnitude of structural benefit increases continuously beyond this snow regime”
+
+rather than claiming an artificially sharp universal threshold.
+
+Major Concern 8 — Basin selection and negative controls must be protected against post hoc selection
+
+You state that A and B were selected a priori. That is important. The manuscript should document the rule explicitly.
+
+For example:
+
+“Before any XAJ-Snow calibration was performed, Basin A was selected because … and Basin B because ….”
+
+For the large-sample study, inclusion/exclusion and snow strata should likewise be fixed before inspecting ΔKGE distributions.
+
+The negative-control concept is one of the manuscript's best methodological ideas. Preserve it, but elevate it from one control catchment to a control population.
+
+The key inferential result should eventually be something like:
+
+median/CI Δskill near zero in near-zero-snow basins;
+
+progressively positive Δskill in increasingly snow-influenced groups;
+
+no large systematic degradation in controls;
+
+exceptions discussed rather than hidden.
+
+That is much more persuasive than selecting a good snow case and a good flat control after the fact.
+
+2. Conclusions that currently exceed the evidence
+
+I would draw the boundaries as follows.
+
+Candidate conclusion	Current status	Acceptable wording now
+XAJ-MZ fails because it lacks snow storage	Too strong	Basin A behaviour is consistent with a missing snow-storage mechanism
+XAJ-Snow repairs snow-dominated XAJ failure	Too general from n=1	XAJ-Snow strongly repairs the pilot snow basin
+The intervention is selective	Promising, not established	Selectivity is observed in the A/B pilot contrast
+Snow-free basins do not benefit	Unsupported population claim	No benefit was observed in Basin B
+Added parameter freedom is not responsible	Unsupported	Basin B provides one negative-control check, but optimizer/freedom attribution remains pending
+Kf≈3.50 is plausible	Reasonable	It lies within a conventional CemaNeige melt-factor range 
+INRAE
+
+CTG≈0.116 is physically reasonable	Too strong	It is interior to the admissible 0–1 interval
+Interior Kf/CTG validate snow physics	Unsupported	Interior optima show only absence of obvious bound-seeking
+There is an XAJ applicability boundary	Unsupported	The pilot motivates estimating one
+ERA5-Land SWE validates snow states	Incorrect framing	It provides external/process consistency evidence, not independent validation
+rep=800 is a fair baseline	Not demonstrated	It is the common pilot budget; convergence/fairness remains to be established
+Similar human footprint isolates snow	Too strong	Similar HFT reduces one obvious contrast but does not control all confounders
+Unit tests validate the model	Incorrect	They test implementation behaviour for covered cases; they do not validate hydrological realism
+
+Your proposed Conclusion—“engineering GO for the stratified large-sample experiment”—is appropriate as an internal project decision. It is not yet the scientific conclusion of a HESS research article.
+
+3. Introduction: revised gap and distinction from prior XAJ-snow work
+
+The current gap should be rewritten substantially because of Chen & Zhao (2025).
+
+A defensible opening logic is:
+
+Existing studies have already demonstrated several ways to incorporate snow and ice processes into Xin'anjiang-family models, ranging from regional snowmelt extensions to distributed and gridded formulations and, recently, a CemaNeige-coupled differentiable XAJ evaluated over 531 CAMELS catchments. The unresolved question is therefore not whether XAJ can be augmented with snow physics. Rather, it is where omission of snow storage becomes a systematic limitation of the baseline model, whether a deliberately minimal snow intervention selectively repairs that limitation without yielding generic gains from additional calibration freedom, and whether the transition can be quantified as an empirical applicability boundary.
+
+That statement is consistent with the retrieved literature. 
+MDPI
++3
+国家公共卫生应急管理中心
++3
+HESS
++3
+
+Then distinguish specific priors:
+
+Tan et al. (2023): shows that an XAJ snowmelt extension can improve flood simulation in a snow-influenced regional application. Your novelty is not another snowmelt-XAJ coupling. 
+MDPI
+
+Ju et al. (2024): develops a distributed Xin'anjiang treatment of ice and snow melt in the Bahe River basin. Again, this establishes prior process coupling. 
+科学直达
+
+Wu et al. (2025): explicitly extends gridded XAJ with snow and then snow + seasonally frozen ground. The distinction should be that your snow routine is intentionally stripped down to serve as a structural diagnostic intervention, not that it is more physically complete. 
+HESS
+
+Chen & Zhao (2025): is the critical comparison. Their published abstract already contains both XAJ+CemaNeige and a 531-catchment CAMELS experiment. The distinction therefore has to be inferential objective: their work foregrounds differentiable parameter learning and predictive performance; yours must foreground localization of baseline structural failure, negative controls, added-flexibility falsification and applicability boundaries. 
+Sun Yat-Sen University
+
+Husic/Santos: mean that “large-sample diagnosis of hydrological model weaknesses” is also insufficient as a novelty claim by itself. 
+HESS
++1
+
+I would therefore formulate the RQs approximately as:
+
+RQ1. How does out-of-sample performance of unmodified XAJ vary along a pre-defined gradient of snow influence after accounting for major hydroclimatic covariates?
+
+RQ2. Does adding a minimal snow-storage/melt routine produce a selective improvement that increases with snow influence while remaining approximately neutral in negative-control, snow-free basins, and is that conclusion robust to optimization budget and parameter-freedom controls?
+
+RQ3. Can the transition from negligible to material snow-module benefit be estimated with uncertainty, and are the inferred improvements consistent with independent or quasi-independent snow-state information?
+
+These RQs would make a genuine Methods/diagnostic paper.
+
+4. Methods reproducibility gaps
+
+The Methods need considerably more specification even before the large-sample component is added.
+
+Data and basin definition
+
+State exact:
+
+Caravan release/version;
+
+basin IDs, not merely A/B;
+
+original CAMELS collection/country;
+
+outlet coordinates if appropriate;
+
+exact forcing product within Caravan;
+
+streamflow units and whether converted to mm d⁻¹;
+
+temperature variable used;
+
+FAO-PM PET implementation and required meteorological inputs;
+
+missing-data rules;
+
+precipitation/temperature corrections, if any;
+
+snow-fraction source and exact equation.
+
+The Caravan forcing caveat belongs explicitly in Methods/limitations, not only in Discussion, because forcing choice can materially alter hydrological calibration results. 
+HESS
+
+Time split
+
+Explain why there is a decade between calibration ending in September 1995 and testing beginning in October 2005.
+
+If intentional, say whether this is designed as:
+
+temporal transfer,
+
+climatic contrast,
+
+or simply common-data availability.
+
+Also state exactly where the 365-day warm-up comes from for calibration and test.
+
+For a snow-storage model, I would add a warm-up sensitivity check. One year may be adequate, but the claim should be empirical rather than assumed.
+
+XAJ-MZ
+
+Provide:
+
+all 15 parameter names;
+
+meanings;
+
+units;
+
+bounds;
+
+equations or definitive implementation reference;
+
+initial stores;
+
+routing scheme;
+
+numerical time step.
+
+Calling precipitation “rainfall-equivalent” should be accompanied by a clear statement that all precipitation immediately enters the liquid-water XAJ pathway in the baseline.
+
+XAJ-Snow
+
+The full update needs equations, not pseudocode fragments.
+
+In particular, explicitly define phase partition. For example, if linear between thresholds, state it mathematically.
+
+Also define G
+thr
+	​
+
+, which is currently the largest missing term in the provided Methods.
+
+Calibration
+
+“SCE-UA, rep=800, ngs=15” is not enough.
+
+Specify:
+
+software/package and version or own implementation;
+
+meaning of rep;
+
+population construction;
+
+stopping rules;
+
+number of objective-function calls actually completed;
+
+initialization;
+
+random seed(s);
+
+number of independent optimization starts;
+
+whether failed parameter combinations occur and how handled.
+
+Also give the exact KGE definition. “KGE” is ambiguous unless the formulation is stated.
+
+Performance statistics
+
+Define:
+
+NSE;
+
+KGE version;
+
+RMSE and units;
+
+“Bias”.
+
+The reported Bias values such as 0.2776 and −0.3755 especially require definition. If this is a normalized signed bias, name it accordingly; if it is a KGE bias component, the values as presented require explanation.
+
+Because the mechanism is mainly temporal snow storage, add diagnostics targeted to that mechanism:
+
+spring runoff volume bias;
+
+peak timing error;
+
+seasonal center-of-mass timing;
+
+perhaps snow-season KGE/NSE;
+
+KGE components rather than only total KGE.
+
+Reproducibility package
+
+For a HESS paper I would expect:
+
+code archive;
+
+environment/dependencies;
+
+exact configs;
+
+seeds;
+
+basin list;
+
+train/test dates;
+
+parameter tables;
+
+unit tests;
+
+outputs required to recreate tables/figures.
+
+“8/8 unit tests passed” is useful software QA, but report what those eight tests cover.
+
+5. Results and Discussion: main logic breaks
+Logic break A: “similar HFT + snow difference ⇒ snow causes the performance difference”
+
+No. Similar HFT removes one possible gross contrast. It does not make the basins a matched causal pair.
+
+Rewrite as:
+
+“The contrast is consistent with the snow-omission hypothesis and motivates a population-level test; it does not uniquely attribute the difference to snow.”
+
+Logic break B: “Basin B is flat ⇒ 17-vs-15 flexibility concern is resolved”
+
+Too strong.
+
+Basin B demonstrates that the extra snow parameters do not automatically improve this basin. That is useful and should remain.
+
+But parameter freedom needs a population of controls and the factorial/frozen-parameter tests above.
+
+Logic break C: “interior Kf and CTG ⇒ physically reasonable process”
+
+Interior calibration tells you the optimizer is not simply hitting your bounds. That is different from physical identifiability.
+
+Kf≈3.50 has a useful contextual comparison with conventional CemaNeige ranges; CTG≈0.116 is simply admissible. 
+INRAE
++1
+
+Logic break D: hydrograph improvement ⇒ correct SWE
+
+The spring hydrograph evidence shows that including the T-dependent snow routine greatly improves temporal runoff behaviour. It does not establish that accumulated SWE or melt flux is correct.
+
+Keep streamflow and process-state claims separated.
+
+Logic break E: “snow fraction boundary” before estimating a boundary
+
+The term “applicability boundary” should be treated as a hypothesis/output of the large-sample experiment, not as something already demonstrated by the pilot.
+
+Logic break F: forcing caveat is currently too passive
+
+Given the magnitude of Basin A's baseline failure, forcing deserves an explicit sensitivity analysis if feasible. Clerc-Schwarzenbach et al. show that Caravan forcing can materially change calibration relative to original CAMELS forcing. 
+HESS
+
+At minimum, for Basin A and a representative subset of the large sample, compare against the original CAMELS forcing where available. This does not need to become a second paper. It can be a robustness check.
+
+Logic break G: the paper risks arguing from “poor baseline” to “structural deficiency”
+
+Baseline NSE −0.232 is extremely poor. That makes the gain impressive but also makes confounding more important.
+
+The authors should establish that the failure is not primarily:
+
+optimizer failure;
+
+forcing defect;
+
+unit/data problem;
+
+an idiosyncratic basin;
+
+or mis-specified PET.
+
+The proposed large-sample distribution solves much of this automatically.
+
+6. Figure-by-figure assessment
+Figure 1 — grouped NSE/KGE bars
+
+What it supports: the pilot paired contrast is visually very clear.
+
+What it does not support: population-level selective recovery or an applicability boundary.
+
+For the final paper, this figure should probably be replaced or expanded by the large-sample result:
+
+x-axis: snow fraction;
+
+y-axis: ΔKGE or ΔNSE;
+
+individual basins;
+
+smoothed/partial relationship;
+
+uncertainty;
+
+indication of A and B as illustrative cases.
+
+A second panel with stratified Δ distributions would be stronger than the current four bars.
+
+Pilot verdict: keep for internal report; unlikely to deserve a standalone main-text figure in final HESS version.
+
+Figure 2 — full Basin A hydrograph
+
+Supports: substantial temporal improvement; useful evidence that the aggregate metric change corresponds to recognizable hydrograph behaviour.
+
+Potential problem: ten years compressed into one panel can become visually uninformative.
+
+I would retain a full-period panel in the supplement and use either:
+
+representative water years, or
+
+seasonal climatology + representative events
+
+in the main paper.
+
+If precipitation/temperature are added, be careful not to overload the figure.
+
+Figure 3 — spring 2010–2012 zoom
+
+This is probably your strongest mechanism-motivated illustration, provided those years are not selected only because they look best.
+
+It supports:
+
+improved runoff timing in snow-season conditions;
+
+different multi-peak behaviour.
+
+It does not separate:
+
+temperature information,
+
+snow storage,
+
+forcing quality,
+
+parameter compensation.
+
+Your own caveat is exactly right.
+
+For the final paper, add either:
+
+simulated SWE/melt beneath the hydrograph;
+
+observed/reanalysis SWE or snow-cover consistency;
+
+or a corresponding population seasonal-timing diagnostic.
+
+Otherwise the figure remains illustrative rather than mechanistic.
+
+Figure 4 — Basin B hydrograph
+
+This is conceptually important because it visualizes the negative control.
+
+Keep it if the paper continues to use A/B as illustrative case studies.
+
+However, once you have dozens/hundreds of controls, the stronger figure is a distribution of Δskill among near-zero-snow basins. Figure 4 could then move to the supplement.
+
+Figure 5 — observed vs simulated scatter
+
+This figure supports:
+
+amplitude correspondence;
+
+systematic spread/bias;
+
+closeness to the 1:1 relationship.
+
+It cannot support timing, because the temporal ordering is removed.
+
+Therefore remove any phrase such as:
+
+“Fig. 5 confirms improved timing.”
+
+It does not.
+
+Given that correlation, bias and RMSE are already tabulated, I regard this as the least valuable of the five pilot figures. I would either move it to Supplement or replace it with something mechanistically closer to the central question.
+
+Figures that are actually missing for the final HESS paper
+
+I would regard four analyses as close to essential:
+
+Population Δskill vs snow influence
+This is the paper's principal figure.
+
+Stratified negative-control/selectivity figure
+Distribution of ΔKGE/ΔNSE across snow strata, with uncertainty.
+
+Optimizer/parameter-freedom robustness figure
+Budget convergence + frozen-XAJ/fixed-snow/joint-calibration factorial.
+
+Snow-state consistency figure
+SWE/SCA timing/seasonality for a representative subset or pooled statistic.
+
+An applicability-boundary figure can be incorporated into Fig. 1 rather than becoming a fifth new analysis.
+
+A geographical basin map is useful but scientifically secondary.
+
+7. Concrete rewrite suggestions
+Abstract
+
+I would not let the current two-basin draft end with a generalized snow-region conclusion.
+
+For the pilot version, use something close to:
+
+“In a snow-influenced pilot basin, the snow-enabled formulation increased out-of-sample NSE from −0.232 to 0.732 and KGE from 0.210 to 0.776, whereas changes in a snow-free negative-control basin were negligible. The paired result is consistent with, but does not establish, an omitted-snow-storage failure mode in XAJ-MZ. It motivates a stratified large-sample test of failure localization, parameter-freedom robustness, snow-state consistency, and the existence of an empirical applicability boundary.”
+
+For the eventual full paper, the abstract should lead with the population result, not Basin A.
+
+Introduction novelty paragraph
+
+Recommended conceptual wording:
+
+“Previous studies have already demonstrated that snow and ice processes can be incorporated into Xin'anjiang-family models, including regional snowmelt extensions, distributed ice–snow formulations, gridded snow/frozen-ground variants, and recently a differentiable XAJ–CemaNeige formulation evaluated across 531 CAMELS catchments. Accordingly, our objective is not to introduce snow modelling to XAJ. We instead ask a diagnostic question: where does omission of snow storage become a material limitation of the baseline XAJ model, can a deliberately minimal snow intervention selectively repair this failure without generating generic gains from additional parameter freedom, and can the resulting transition be expressed as an empirical applicability boundary?”
+
+That paragraph would survive the recent literature much better. 
+MDPI
++3
+Sun Yat-Sen University
++3
+HESS
++3
+
+Methods: model description
+
+Replace “CemaNeige model” with:
+
+“a single-band, CemaNeige-style degree-day snow accounting routine”
+
+throughout unless you actually implement standard CemaNeige.
+
+Then explicitly state:
+
+“The formulation preserves the two conceptual roles of CemaNeige's CTG and Kf parameters but is not intended as a numerical reproduction of the airGR implementation.”
+
+This distinction matters because standard CemaNeige includes additional implementation choices including elevation handling. 
+hydroGR
++1
+
+Results: pilot contrast
+
+Avoid:
+
+“The negative control demonstrates that the snow module does not improve performance simply because it adds two parameters.”
+
+Use:
+
+“The near-zero change in Basin B provides an initial negative-control check against an indiscriminate benefit from added model flexibility. Because this inference is based on one control basin, parameter-freedom and optimization effects are evaluated explicitly in the large-sample/factorial experiments.”
+
+Discussion: structural interpretation
+
+Avoid:
+
+“These results demonstrate that XAJ failure in Basin A is caused by its inability to store snowfall.”
+
+Use:
+
+“The concentration of the improvement in the snow-influenced basin, together with the marked recovery of hydrograph correlation and spring timing, is consistent with the hypothesis that immediate treatment of all precipitation as liquid contributes materially to baseline error. The two-basin experiment cannot uniquely separate that mechanism from differences in temperature use, meteorological forcing, or compensating XAJ parameters.”
+
+That wording is much harder for a referee to attack.
+
+Discussion: parameters
+
+Recommended wording:
+
+“The optimized Kf of 3.50 mm °C⁻¹ d⁻¹ lies within a conventional range reported for CemaNeige-type degree-day factors, while CTG=0.116 is interior to its prescribed [0,1] interval. These observations indicate no obvious bound-seeking solution, but we treat both quantities as runoff-calibrated effective parameters rather than physically validated snow properties.”
+
+The first sentence can be supported by INRAE documentation. 
+INRAE
++1
+
+Discussion: Caravan forcing
+
+I would sharpen this limitation:
+
+“Because Caravan replaces or standardizes meteorological forcing relative to several source CAMELS data sets, baseline model failure cannot automatically be attributed to model structure. Clerc-Schwarzenbach et al. (2024) demonstrated substantial calibration sensitivity to these forcing differences. We therefore treat forcing choice as an explicit robustness factor rather than assuming that Caravan reproduces the original CAMELS forcing.”
+
+This is directly supported by the HESS paper. 
+HESS
+
+Conclusions
+
+For the current two-basin pilot, the strongest legitimate conclusion is:
+
+“The pilot establishes feasibility and justifies the planned large-sample experiment, but it does not establish a general snow-related applicability boundary for XAJ-MZ. Such a claim requires population-level selectivity, optimization/freedom robustness, and snow-state consistency analyses.”
+
+After those analyses are complete, the final conclusion should answer three quantitative questions:
+
+Where does baseline XAJ skill deteriorate?
+
+Where does the minimal snow intervention recover skill?
+
+How uncertain is the inferred transition?
+
+That is the paper.
+
+8. Recent literature search: papers that most weaken or redefine novelty
+
+The following are the real, verified recent works I would add/reassess. I am listing DOI, journal and year only where verified.
+
+Chen, Z. & Zhao, T. — “Incorporating snow accumulation and melting into the Xin'anjiang model using differentiable parameter learning.”
+Advances in Water Science, 2025.
+DOI: 10.14042/j.cnki.32.1309.2025.02.003.
+Novelty impact: very high. XAJ + CemaNeige + 531 CAMELS catchments directly removes any broad “first multi-regional XAJ-CemaNeige” claim. 
+国家公共卫生应急管理中心
++1
+
+Wu et al. — “Predicting snow cover and frozen ground impacts on large basin runoff: developing appropriate model complexities.”
+Hydrology and Earth System Sciences, 2025, 29, 3703–3725.
+DOI: 10.5194/hess-29-3703-2025.
+Novelty impact: high. GXAJ-S and GXAJ-S-SF already explicitly address snow and frozen-ground extensions of gridded XAJ. 
+HESS
+
+Ke et al. — Xinanjiang-based interval forecasting model for daily streamflow considering climate-change impacts.
+Water Resources Management, 2024, 38.
+DOI: 10.1007/s11269-024-03909-6.
+Novelty impact: moderate. Includes a snowmelt component coupled to XAJ; different objective, but reinforces that snow augmentation itself is established. 
+IDEAS/RePEc
+
+Ju et al. — “Application of distributed Xin'anjiang model of melting ice and snow in Bahe River basin.”
+Journal of Hydrology: Regional Studies, 2024, 51, 101638.
+DOI: 10.1016/j.ejrh.2023.101638.
+Novelty impact: moderate–high. Distributed XAJ with degree-day ice/snow treatment. 
+科学直达
+
+Premier et al. — “Assessing the impact of Earth Observation data-driven calibration of the melting coefficient on the LISFLOOD snow module.”
+Hydrology and Earth System Sciences, 2026, 30, 1189–1220.
+DOI: 10.5194/hess-30-1189-2026.
+Novelty impact: methodological rather than XAJ-specific. Particularly relevant to your planned “freeze other parameters / isolate snow process” fairness experiment and to snow-state calibration. 
+HESS
+
+Husic et al. — “Interrogating process deficiencies in large-scale hydrologic models with interpretable machine learning.”
+Hydrology and Earth System Sciences, 2025, 29, 4457–4472.
+DOI: 10.5194/hess-29-4457-2025.
+Novelty impact: moderate. It means generic “large-sample diagnosis of process deficiencies” is not novel; your contribution must be the particular falsifiable XAJ snow experiment. 
+HESS
+
+Santos et al. — “Lack of robustness of hydrological models: a large-sample diagnosis and an attempt to identify hydrological and climatic drivers.”
+Hydrology and Earth System Sciences, 2025, 29, 683–700.
+DOI: 10.5194/hess-29-683-2025.
+Novelty impact: moderate. Closely relevant to the architecture of “diagnosis → drivers → model limitations.” 
+HESS
+
+I would still cite Tan et al. (2023), although it lies just outside the requested two-year window, because it is direct XAJ prior art: Water, DOI 10.3390/w15193401. 
+MDPI
+
+9. Reference audit from the draft
+
+The DOI set you supplied is largely sound. Two bibliographic points merit correction or explicit attention.
+
+Ouyang et al. DOI 10.1016/j.jhydrol.2024.132471 is real, but the final Journal of Hydrology publication is listed as 2025, not 2024. The DOI string containing “2024” should not determine the citation year. 
+科学直达
+
+Ju et al. DOI 10.1016/j.ejrh.2023.101638 is likewise real, but the article belongs to Journal of Hydrology: Regional Studies volume 51, 2024. Your “Ju 2024” usage is therefore appropriate. 
+科学直达
+
+For Valéry et al., the complete Journal of Hydrology DOIs are:
+
+Part 1: 10.1016/j.jhydrol.2014.04.059
+
+Part 2, CemaNeige sensitivity analysis: 10.1016/j.jhydrol.2014.04.058. 
+RDocumentation
++1
+
+I found no basis in this search to reject the other DOI strings you supplied.
+
+10. Priority order before writing more manuscript text
+
+If I were handling this as an external HESS review, I would rank the remaining work:
+
+P0 — indispensable
+
+Run the stratified large-sample population.
+
+Establish ΔKGE/ΔNSE versus snow influence.
+
+Build a population of negative controls.
+
+Run optimizer-budget robustness.
+
+Run at least the frozen-XAJ vs joint-calibration parameter-freedom experiment.
+
+Define and estimate the applicability boundary with uncertainty.
+
+Add snow-state consistency for a representative subset.
+
+Reframe novelty around Chen & Zhao (2025).
+
+P1 — strongly desirable
+
+Original-CAMELS-vs-Caravan forcing sensitivity for a strategically chosen subset.
+
+Seasonal timing/volume metrics.
+
+Warm-up sensitivity for snow storage.
+
+Attribute Δskill to snow fraction plus major basin covariates.
+
+Explicit parameter-identifiability/sensitivity analysis for Kf and CTG.
+
+P2 — manuscript polish after P0
+
+Reorganize the figures.
+
+Rewrite Abstract/Introduction.
+
+Expand exact snow-module equations and reproducibility information.
+
+Move scatter plots and some illustrative hydrographs to Supplement if necessary.
+
+The key point is that I would not spend substantial effort polishing the current two-basin Results section yet. The large-sample result can fundamentally change the paper's narrative.
+
+Referee bottom line
+
+The pilot passes the engineering go/no-go test: the A/B contrast is strong enough to justify the next stage. It does not yet pass the HESS evidentiary threshold for the manuscript's intended contribution.
+
+The most important novelty correction from the web search is Chen & Zhao (2025). After that paper, the manuscript cannot be sold as “XAJ + CemaNeige at large sample.” 
+国家公共卫生应急管理中心
+ The viable HESS contribution is considerably more specific:
+
+Use a minimally altered XAJ as a controlled structural experiment to identify where omission of snow storage becomes consequential, falsify indiscriminate complexity gains with snow-free controls and parameter-freedom tests, and quantify the regime in which the intervention is warranted.
+
+If the planned large-sample experiment produces a monotonic or otherwise interpretable snow-dependence of Δskill, with controls remaining approximately neutral and the result surviving optimization/freedom checks, I would regard that as a substantially stronger and more defensible HESS paper than a conventional “improved XAJ-Snow” manuscript.

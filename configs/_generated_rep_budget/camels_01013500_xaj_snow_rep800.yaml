@@ -1,0 +1,46 @@
+data:
+  dataset: caravan
+  path: null
+  basin_ids:
+  - camels_01013500
+  warmup_length: 365
+  variables:
+  - precipitation
+  - potential_evapotranspiration
+  - streamflow
+  - temperature_mean
+  datasource_kwargs:
+    region: US
+  train_period:
+  - '1985-10-01'
+  - '1995-09-30'
+  test_period:
+  - '2005-10-01'
+  - '2014-09-30'
+  output_dir: D:/Projects/hydromodel-0.3.2/hydromodel-0.3.2/results/diagnostics/rep_budget/camels_01013500_xaj_snow_rep800
+model:
+  name: xaj_snow
+  params:
+    source_type: sources
+    source_book: HF
+    kernel_size: 15
+  output_variable: qsim
+training:
+  algorithm: SCE_UA
+  SCE_UA:
+    rep: 800
+    ngs: 15
+    kstop: 40
+    peps: 0.1
+    pcento: 0.1
+    random_seed: 1234
+  loss: KGE
+  save_config: true
+evaluation:
+  metrics:
+  - NSE
+  - KGE
+  - RMSE
+  - PBIAS
+  save_results: true
+  plot_results: false

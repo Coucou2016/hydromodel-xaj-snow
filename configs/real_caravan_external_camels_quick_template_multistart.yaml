@@ -1,0 +1,39 @@
+data:
+  dataset: "caravan"
+  path: null
+  basin_ids: ["REPLACE_WITH_CARAVAN_BASIN_ID"]
+  warmup_length: 365
+  variables: ["precipitation", "potential_evapotranspiration", "streamflow"]
+  datasource_kwargs:
+    region: "US"
+  train_period: ["1985-10-01", "1995-09-30"]
+  test_period: ["2005-10-01", "2014-09-30"]
+  output_dir: "results/multi_basin_quick_diag/REPLACE_WITH_CARAVAN_BASIN_ID"
+
+model:
+  name: "xaj_mz"
+  params:
+    source_type: "sources"
+    source_book: "HF"
+    kernel_size: 15
+  output_variable: "qsim"
+
+training:
+  algorithm: "scipy"
+  scipy:
+    method: "L-BFGS-B"
+    max_iterations: 60
+    ftol: 1e-6
+    gtol: 1e-5
+    # NEW: multi-start local optimization for robustness
+    n_starts: 6
+    init_strategy: "random"  # random | jitter
+    seed: 42
+  loss: "NSE"
+  save_config: true
+
+evaluation:
+  metrics: ["NSE", "KGE", "RMSE", "PBIAS"]
+  save_results: true
+  plot_results: false
+

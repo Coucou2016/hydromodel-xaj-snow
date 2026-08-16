@@ -1,0 +1,1335 @@
+请务必使用【网页搜索】工具联网检索，禁止臆造 DOI/文献。每条引用须给出：完整题名、作者、期刊、年份、DOI、一手链接（出版社/Crossref）。不确定就标【未核实】。  === CONTEXT 1/1：XAJ-Snow 论文写作与文献（脱敏）END OF CONTEXT 后回答四问 ===  【研究主线】 - 创新：XAJ-Snow = CemaNeige-style 度日融雪（集总单高程带）+ 新安江 XAJ-MZ；数据 Caravan 多区域大样本。 - go/no-go（真实 medium：SCE-UA+KGE，rep=800；train 1985–1995，test 2005–2014，warmup=365）：   - 雪区流域 A（frac_snow≈0.37）：XAJ-MZ NSE=-0.232 → XAJ-Snow NSE=0.732（Δ≈+0.96）   - 无雪负对照流域 B（frac_snow≈0）：0.711 → 0.704（几乎不变）   - 最优雪参：Kf≈3.50 mm/°C/day，CTG≈0.116（未贴边） - 实现诚实边界：非 airGR 严格复现；Ts=0/Tr=1；单带；论文写 CemaNeige-style / single-band。 - 上游相关：dXAJ/dXAJnn（可微 XAJ，JoH，doi:10.1016/j.jhydrol.2024.132471，仅约8 CAMELS+5三峡）；含水库大陆尺度 LSTM（JoH，doi:10.1016/j.jhydrol.2021.126455）。 - 三个写作缺口：①全球多区域大样本 XAJ 评估空白；②dXAJ 未分离“优化机制 vs 参数共享”；③寒区/融雪流域常被回避。 - 数据：Caravan 约1.6万流域；NC 含 temperature 与 snow_depth_water_equivalent（可做 SWE 独立验证）；属性含 frac_snow、dor、hft、aridity。 - 目标期刊倾向：HESS 或 Journal of Hydrology。图由另一工作流产出，命名约定 results/figures/。  【请联网完成并分节回答】 1) 文献调研：近年（优先2018–2026）大样本水文建模、概念模型融雪扩展、XAJ/CemaNeige、模型适用性回归的代表作；再给出3–5篇可作为“写作架构模板”的论文（优先 HESS/JoH/WRR/Nature子刊），并说明各自结构套路（引言如何设缺口、方法如何铺大样本协议、结果图叙事、讨论如何界定适用边界）。每条必须有 DOI。 2) 为本主线选定可模仿框架：给一份完整论文 outline（各节要点、字数量级、每张图对应论点、贡献声明写法），倾向 HESS 或 JoH。 3) 创新点打磨：把“XAJ失效诊断+融雪扩展+全球适用性边界+优化机制/参数共享分离”提炼成2–3条清晰、可辩护、与 dXAJ 区分度高的贡献声明。 4) 审稿风险与应对：基线是否调好(rep敏感性)、单站到大样本外推、SWE验证说服力、17vs15参数自由度、名义CemaNeige≠实现等。  规则：先搜索再写；引用失败则删；不要编造未发表结果；不要要求上传文件。 === END OF CONTEXT ===
+展开
+思考了 16m 21s
+
+检索后的判断比原先更明确：这篇论文最有竞争力的方向，不是“给 XAJ 加一个融雪模块”，而是把它写成一篇“大样本结构失效诊断 + 最小结构修正 + 负对照 + 适用性边界 + 机制排除”的论文。原因是我核实到至少三条直接先例：2023 年已经有 XAJ + snowmelt + SCE-UA，2024 年已有 distributed degree-day DD-XAJ，2025 年又有 GXAJ + snow + frozen-ground。因此，“首次 XAJ-Snow”“首次 degree-day XAJ”都不能再作为创新声明。
+MDPI
++2
+开放获取期刊目录
++2
+
+我会优先投 HESS。这是基于已发表论文结构作出的期刊定位判断，而不是说 JoH 不合适：HESS 最近已有“大样本模型失效诊断—驱动因素”“可解释 ML 诊断模型缺陷”“大样本多状态约束”“XAJ 寒区过程扩展”等与你的论文叙事高度接近的工作。
+HESS
++3
+HESS
++3
+HESS
++3
+
+1. 文献调研
+1.1 第一组：与你最直接相关的 XAJ / XAJ-Snow / dXAJ 文献
+
+这组必须在 Introduction 和 Discussion 正面处理，尤其是前 4 篇。
+
+[L1] Tan et al. (2023) — 直接 XAJ+融雪先例
+
+Yaogeng Tan, Ningpeng Dong, Aizhong Hou, Wei Yan.
+An Improved Xin’anjiang Hydrological Model for Flood Simulation Coupling Snowmelt Runoff Module in Northwestern China.
+Water, 2023.
+DOI: 10.3390/w15193401
+出版社：https://www.mdpi.com/2073-4441/15/19/3401
+
+DOI：https://doi.org/10.3390/w15193401
+
+这篇非常重要：作者明确给传统 XAJ 增加 snowmelt runoff module，并用 SCE-UA 优化参数。因此你的创新绝不能表述成“首次把融雪引入 XAJ”，甚至“首次 SCE-UA 校准 XAJ-Snow”也不成立。
+MDPI
+
+[L2] Ju et al. (2024) — distributed degree-day XAJ
+
+Qin Ju, Xiaoni Liu, Dawei Zhang, Tongqing Shen, Yueyang Wang, Peng Jiang, Huanghe Gu, Zhongbo Yu, Xiaolei Fu.
+Application of distributed Xin'anjiang model of melting ice and snow in Bahe River basin.
+Journal of Hydrology: Regional Studies, 2024.
+DOI: 10.1016/j.ejrh.2023.101638
+出版社：https://www.sciencedirect.com/science/article/pii/S2214581823003257
+
+DOI：https://doi.org/10.1016/j.ejrh.2023.101638
+
+这篇提出 distributed DD-XAJ，把 degree-day ice/snow thawing 模块加到 distributed XAJ，而且分析了雪融和冰川融水。因此你的模型应被定位为“更简约、single-band、面向大样本诊断的结构修正”，而不是技术上比 DD-XAJ 更完整。
+开放获取期刊目录
++1
+
+[L3] Wu et al. (2025) — 当前与你最接近的寒区 XAJ 论文
+
+Nan Wu, Ke Zhang, Amir Naghibi, Hossein Hashemi, Zhongrui Ning, Qinuo Zhang, Xuejun Yi, Haijun Wang, Wei Liu, Wei Gao, Jerker Jarsjö.
+Predicting snow cover and frozen ground impacts on large basin runoff: developing appropriate model complexity.
+Hydrology and Earth System Sciences, 2025.
+DOI: 10.5194/hess-29-3703-2025
+出版社：https://hess.copernicus.org/articles/29/3703/2025/
+
+DOI：https://doi.org/10.5194/hess-29-3703-2025
+
+他们基于 GXAJ 构建 GXAJ-S 和 GXAJ-S-SF；雪模块采用 SNOW17，先用雪深数据约束主要雪参数，然后所有 GXAJ 架构均用 SCE-UA 校准。论文特别强调“逐步增加过程复杂度并逐级检查性能”。这会是审稿人最可能拿来与你正面对比的文献之一。
+HESS
++1
+
+[L4] Ouyang et al. (2025) — dXAJ
+
+Wenyu Ouyang, Lei Ye, Yikai Chai, Haoran Ma, Jinggang Chu, Yong Peng, Chi Zhang.
+A differentiable, physics-based hydrological model and its evaluation for data-limited basins.
+Journal of Hydrology, 2025.
+DOI: 10.1016/j.jhydrol.2024.132471
+出版社：https://www.sciencedirect.com/science/article/pii/S0022169424018675
+
+DOI：https://doi.org/10.1016/j.jhydrol.2024.132471
+
+核实结果与你给出的背景一致：5 个三峡区域流域 + 8 个 CAMELS 流域；比较 dXAJ、dXAJnn 和 evolutionary-algorithm-calibrated XAJ。需要特别注意：这篇论文确实把性能差异解释为与优化机制有关，所以不要写“dXAJ 没有研究 optimizer”。更准确的缺口是：
+
+dXAJ 的 eXAJ–dXAJ 比较同时改变了优化/学习机制以及参数学习方式，因此不能作为一个严格的 factorial identification 来分别估计 optimizer effect 和 parameter-sharing/learning effect。
+
+这是你真正可以补的机制识别缺口。
+科学直达
+
+[L5] Ouyang et al. (2021) — 水库/人为调控混杂因素
+
+Wenyu Ouyang, Kathryn Lawson, Dapeng Feng, Lei Ye, Chi Zhang, Chaopeng Shen.
+Continental-scale streamflow modeling of basins with reservoirs: Towards a coherent deep-learning-based strategy.
+Journal of Hydrology, 2021.
+DOI: 10.1016/j.jhydrol.2021.126455
+出版社：https://www.sciencedirect.com/science/article/pii/S0022169421005023
+
+DOI：https://doi.org/10.1016/j.jhydrol.2021.126455
+
+它直接说明 reservoir type、capacity-to-runoff ratio/DOR 等会显著影响大尺度流量建模。你拥有 dor、hft，因此它们不能只作为背景属性；至少需要作为筛选、分层或 applicability regression 的混杂变量。
+科学直达
+
+1.2 第二组：CemaNeige 与“简单但足够”的融雪建模
+
+虽然两篇 CemaNeige 奠基论文早于 2018，但必须引用。
+
+[L6] Valéry et al. (2014a)
+
+Audrey Valéry, Vazken Andréassian, Charles Perrin.
+‘As simple as possible but not simpler’: What is useful in a temperature-based snow-accounting routine? Part 1 – Comparison of six snow accounting routines on 380 catchments.
+Journal of Hydrology, 2014.
+DOI: 10.1016/j.jhydrol.2014.04.059
+出版社：https://www.sciencedirect.com/science/article/abs/pii/S0022169414003333
+
+DOI：https://doi.org/10.1016/j.jhydrol.2014.04.059
+
+它通过 380 个流域比较不同雪核算结构，建立了 CemaNeige 的 parsimonious snow-accounting 逻辑。
+科学直达
+
+[L7] Valéry et al. (2014b)
+
+Audrey Valéry, Vazken Andréassian, Charles Perrin.
+‘As simple as possible but not simpler’: What is useful in a temperature-based snow-accounting routine? Part 2 – Sensitivity analysis of the Cemaneige snow accounting routine on 380 catchments.
+Journal of Hydrology, 2014.
+DOI: 10.1016/j.jhydrol.2014.04.058
+出版社：https://www.sciencedirect.com/science/article/abs/pii/S0022169414003321
+
+DOI：https://doi.org/10.1016/j.jhydrol.2014.04.058
+
+特别重要的是，原版 CemaNeige 并非你的 single-band 版本：其最终结构涉及降水固液相转换、多个等面积高程带、snowpack cold content、degree-day melt factor 等。因此 Methods 中务必写 “CemaNeige-inspired/style”，不能写成“CemaNeige implementation”。
+科学直达
++1
+
+[L8] Ruelland (2023)
+
+Denis Ruelland.
+Development of the snow- and ice-accounting routine (SIAR).
+Journal of Hydrology, 2023.
+DOI: 10.1016/j.jhydrol.2023.129867
+出版社：https://www.sciencedirect.com/science/article/pii/S0022169423008090
+
+DOI：https://doi.org/10.1016/j.jhydrol.2023.129867
+
+这是“参数复杂度是否值得”的优秀先例。作者从多参数版本逐步削减到非常简约的 temperature-index routine，并联合 runoff、MODIS FSC 和局地 SWE 评价，结论强调限制自由参数可以减少 over-parameterization/equifinality。对你“17 vs 15 参数”的防守价值很高。
+科学直达
+
+[L9] Ruelland (2024)
+
+Denis Ruelland.
+Potential of snow data to improve the consistency and robustness of a semi-distributed hydrological model using the SAFRAN input dataset.
+Journal of Hydrology, 2024.
+DOI: 10.1016/j.jhydrol.2024.130820
+出版社：https://www.sciencedirect.com/science/article/am/pii/S0022169424002142
+
+DOI：https://doi.org/10.1016/j.jhydrol.2024.130820
+
+价值在于区分“流量拟合好”与“雪过程合理”：作者比较 runoff、snow-cover 和 SWE 的联合/顺序校准，并讨论 identifiability、equifinality 和 robustness。
+科学直达
+
+[L10] Tong et al. (2022)
+
+Rui Tong, Juraj Parajka, Borbála Széles, Isabella Greimeister-Pfeil, Mariette Vreugdenhil, Jürgen Komma, Peter Valent, Günter Blöschl.
+The value of satellite soil moisture and snow cover data for the transfer of hydrological model parameters to ungauged sites.
+Hydrology and Earth System Sciences, 2022.
+DOI: 10.5194/hess-26-1779-2022
+出版社：https://hess.copernicus.org/articles/26/1779/2022/
+
+DOI：https://doi.org/10.5194/hess-26-1779-2022
+
+这是辅助状态验证/多变量评价的重要依据：模型不仅按 runoff，而且按 soil moisture、snow cover 检验。
+HESS
+
+[L11] Premier et al. (2026)
+
+Valentina Premier, Francesca Moschini, Jesús Casado-Rodríguez, Davide Bavera, Carlo Marin, Alberto Pistocchi.
+Assessing the impact of Earth Observation data-driven calibration of the melting coefficient on the LISFLOOD snow module.
+Hydrology and Earth System Sciences, 2026.
+DOI: 10.5194/hess-30-1189-2026
+出版社：https://hess.copernicus.org/articles/30/1189/2026/
+
+DOI：https://doi.org/10.5194/hess-30-1189-2026
+
+我认为这是你最值得模仿的“机制隔离”论文之一：作者只改 snowmelt coefficient，其余参数保持不变，从而明确隔离 snow parameterization effect；而且发现 snow metrics 改善未必导致 basin-scale discharge KGE 同步改善。
+HESS
+
+1.3 第三组：大样本模型评估、模型失效诊断和适用性回归
+
+[L12] Kratzert et al. (2023) — Caravan
+
+Frederik Kratzert, Grey Nearing, Nans Addor, Tyler Erickson, Martin Gauch, Oren Gilon, Lukas Gudmundsson, Avinatan Hassidim, Daniel Klotz, Sella Nevo, Guy Shalev, Yossi Matias.
+Caravan - A global community dataset for large-sample hydrology.
+Scientific Data, 2023.
+DOI: 10.1038/s41597-023-01975-w
+出版社：https://www.nature.com/articles/s41597-023-01975-w
+
+DOI：https://doi.org/10.1038/s41597-023-01975-w
+
+原始 Caravan 论文版本是 6830 catchments，并且 Caravan 的设计本身允许持续扩展。因此你本地目前“约 1.6 万”的数据规模不能简单写成“Caravan contains 16,000 basins”；论文必须冻结并报告具体 Caravan snapshot/version、包含哪些 source datasets，以及质量控制后真正进入模拟的 N。
+Nature
++1
+
+Caravan 还明确说明：forcing 来自 ERA5-Land，而且其 soil moisture/snow variables 是 ERA5-Land modeled reference states。所以 snow_depth_water_equivalent 不是地面实测 SWE。
+Nature
+
+[L13] Clerc-Schwarzenbach et al. (2024)
+
+Franziska Clerc-Schwarzenbach, Giovanni Selleri, Mattia Neri, Elena Toth, Ilja van Meerveld, Jan Seibert.
+Large-sample hydrology – a few camels or a whole caravan?
+Hydrology and Earth System Sciences, 2024.
+DOI: 10.5194/hess-28-4219-2024
+出版社：https://hess.copernicus.org/articles/28/4219/2024/
+
+DOI：https://doi.org/10.5194/hess-28-4219-2024
+
+对你的数据方法尤其重要：它专门讨论 Caravan 和区域 CAMELS forcing 的差异以及这种差异对模型结果与推论的影响。因此全球统一 forcing 并不意味着 forcing uncertainty 可以忽略。
+HESS
++1
+
+[L14] Clerc-Schwarzenbach & do Nascimento (2026)
+
+Franziska Clerc-Schwarzenbach, Thiago V. M. do Nascimento.
+Evaluating E-OBS forcing data for large-sample hydrology using model performance diagnostics.
+Hydrology and Earth System Sciences, 2026.
+DOI: 10.5194/hess-30-119-2026
+出版社：https://hess.copernicus.org/articles/30/119/2026/
+
+DOI：https://doi.org/10.5194/hess-30-119-2026
+
+这篇更进一步，通过 2682 个流域比较大尺度 forcing 与区域数据，并用水文模型性能进行 forcing diagnostics；其分析表明 forcing 差异，特别是 precipitation 差异，可以解释模型性能差异的重要部分。
+HESS
++1
+
+[L15] Knoben et al. (2020)
+
+Wouter J. M. Knoben, Jim E. Freer, Murray C. Peel, Keirnan J. A. Fowler, Ross A. Woods.
+A Brief Analysis of Conceptual Model Structure Uncertainty Using 36 Models and 559 Catchments.
+Water Resources Research, 2020.
+DOI: 10.1029/2019WR025975
+出版社：https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019WR025975
+
+DOI：https://doi.org/10.1029/2019WR025975
+
+它非常适合支撑你的核心假说：36 个 conceptual structures × 559 个流域的大样本比较发现模型 ensemble 在 snow-dominated catchments 特别容易失败；同时并没有发现“参数越多性能自然越好”的简单关系。也就是说，结构是否包含正确过程和“多两个自由参数”不是一回事，但你仍然要通过公平实验来证明这一点。
+AGU Publications
+
+[L16] Santos et al. (2025)
+
+Léonard Santos, Vazken Andréassian, Torben O. Sonnenborg, Göran Lindström, Alban de Lavenne, Charles Perrin, Lila Collet, Guillaume Thirel.
+Lack of robustness of hydrological models: a large-sample diagnosis and an attempt to identify hydrological and climatic drivers.
+Hydrology and Earth System Sciences, 2025.
+DOI: 10.5194/hess-29-683-2025
+出版社：https://hess.copernicus.org/articles/29/683/2025/
+
+DOI：https://doi.org/10.5194/hess-29-683-2025
+
+这篇几乎可以作为你全文的“叙事骨架”：先 large-sample diagnosis，再问 failure 是否与 hydrologic/climatic characteristics 联系，最后把结果解释成模型结构改进的方向。
+HESS
+
+[L17] Husic et al. (2025)
+
+Admin Husic, John Hammond, Adam N. Price, Joshua K. Roundy.
+Interrogating process deficiencies in large-scale hydrologic models with interpretable machine learning.
+Hydrology and Earth System Sciences, 2025.
+DOI: 10.5194/hess-29-4457-2025
+出版社：https://hess.copernicus.org/articles/29/4457/2025/
+
+DOI：https://doi.org/10.5194/hess-29-4457-2025
+
+作者用 4383 个 gauges、48 个 catchment attributes 和 random forest/SHAP 预测模型 KGE，并寻找性能下降对应的属性范围。这就是你做“XAJ applicability regression”的最近、最直接的方法论参照之一。注意 SHAP 得到的是模型关联和经验阈值，而不是因果阈值。
+HESS
+
+[L18] Yeste et al. (2024)
+
+Patricio Yeste, Matilde García-Valdecasas Ojeda, Sonia R. Gámiz-Fortis, Yolanda Castro-Díez, Axel Bronstert, María Jesús Esteban-Parra.
+A large-sample modelling approach towards integrating streamflow and evaporation data for the Spanish catchments.
+Hydrology and Earth System Sciences, 2024.
+DOI: 10.5194/hess-28-5331-2024
+出版社：https://hess.copernicus.org/articles/28/5331/2024/
+
+DOI：https://doi.org/10.5194/hess-28-5331-2024
+
+其方法明确拆成三步：regional sensitivity → Q 与 Q+E calibration → benchmark + multi-forcing cross-validation。这种“Methods 的实验块与 Results 完全镜像”的结构尤其值得你学习。
+HESS
+
+1.4 最推荐的 5 篇“写作架构模板”
+
+如果只精读 5 篇，我建议依次看 [L16] Santos 2025、[L3] Wu 2025、[L11] Premier 2026、[L17] Husic 2025、[L18] Yeste 2024。
+
+模板 A：[L16] Santos 2025 —— 最适合全文主骨架
+
+它的套路是：
+
+普遍使用模型 ≠ 模型在所有气候条件下都稳健
+→ 建立统一的大样本 robustness test
+→ 先回答“哪里失败”
+→ 再回答“什么流域属性与失败相关”
+→ 最后回到“哪些结构值得改”。
+
+你的稿子可以直接替换成：
+
+XAJ widely used → lack of multi-regional structural diagnosis
+→ large-sample XAJ benchmark
+→ identify snow-related failure regime
+→ targeted XAJ-Snow correction
+→ derive applicability boundary.
+
+这比“开发了一个新 XAJ-Snow，然后全球验证”高级得多。
+HESS
+
+模板 B：[L3] Wu 2025 —— XAJ 寒区直接竞品
+
+其强点是逐级结构：
+
+GXAJ → GXAJ-S → GXAJ-S-SF。
+
+先验证 snow，再验证 runoff，再解释 hydrological components，最后讨论 complexity 与其他寒区过程。
+HESS
+
+你不应复制它的模型复杂度，而应反向形成自己的特色：
+
+XAJ-MZ → only two snow parameters → large-sample falsification → negative control → regime boundary.
+
+模板 C：[L11] Premier 2026 —— 最适合机制隔离
+
+这篇明确做到：
+
+只改变 snowmelt coefficient；其他参数固定。
+
+因此任何输出变化都更容易归因到目标雪参数化，而不是整套重新优化造成的。
+HESS
+
+你后面的 optimizer/parameter-sharing ablation 应模仿这种实验哲学。
+
+模板 D：[L17] Husic 2025 —— 最适合“适用边界回归”
+
+核心结构：
+
+basin-wise performance → catchment attributes → out-of-sample performance prediction → interpretable feature effects → empirical thresholds → process hypotheses.
+
+你需要把预测对象由 KGE_XAJ 改成更有价值的：
+
+ΔKGE=KGE
+XAJ−Snow
+	​
+
+−KGE
+XAJ−MZ
+	​
+
+
+这样模型回答的不是“哪个流域难”，而是：
+
+什么流域值得增加 snow process？
+
+这会成为很明确的 paper-level contribution。
+HESS
+
+模板 E：[L18] Yeste 2024 —— 最适合 Methods–Results 一一对应
+
+特别适合你解决 SWE、forcing 和泛化三个潜在质疑。它的方法块本身就包含 auxiliary state、benchmark 和 forcing cross-validation。
+HESS
+
+2. 推荐的完整论文框架
+2.1 建议题目
+
+我目前最推荐：
+
+Diagnosing snow-related structural limitations of the Xinanjiang model across a large multi-regional catchment sample
+
+如果最终大样本结果证明“哪些流域需要 snow”这一点非常清楚，则可更有记忆点：
+
+When does the Xinanjiang model need snow? A large-sample diagnosis of a parsimonious snow extension
+
+在最终 basin coverage 没有统计清楚前，我暂时不建议题目使用 global。Caravan 本身虽然是全球数据框架，但你最终通过时间覆盖、缺失数据、质量筛选之后的有效样本未必代表“全球”。原始 Caravan 本身也持续扩展，所以具体版本必须冻结。
+Nature
++1
+
+2.2 Abstract：约 230–280 words
+
+严格采用五段逻辑压缩成一段：
+
+Problem：conceptual rainfall–runoff models may exhibit regime-dependent structural inadequacy。
+
+Gap：XAJ 已有区域性 snow/cold-region extensions，但缺少多区域大样本下“baseline failure → snow correction → applicability boundary”的统一评估。这里不要写“first”。已有直接 XAJ-snow 先例见 [L1–L3]。
+MDPI
++2
+开放获取期刊目录
++2
+
+Method：Caravan + XAJ-MZ vs two-parameter single-band CemaNeige-inspired XAJ-Snow + common protocol + negative controls + attribute diagnostics。
+
+Results：将来只写大样本真实结果；目前不能把 A/B pilot 外推进去。
+
+Meaning：从“模型排名”提升到 “regime-dependent structural adequacy and process need”。
+
+2.3 Introduction：约 1200–1500 words
+第 1 段：从“大样本模型适用性”开题，而不是从“雪很重要”开题
+
+论点：
+
+Conceptual models are useful partly because of their parsimony, but a fixed model structure need not remain adequate across hydroclimatic regimes.
+
+Knoben 的 559 流域结果已经证明 snow-dominated basins 对很多 conceptual structures 是系统性难点；Santos/Husic 则进一步提供了“大样本失败诊断”的范式。
+AGU Publications
++2
+HESS
++2
+
+第 2 段：XAJ 的现状
+
+这里把 [L1–L4] 排清楚：
+
+已有 snow-enhanced XAJ；
+
+已有 degree-day distributed XAJ；
+
+已有 snow + frozen-ground GXAJ；
+
+已有 differentiable XAJ。
+
+因此缺口不能是 “XAJ has never been extended”。
+科学直达
++3
+MDPI
++3
+开放获取期刊目录
++3
+
+真正缺口写成：
+
+Existing studies establish that XAJ can be modified for cold-region or data-driven applications, but they do not provide a common multi-regional experiment that diagnoses where the standard model becomes structurally inadequate, whether a minimal snow correction selectively addresses that failure, and where the added process is unnecessary.
+
+其中“现有检索未发现完全相同的大样本设计”最好不要写成绝对的 first-ever。
+
+第 3 段：为什么使用极简 snow routine
+
+用 [L6–L9] 建立 “as simple as possible but not simpler” 的思想，而不是声称自己提出了新的融雪方程。
+科学直达
++3
+科学直达
++3
+科学直达
++3
+
+第 4 段：为什么只看 Q 不够
+
+用 snow-state observations/reanalysis 去问：
+
+Does better discharge arise for the right process reason?
+
+这有 Tong、Ruelland、Premier 等直接依据。
+HESS
++2
+科学直达
++2
+
+第 5 段：四个研究问题
+
+建议明确列 RQ：
+
+RQ1. Where does XAJ-MZ lose out-of-sample skill along gradients of snow influence and other hydroclimatic attributes?
+
+RQ2. Does the two-parameter XAJ-Snow correction improve performance preferentially in snow-affected basins while remaining neutral in low/no-snow negative controls?
+
+RQ3. Are those gains robust to optimization budget and additional parameter freedom, and what basin attributes delimit the useful domain of the snow extension?
+
+RQ4. 只有真的完成 factorial experiment 后再放：
+
+How much of the improvement associated with alternative XAJ training strategies can be attributed separately to the optimization mechanism and to parameter sharing/learning?
+
+否则删掉 RQ4。
+
+2.4 Data and Methods：约 3000–3600 words
+2.1 Caravan data and catchment screening
+
+这里必须做到 reproducibility level：
+
+Caravan snapshot/version/date；
+
+source datasets；
+
+initial N；
+
+availability of P/T/PET/Q；
+
+period filters；
+
+missing-data threshold；
+
+final N；
+
+source-dataset composition；
+
+geographical coverage；
+
+frac_snow、aridity、DOR、HFT distributions。
+
+原始 Caravan 的 forcing 和 reference snow/soil states来自 ERA5-Land，所以必须明示。
+Nature
+
+2.2 Baseline XAJ-MZ
+
+完整列：
+
+states；
+
+fluxes；
+
+15 parameters；
+
+bounds；
+
+daily timestep；
+
+routing；
+
+PET treatment；
+
+initialization。
+
+最好做 Table 1。
+
+2.3 XAJ-Snow
+
+这里非常关键。
+
+建议正式叫：
+
+single-band CemaNeige-inspired temperature-index snow accounting routine
+
+而不是：
+
+CemaNeige；
+
+CemaNeige model；
+
+airGR-CemaNeige；
+
+implementation of CemaNeige。
+
+明确写：
+
+single elevation band；
+
+T
+s
+	​
+
+=0
+∘
+C；
+
+T
+r
+	​
+
+=1
+∘
+C；
+
+Kf；
+
+CTG；
+
+snow storage / cold-content formulation；
+
+precipitation partition；
+
+melt-to-XAJ coupling。
+
+同时做一个小表：
+
+Feature	Original CemaNeige	This study
+elevation treatment	multiple equal-area bands	single lumped band
+phase transition	original formulation	Ts=0, Tr=1
+melt	degree-day	degree-day
+snow thermal inertia/cold content	yes	actual implemented form
+calibrated snow parameters	original scheme	Kf, CTG
+
+原版 CemaNeige 的结构由 [L6–L7] 支撑。
+科学直达
++1
+
+2.4 Calibration and temporal evaluation
+
+你当前协议可如实定义：
+
+warm-up = 365 d；
+
+calibration = 1985–1995；
+
+evaluation = 2005–2014；
+
+objective = KGE；
+
+optimizer = SCE-UA。
+
+但是 rep=800 一定不能直接当方法描述。
+
+你必须定义它究竟代表：
+
+function evaluations？
+
+iterations？
+
+complexes？
+
+repetitions？
+
+population updates？
+
+这是 P0。
+
+而且既然 calibration objective 是 KGE，主结果建议优先报告：
+
+KGE,r,α,β
+
+NSE 可以作为重要 secondary metric，但如果 calibration 用 KGE、摘要却只报 NSE，容易被质疑 metric cherry-picking。
+
+2.5 Predefined snow strata and negative controls
+
+不要等结果出来再找 threshold。
+
+建议至少同时做：
+
+frac_snow 连续变量；
+
+no/very-low-snow control stratum；
+
+snow-affected strata；
+
+更高 snow influence strata。
+
+主分析用连续梯度；分箱主要为了图示和可解释性。
+
+你目前 A/B 两个 pilot 最有价值的不是数值本身，而是证明了这个实验设计有 falsifiability：
+
+snow basin 应改善；no-snow basin 不应系统性改善。
+
+2.6 Fair optimization and complexity controls
+
+这是整篇论文最应增加的实验之一。
+
+Optimizer-budget test
+
+在 stratified subset 上做：
+
+0.25B,0.5B,1B,2B
+
+其中 B 应定义成objective-function evaluations，而不是模糊的 rep。
+
+每个 budget 多 seeds。
+
+画：
+
+test KGE versus cumulative evaluations
+
+如果 15-param XAJ-MZ 只是没收敛，而 17-param XAJ-Snow 恰好搜索得更好，这里就会暴露出来。
+
+Parameter-complexity control
+
+至少三组：
+
+A. XAJ-MZ：15 basin-local params
+B. XAJ-Snow：15 + 2 basin-local snow params
+C. XAJ-Snow-fixed：15 basin-local XAJ params + 跨训练流域固定的 Kf/CTG
+
+C 极其重要。
+
+如果 C 在 snow basins 仍明显优于 baseline，同时 no-snow controls 接近零增益，那么“只是多两个自由参数”就很难解释结果。
+
+Ruelland 的研究表明 temperature-index snow models 可以通过固定低敏感参数获得更简约配置；Wu 2025 也采用了独立 snow-state constraints 来避免简单依靠 runoff fitting 吸收所有自由度。
+科学直达
++1
+
+2.7 Snow-state consistency evaluation
+
+这里我建议改掉“SWE independent validation”。
+
+Caravan 明确称这些变量为 ERA5-Land modeled reference states。
+Nature
+
+建议术语：
+
+auxiliary snow-state consistency evaluation
+
+或者：
+
+streamflow-objective-independent snow-state evaluation against ERA5-Land reference states
+
+不要写：
+
+independent observational SWE validation.
+
+评价重点也不要只看 SWE magnitude，而可以看：
+
+snow onset；
+
+peak SWE timing；
+
+melt onset；
+
+melt-out timing；
+
+seasonal correlation；
+
+normalized seasonal cycle；
+
+event/season timing error。
+
+如果计算成本允许，再选择一部分重点 snow basins 做 MODIS/Sentinel snow-cover 外部评价，会把证据等级明显抬高。Tong、Wu、Premier 都提供了这类过程状态验证的强先例。
+HESS
++2
+HESS
++2
+
+2.8 Applicability regression
+
+预测目标我强烈建议使用：
+
+ΔKGE
+i
+	​
+
+=KGE
+Snow,i
+	​
+
+−KGE
+MZ,i
+	​
+
+
+而不是预测 baseline KGE。
+
+候选 predictor：
+
+frac_snow,aridity,dor,hft,
+
+再加气候季节性、mean T、P seasonality、elevation/topography 等真正可用属性。
+
+建议两套模型：
+
+一个透明的 GAM / spline regression；
+
+一个 RF/GBDT + SHAP。
+
+Husic 2025 已经展示了 RF + catchment attributes + SHAP 用于大尺度 model-deficiency diagnosis 的可行性。
+HESS
+
+但是 validation 必须用：
+
+grouped / leave-region-or-source-out CV
+
+而不是只有 random basin split。
+
+否则模型可能只学习 CAMELS-US、CAMELS-GB 等 source-dataset identity。
+
+2.9 Optional optimizer × parameter-sharing factorial
+
+如果你确实要兑现“分离优化机制和参数共享”，建议真正做：
+
+SCE-UA
+gradient/differentiable
+	​
+
+local parameters
+A
+B
+	​
+
+shared/learned parameters
+C
+D
+	​
+
+	​
+
+
+那么：
+
+B−A≈optimizer effect
+C−A≈sharing effect
+
+而
+
+(D−C)−(B−A)
+
+近似反映 interaction。
+
+如果没有这样或等价的 controlled experiment，就不要声称已经“separated optimization from parameter sharing”。
+
+dXAJ 本身明确比较 differentiable XAJ 与 evolutionary-algorithm XAJ，并把差异讨论到 optimization mechanism；你的价值应该是“factorial attribution 更干净”，而不是否认其已有分析。
+科学直达
+
+2.5 Results：约 2400–3000 words
+
+建议 Results 完全按实验问题排列，而不是“先几个案例、再全球图”。
+
+3.1 Where does baseline XAJ-MZ fail?
+
+先展示 baseline。
+
+3.2 Does XAJ-Snow improve out-of-sample skill?
+
+主图 paired：
+
+KGE
+MZ
+	​
+
+vsKGE
+Snow
+	​
+
+
+再展示
+
+ΔKGE
+
+分 snow regime。
+
+3.3 Is the gain snow-specific?
+
+这是负对照章节。
+
+no-snow catchments 必须单独展示。
+
+3.4 Does XAJ-Snow improve snow-process consistency?
+
+ERA5-Land SWE auxiliary evaluation。
+
+3.5 Is the gain robust to optimization and extra degrees of freedom?
+
+budget / seed / fixed-snow-parameter tests。
+
+3.6 Where is XAJ-Snow useful?
+
+applicability regression + cross-region prediction。
+
+3.7 What explains optimizer versus parameter-sharing gains?
+
+只在真正完成 factorial 后保留。
+
+2.6 主文图件建议
+
+Fig. 1 — Study domain and experimental population
+
+世界/多区域分布图 + screening flow + frac_snow/aridity/DOR distributions。
+
+论点：
+
+研究不是两个 cherry-picked basins，而是预定义的大样本实验总体。
+
+Fig. 2 — XAJ-MZ versus XAJ-Snow structure
+
+必须把你的 single-band CemaNeige-inspired routine 与 XAJ coupling 画清楚。
+
+论点：
+
+deliberately minimal structural perturbation。
+
+Fig. 3 — Paired out-of-sample performance
+
+主指标 KGE；NSE 可 companion panel / supplement。
+
+论点：
+
+snow correction 是否总体有效，以及效应分布。
+
+Fig. 4 — ΔKGE along snow influence gradient
+
+横轴 frac_snow 或更完善 snow index；连续 smoother + uncertainty。
+
+论点：
+
+gain is regime-dependent, not universal.
+
+Fig. 5 — Mechanistic hydrograph examples
+
+只选预定义规则确定的 representative snow/no-snow basins，不要挑最大 improvement。
+
+论点：
+
+timing correction in snow basin; absence of arbitrary gain in negative control.
+
+Fig. 6 — Snow-state consistency
+
+SWE seasonal timing / accumulation / melt-out。
+
+论点：
+
+better Q is at least consistent with an improved snow state rather than purely numerical flexibility.
+
+注意标题不要叫 “independent SWE validation”。Caravan snow states来自 ERA5-Land。
+Nature
+
+Fig. 7 — Optimizer and parameter-complexity robustness
+
+budget convergence + local/free vs fixed/shared Kf/CTG。
+
+论点：
+
+improvement cannot be explained solely by optimization budget or two extra local parameters.
+
+Fig. 8 — Applicability boundary
+
+grouped-CV predicted vs observed ΔKGE + SHAP/GAM partial effects。
+
+论点：
+
+which basin conditions warrant adding the snow process.
+
+Fig. 9 — optional factorial mechanism figure
+
+optimizer × parameter sharing interaction。
+
+只有真的完成实验再放。
+
+3. 创新点怎么打磨
+
+你现在最需要做的是主动把“融雪模块本身”降级为研究工具，而把“为什么、何时、在哪里需要这个结构”升级成创新。
+
+Contribution 1：大样本 XAJ 结构失效诊断
+
+推荐正文表述：
+
+We conduct a multi-regional large-sample diagnosis of the Xinanjiang model and quantify how its out-of-sample adequacy varies along snow and broader hydroclimatic gradients, shifting the evaluation from aggregate model skill to regime-dependent structural adequacy.
+
+中文逻辑：
+
+首先不是问“XAJ 平均精度怎么样”，而是问“XAJ 在什么水文气候条件下结构性失效”。
+
+这与 [L16] Santos 和 [L17] Husic 的 large-sample diagnostic paradigm 一致，但对象变成 XAJ，而且直接连到后续结构修正。
+HESS
++1
+
+这应该成为第一创新点。
+
+Contribution 2：可证伪的最小融雪结构修正，而不是“新融雪模型”
+
+建议：
+
+We evaluate a deliberately parsimonious two-parameter, single-band, CemaNeige-inspired snow routine as a targeted structural correction. Its added value is tested through a falsifiable contrast: gains should concentrate in snow-affected catchments and diminish toward low- or no-snow negative controls.
+
+这个表述比：
+
+We develop a novel XAJ-Snow model.
+
+强很多，也安全很多。
+
+因为 [L1]、[L2]、[L3] 已经明确否定了“首次 XAJ 加 snow”的 novelty。
+MDPI
++2
+开放获取期刊目录
++2
+
+真正的新意变成：
+
+structural hypothesis→minimal intervention→positive regime+negative control.
+Contribution 3：适用性边界 + 机制控制
+
+如果只做现阶段计划中的公平性控制，建议写：
+
+We derive an out-of-region-validated applicability boundary for the incremental value of XAJ-Snow and test whether the inferred benefit is robust to optimization budget and additional parameter freedom.
+
+这已经足够成为第三创新点。
+
+如果真正完成 optimizer × parameter-sharing factorial，则升级为：
+
+Using matched optimization budgets and a factorial ablation of optimization and parameter-sharing strategies, we distinguish process-structure gains from optimization- and sharing-related gains and quantify their interactions.
+
+这个版本与 dXAJ 的区分会非常清楚。
+
+dXAJ 的发表设计已经比较了 differentiable parameter learning 与 evolutionary optimization，并把一部分性能差异解释到 optimization mechanism；你的创新不是“他们没考虑 optimizer”，而是：
+
+他们的 model comparison 不是专门为了独立识别 optimizer effect 与 parameter-learning/sharing effect 设计的；你的 factorial experiment 则以 causal attribution of experimental factors 为目的。 
+科学直达
+
+4. 审稿风险与具体应对
+
+我会按优先级分成 P0/P1。
+
+P0-1：Novelty 被 Tan 2023 / Ju 2024 / Wu 2025 直接击穿
+
+这是现在最大的写作风险。
+
+审稿人完全可能写：
+
+Snowmelt has already been incorporated into XAJ models. What is novel here?
+
+因为事实如此：[L1] 已有 snowmelt-enhanced XAJ + SCE-UA；[L2] 已有 degree-day DD-XAJ；[L3] 已有 GXAJ-S/GXAJ-S-SF。
+MDPI
++2
+开放获取期刊目录
++2
+
+应对不是淡化这些文献，而是主动在 Introduction 写：
+
+Previous studies have demonstrated the feasibility of extending XAJ with snow, ice, or frozen-ground processes at individual or regional basin scales. Here, the snow routine is therefore not introduced as a new snowmelt formulation; rather, it is used as a parsimonious structural intervention to diagnose, test, and delimit snow-related XAJ deficiencies in a common multi-regional large-sample experiment.
+
+这一句基本决定稿子能不能站稳。
+
+P0-2：Baseline 没调透，Δ 是 optimizer artifact
+
+你现在的 rep=800 pilot 已经足够支持 go/no-go，但不足以支撑最终论文的公平性声明。
+
+尤其 15 参数和 17 参数的问题并不是简单地：
+
+都 rep=800，所以公平。
+
+不一定。
+
+更稳的协议：
+
+B∈{0.25,0.5,1,2}×B
+0
+	​
+
+
+并定义 B 为 objective evaluations。
+
+每档 multiple seeds。
+
+看：
+
+KGE
+test
+	​
+
+(B).
+
+如果 XAJ-MZ 在 2B 之后仍停在较低水平，而 XAJ-Snow 稳定较高，结构解释才强。
+
+你还应报告 parameter convergence / boundary hitting。
+
+你目前 Kf≈3.50、CTG≈0.116 未贴边是一个不错的 pilot signal，但现在只能作为你内部 go/no-go 证据，不能代替大样本 robustness。
+
+P0-3：17 参数 vs 15 参数
+
+这很可能是第二轮最经典的审稿问题：
+
+How do you know the improvement is caused by snow physics rather than increased flexibility?
+
+Knoben 2020 的大样本结果说明参数数量本身并不简单决定模型性能，但这不能替代你自己的公平性实验。
+AGU Publications
+
+最强控制就是：
+
+M
+0
+	​
+
+M
+1
+	​
+
+M
+2
+	​
+
+	​
+
+:XAJ-MZ,
+:XAJ-Snow,
+:XAJ-Snow-fixed,
+	​
+
+	​
+
+15 local
+17 local
+15 local+2 fixed/shared snow.
+	​
+
+
+如果：
+
+ΔKGE(M
+2
+	​
+
+,M
+0
+	​
+
+)>0
+
+主要发生在 high-frac_snow，同时：
+
+ΔKGE≈0
+
+发生在 no-snow controls，
+
+这个论证会很强。
+
+甚至可以把它上升成：
+
+The central test is not whether a 17-parameter model fits better than a 15-parameter model, but whether a physically targeted snow process yields condition-specific, out-of-sample gains that persist when its additional basin-level degrees of freedom are removed.
+
+P0-4：Caravan forcing 导致的“雪区性能差”假象
+
+这是我认为容易被忽略、但 HESS 审稿人很可能抓住的一点。
+
+Caravan 使用统一 ERA5-Land forcing/reference states；其优点是空间一致，但原始论文自己承认全球产品相对于地方高分辨率数据具有更大的不确定性。
+Nature
+
+Clerc-Schwarzenbach 2024 又直接指出 Caravan 与区域 CAMELS forcing 的差异足以影响 model inference；2026 的 forcing diagnostic 进一步显示降水差异可以成为性能差异的重要来源。
+HESS
++1
+
+因此至少：
+
+Methods 冻结 forcing version；
+
+报 PET 的来源和计算方式；
+
+source-dataset/region 加入分析；
+
+applicability regression 中防止 model 只学到 dataset identity；
+
+对 overlap catchments 若条件允许做 limited native-forcing sensitivity。
+
+否则审稿人可能问：
+
+Is XAJ failing because snow is missing, or because precipitation/PET forcing is biased in cold mountainous regions?
+
+P0-5：A/B pilot 不能外推成 large-sample conclusion
+
+你目前 A 的：
+
+−0.232→0.732
+
+和 B 的：
+
+0.711→0.704
+
+是非常好的实验可行性证据。
+
+但论文中只能等大样本完成后回答：
+
+“这种 pattern 是否普遍存在？”
+
+因此：
+
+A/B 不进 Abstract；
+
+不根据 A/B 结果反向定义 snow threshold；
+
+final strata 预先冻结；
+
+report all eligible basins；
+
+region/source-level forest plots 或 distributions。
+
+P1-1：“SWE 独立验证”说服力不足
+
+这一点必须改术语。
+
+Caravan 明确说明 snow states 是 modeled ERA5-Land reference states。
+Nature
+
+所以最稳的是：
+
+auxiliary snow-state consistency evaluation against ERA5-Land reference states
+
+它仍然有价值，因为：
+
+Q calibration target 与 SWE state 不同；
+
+可以检验 accumulation/melt timing；
+
+可以避免“只靠 outlet Q 猜过程”。
+
+但它不是 ground-truth independent validation。
+
+最强版本：
+
+Caravan/ERA5-Land SWE：大样本统一 auxiliary check
+
+MODIS/Sentinel snow cover：snow basin subset 的 external EO check。
+
+多状态雪验证已有 Tong、Ruelland、Premier 的直接方法论支持。
+HESS
++2
+科学直达
++2
+
+P1-2：single-band 在山地 snow basin 是否过度简化
+
+这是可预见风险，但不必回避。
+
+原始 CemaNeige 的研究实际上认为 elevation-band treatment 是有用成分之一；SIAR 也研究了 lumped 到分布式/高程带之间的权衡。
+科学直达
++1
+
+因此不要把 single-band 写成“最佳融雪模型”。
+
+应写：
+
+The single-band configuration is deliberately chosen as a minimal structural perturbation suitable for computationally intensive large-sample experimentation. It is not intended to resolve within-catchment elevation gradients or replace distributed cryospheric models.
+
+甚至可以把结果中的“高 frac_snow、高 relief 流域仍然失败”解释成下一层 complexity boundary，而不是失败。
+
+P1-3：名义 CemaNeige ≠ 你的实现
+
+这个完全可以通过透明命名化解。
+
+建议全文统一：
+
+CemaNeige-inspired single-band snow routine
+
+或：
+
+CemaNeige-style temperature-index snow routine
+
+不要混用：
+
+CemaNeige；
+
+modified CemaNeige；
+
+CemaNeige model。
+
+Methods 增加 “original vs implementation” table，就基本不会成为严重问题。
+
+P1-4：寒区不只有 snow，还有 frozen ground / glacier
+
+Wu 2025 已直接表明 GXAJ 中加入 frozen-ground processes 会显著改变寒季水文过程，而 Ju 2024 的 DD-XAJ 同时处理了 glacier and snow melt。
+HESS
++1
+
+所以你最终的 claim 应严格是：
+
+snow-related structural limitation
+
+而不要泛化为：
+
+complete solution for cold-region XAJ.
+
+特别是如果某些高雪、高寒流域 XAJ-Snow 仍表现差，这反而是很好的 applicability-boundary 结果：
+
+seasonal snow correction is insufficient where glacier/frozen-ground/topographic heterogeneity becomes important.
+
+P1-5：DOR/HFT 人为调控可能污染“模型结构失效”
+
+已有 continental-scale reservoir study 明确显示 DOR/reservoir characteristics 与 streamflow modeling difficulty 有关。
+科学直达
+
+建议至少：
+
+主结果报告 low-regulation subset；
+
+全样本作为 general sample；
+
+regression 中加入 DOR/HFT；
+
+检查 frac_snow × DOR interaction。
+
+否则一个高雪、高水库流域的低 KGE 未必是 snow physics 问题。
+
+P1-6：Applicability regression 容易变成漂亮但不可靠的 SHAP 图
+
+必须把目标明确成：
+
+Y=ΔKGE
+
+而不是 KGE
+Snow
+	​
+
+。
+
+这样问的是：
+
+什么条件决定“增加 snow module 是否值得”？
+
+另外：
+
+source/region grouped CV；
+
+simple GAM 作 sanity check；
+
+SHAP 只叫 associations；
+
+learned threshold 叫 empirical applicability boundary；
+
+不叫 physical threshold / causal threshold。
+
+Husic 的工作本身属于 post-hoc model deficiency diagnosis，这个定位与你很契合。
+HESS
+
+最后给一个“论文主线定稿版”
+
+如果现在就固定全文逻辑，我建议压缩成这一条：
+
+Diagnose → Correct → Falsify → Bound → Attribute
+
+即：
+
+Where does XAJ fail?
+	​
+
+
+↓
+
+Does a minimal snow process fix the expected failure?
+	​
+
+
+↓
+
+Does the gain disappear where snow is absent?
+	​
+
+
+↓
+
+Does it survive optimizer/DoF controls?
+	​
+
+
+↓
+
+Can basin attributes predict when the correction is warranted?
+	​
+
+
+这条主线与 Tan/Ju/Wu 的“开发一个寒区 XAJ”形成了真正的区分，也与 dXAJ 的“改变参数学习/优化框架”形成了区分。已有研究证明 snow-XAJ 本身并不新；你最有价值的问题因此变成了XAJ 的 snow-related structural adequacy 是否能够在大样本上被诊断、证伪和划定边界。
+科学直达
++3
+MDPI
++3
+开放获取期刊目录
++3
+
+按目前 pilot，我认为 go/no-go 已经足以进入分层大样本阶段，但在全量计算前，应先把 optimizer-budget ladder、fixed/shared Kf–CTG control、snow/no-snow strata 和最终 Caravan snapshot 四项实验设计冻结。这样后续结果无论“XAJ-Snow 大范围有效”还是“只在有限 snow regime 有效”，都能形成可发表结论；后者甚至更符合“applicability boundary”这条更强的论文主线。
+HESS
++1
+
+ChatGPT 也可能会犯错。请核查重要信息。
+
+极高

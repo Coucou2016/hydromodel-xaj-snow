@@ -1,0 +1,42 @@
+data:
+  dataset: "caravan"
+  path: null
+  basin_ids: ["camels_14308990"]
+  warmup_length: 365
+  variables: ["precipitation", "potential_evapotranspiration", "streamflow"]
+  datasource_kwargs:
+    region: "US"
+  train_period: ["1985-10-01", "1995-09-30"]
+  test_period: ["2005-10-01", "2014-09-30"]
+  output_dir: "results/multi_basin_global_then_refine_v2/camels_14308990"
+
+model:
+  name: "xaj_mz"
+  params:
+    source_type: "sources"
+    source_book: "HF"
+    kernel_size: 15
+  output_variable: "qsim"
+
+training:
+  # Stage 2: local refinement, initialized from Stage 1 best params
+  algorithm: "scipy"
+  scipy:
+    method: "L-BFGS-B"
+    max_iterations: 40
+    ftol: 1e-6
+    gtol: 1e-5
+    initial_params_from: "results/multi_basin_global_then_refine_v2/camels_14308990/xaj_mz_SCE_UA"
+    # NEW: multi-start local optimization for robustness
+    n_starts: 1
+    init_strategy: "midpoint"
+    seed: 42
+  # Refine toward NSE (often better for hydrograph fit)
+  loss: "NSE"
+  save_config: true
+
+evaluation:
+  metrics: ["NSE", "KGE", "RMSE", "PBIAS"]
+  save_results: true
+  plot_results: false
+

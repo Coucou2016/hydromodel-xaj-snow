@@ -1,0 +1,28 @@
+local_data_path:
+  # All paths are relative to this file, so the whole folder is portable.
+  #
+  # CARAVAN single source of truth (do not delete duplicate under ../hydrodata/Caravan):
+  #   ./_portable_data/datasets-origin/CARAVAN
+  # External mirror (same NetCDF content, deeper path): ../hydrodata/Caravan/usr/local/.../Caravan-Jan25-nc
+  # See docs/local/data_sources_and_duplicates.md
+  root: ./_portable_data
+  datasets-origin: ./_portable_data/datasets-origin
+  datasets-interim: ./_portable_data/datasets-interim
+  basins-origin: ./_portable_data/basins-origin
+  basins-interim: ./_portable_data/basins-interim
+  cache: ./_portable_data/.cache_global_then_refine_v2
+
+# Optional remote service configs (kept empty for local/portable usage).
+minio:
+  server_url: ""
+  client_endpoint: ""
+  access_key: ""
+  secret: ""
+
+postgres:
+  server_url: ""
+  port: 0
+  username: ""
+  password: ""
+  database: ""
+

@@ -1,0 +1,24 @@
+# Figure remake notes
+
+SciencePlots styles: science + no-latex; serif font in use: Times New Roman; PNG dpi>=300; PDF fonttype=42 (editable).
+
+## Data sources (real files only)
+
+- camels_01013500 XAJ-MZ: NSE=-0.2321, KGE=0.2096 ← `results/xaj_snow_go_nogo/camels_01013500_xaj_mz/xaj_mz_SCE_UA/evaluation_test/basins_metrics.csv`; hydrograph ← `results/xaj_snow_go_nogo/camels_01013500_xaj_mz/xaj_mz_SCE_UA/evaluation_test/xaj_mz_evaluation_results.nc`
+- camels_01013500 XAJ-Snow: NSE=0.7318, KGE=0.7764 ← `results/xaj_snow_go_nogo/camels_01013500_xaj_snow/xaj_snow_SCE_UA/evaluation_test/basins_metrics.csv`; hydrograph ← `results/xaj_snow_go_nogo/camels_01013500_xaj_snow/xaj_snow_SCE_UA/evaluation_test/xaj_snow_evaluation_results.nc`
+- camels_14306500 XAJ-MZ: NSE=0.7106, KGE=0.7815 ← `results/xaj_snow_go_nogo/camels_14306500_xaj_mz/xaj_mz_SCE_UA/evaluation_test/basins_metrics.csv`; hydrograph ← `results/xaj_snow_go_nogo/camels_14306500_xaj_mz/xaj_mz_SCE_UA/evaluation_test/xaj_mz_evaluation_results.nc`
+- camels_14306500 XAJ-Snow: NSE=0.7043, KGE=0.7795 ← `results/xaj_snow_go_nogo/camels_14306500_xaj_snow/xaj_snow_SCE_UA/evaluation_test/basins_metrics.csv`; hydrograph ← `results/xaj_snow_go_nogo/camels_14306500_xaj_snow/xaj_snow_SCE_UA/evaluation_test/xaj_snow_evaluation_results.nc`
+
+## Produced stems
+
+- `fig_go_nogo_metrics_bar.{png,pdf}` — NSE/KGE bars for 2 basins × 2 models
+- `fig_01013500_hydrograph_mz_vs_snow.{png,pdf}` — full test hydrograph with spring shading
+- `fig_01013500_hydrograph_spring_zoom_2010_2012.{png,pdf}` — 2010–2012 zoom emphasizing spring peaks
+- `fig_14306500_hydrograph_mz_vs_snow.{png,pdf}` — negative-control hydrograph
+- `fig_01013500_obs_sim_scatter.{png,pdf}` — obs–sim scatter for 01013500
+
+## Notes
+
+- Hydrograph time axis is the evaluation NetCDF test window after warmup (2006-10-01 to 2014-09-30).
+- Spring shading (Mar–May) on 01013500 highlights the snowmelt season where XAJ-Snow improves peak timing/volume relative to XAJ-MZ.
+- 14306500 is the low-snow negative control; MZ and Snow should nearly overlap.

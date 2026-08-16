@@ -1,0 +1,38 @@
+# Pipeline smoke (small SCE-UA budget). Do not use these NSE values for go/no-go.
+
+data:
+  dataset: "caravan"
+  path: null
+  basin_ids: ["camels_01013500"]
+  warmup_length: 365
+  variables: ["precipitation", "potential_evapotranspiration", "streamflow"]
+  datasource_kwargs:
+    region: "US"
+  train_period: ["1985-10-01", "1995-09-30"]
+  test_period: ["2005-10-01", "2014-09-30"]
+  output_dir: "results/xaj_snow_go_nogo/smoke_camels_01013500_xaj_mz"
+
+model:
+  name: "xaj_mz"
+  params:
+    source_type: "sources"
+    source_book: "HF"
+    kernel_size: 15
+  output_variable: "qsim"
+
+training:
+  algorithm: "SCE_UA"
+  SCE_UA:
+    rep: 120
+    ngs: 7
+    kstop: 20
+    peps: 0.1
+    pcento: 0.1
+    random_seed: 1234
+  loss: "KGE"
+  save_config: true
+
+evaluation:
+  metrics: ["NSE", "KGE", "RMSE", "PBIAS"]
+  save_results: true
+  plot_results: false
