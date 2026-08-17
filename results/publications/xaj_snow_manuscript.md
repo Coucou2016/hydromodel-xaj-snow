@@ -1,6 +1,6 @@
 <!-- Markdown sibling of XAJ-Snow manuscript. HTML/PDF are the fully self-contained deliverables (base64 figures + inline CSS). This Markdown keeps relative image paths for in-repo reading. -->
 
-Hydromodel 0.3.2 · XAJ-Snow manuscript draft · generated 2026-08-18 03:46 · for HESS-oriented polishing
+Hydromodel 0.3.2 · XAJ-Snow manuscript draft · generated 2026-08-18 04:20 · for HESS-oriented polishing
 
   Manuscript draft · Hydrology and Earth System Sciences (target)
 
@@ -237,46 +237,46 @@ A supplementary local refine of the SCE-UA optimum against NSE on 01013500 (diff
 
 Figures 1–5 document the two-basin pilot. They support the decision to proceed with the stratified analysis and indicate method readiness; they are not a substitute for stratified population inference.
 
-![Paired out-of-sample NSE and KGE for the pilot basins](../figures/fig_go_nogo_metrics_bar.png)
+![Test-period Nash–Sutcliffe efficiency (NSE) and Kling–Gupta efficiency (KGE) for XAJ-MZ and XAJ-Snow in the snow-affected pilot basin 01013500 and the low-snow negative-control basin 14306500. Both models were calibrated with the Shuffled Complex Evolution–University of Arizona (SCE-UA) algorithm against KGE using the matched nominal calibration budget (rep = 800)](../figures/fig_go_nogo_metrics_bar.png)
 
-  **Figure 1.** Paired out-of-sample NSE and KGE for the pilot basins.
-  Data source: paired go/no-go basins_metrics.csv (SCE-UA+KGE, rep=800).
+  **Figure 1.** Test-period Nash–Sutcliffe efficiency (NSE) and Kling–Gupta efficiency (KGE) for XAJ-MZ and XAJ-Snow in the snow-affected pilot basin 01013500 and the low-snow negative-control basin 14306500. Both models were calibrated with the Shuffled Complex Evolution–University of Arizona (SCE-UA) algorithm against KGE using the matched nominal calibration budget (rep = 800).
+  Data source: Paired pilot metrics from the SCE-UA + KGE evaluation (training 1985–1995; testing 2005–2014).
 
 **Reading Figure 1.** Grouped bars compare NSE (blue family) and KGE (green family) for each basin–model pair.
 For 01013500, the XAJ-Snow bars show the selective skill recovery relative to the short/negative XAJ-MZ bars.
 For 14306500, the near-equal bars show that the negative control remains nearly unchanged.
 The figure cannot prove causality beyond the paired protocol, nor generalize beyond two basins.
 
-![Full test-period hydrograph for snow-affected basin 01013500](../figures/fig_01013500_hydrograph_mz_vs_snow.png)
+![Observed and simulated daily streamflow (mm d⁻¹) for the snow-affected pilot basin 01013500 over the independent test period after the 365 d warm-up. Simulations are shown for XAJ-MZ and XAJ-Snow; shaded periods indicate the spring season (March–May)](../figures/fig_01013500_hydrograph_mz_vs_snow.png)
 
-  **Figure 2.** Full test-period hydrograph for snow-affected basin 01013500.
-  Data source: evaluation NetCDF for the test window after warmup.
+  **Figure 2.** Observed and simulated daily streamflow (mm d⁻¹) for the snow-affected pilot basin 01013500 over the independent test period after the 365 d warm-up. Simulations are shown for XAJ-MZ and XAJ-Snow; shaded periods indicate the spring season (March–May).
+  Data source: Daily discharge from the test-window model evaluation.
 
 **Reading Figure 2.** Black denotes observed discharge, blue XAJ-MZ, and orange XAJ-Snow over the full test window after warmup.
 Spring shading marks March–May. In this basin, XAJ-MZ visibly displaces or attenuates snow-season peaks relative to observations, while XAJ-Snow tracks volume and timing more closely.
 This is a qualitative hydrograph pattern, since no formal peak-timing metric is included in the completed evidence.
 Summer/autumn residuals should not be interpreted as snow-process proof; they may reflect soil/routing parameter trade-offs.
 
-![Spring zoom (2010–2012) for basin 01013500](../figures/fig_01013500_hydrograph_spring_zoom_2010_2012.png)
+![Spring-focused comparison of observed and simulated daily streamflow (mm d⁻¹) for snow-affected pilot basin 01013500 during 2010–2012. Simulations are shown for XAJ-MZ and XAJ-Snow; shaded periods identify the March–May spring seasons](../figures/fig_01013500_hydrograph_spring_zoom_2010_2012.png)
 
-  **Figure 3.** Spring zoom (2010–2012) for basin 01013500.
-  Data source: same evaluation series as Fig. 2; Mar–May spring shading.
+  **Figure 3.** Spring-focused comparison of observed and simulated daily streamflow (mm d⁻¹) for snow-affected pilot basin 01013500 during 2010–2012. Simulations are shown for XAJ-MZ and XAJ-Snow; shaded periods identify the March–May spring seasons.
+  Data source: Model evaluation series of the test window, restricted to 2010–2012.
 
 **Reading Figure 3.** The 2010–2012 zoom isolates consecutive snowmelt seasons and permits inspection of peak timing, multi-peak structure, and whether XAJ-Snow overshoots individual events.
 It cannot separate temperature-forcing error from structural melt error.
 
-![Negative-control hydrograph for low-snow basin 14306500](../figures/fig_14306500_hydrograph_mz_vs_snow.png)
+![Observed and simulated daily streamflow (mm d⁻¹) for the low-snow negative-control basin 14306500 over the independent test period after the 365 d warm-up. Simulations are shown for XAJ-MZ and XAJ-Snow](../figures/fig_14306500_hydrograph_mz_vs_snow.png)
 
-  **Figure 4.** Negative-control hydrograph for low-snow basin 14306500.
-  Data source: evaluation NetCDF for camels_14306500.
+  **Figure 4.** Observed and simulated daily streamflow (mm d⁻¹) for the low-snow negative-control basin 14306500 over the independent test period after the 365 d warm-up. Simulations are shown for XAJ-MZ and XAJ-Snow.
+  Data source: Daily discharge from the test-window model evaluation.
 
 **Reading Figure 4.** On the negative control, the XAJ-MZ and XAJ-Snow hydrographs nearly overlap, matching the near-zero Δ metrics.
 This comparison guards against “any extra parameters help everywhere” interpretations.
 
-![Observed–simulated scatter for basin 01013500](../figures/fig_01013500_obs_sim_scatter.png)
+![Observed versus simulated daily streamflow (mm d⁻¹) for the snow-affected pilot basin 01013500 over the independent test period: (a) XAJ-MZ and (b) XAJ-Snow](../figures/fig_01013500_obs_sim_scatter.png)
 
-  **Figure 5.** Observed–simulated scatter for basin 01013500.
-  Data source: paired daily discharge from the evaluation series.
+  **Figure 5.** Observed versus simulated daily streamflow (mm d⁻¹) for the snow-affected pilot basin 01013500 over the independent test period: (a) XAJ-MZ and (b) XAJ-Snow.
+  Data source: Paired daily discharge from the test-window model evaluation.
 
 **Reading Figure 5.** The panel compares daily observed and simulated discharge for 01013500, with the 1:1 line as the reference.
 XAJ-Snow points lie closer to the diagonal (higher correlation / lower error), while XAJ-MZ shows larger scatter and bias.
@@ -296,19 +296,19 @@ We report both the overall and snow-stratified summaries because snow stratifica
 These descriptive contrasts motivate completion of the frozen stratified sample and calibration-fairness analyses, but they do not establish an applicability threshold or population-level snow-response relationship.
 Figures 6–7 visualize ΔNSE against snow fraction and by bin.
 
-![Screening-batch ΔNSE versus catchment snow fraction (n=14, rep=200)](../figures/fig_batch_delta_nse_vs_frac_snow.png)
+![Paired change in test-period Nash–Sutcliffe efficiency, ΔNSE = NSE(XAJ-Snow) − NSE(XAJ-MZ), versus catchment snow fraction (frac_snow) for the exploratory screening batch of 14 CAMELS (US) basins. The screening runs used the lighter SCE-UA calibration budget (rep = 200); positive ΔNSE indicates higher test-period NSE for XAJ-Snow](../figures/fig_batch_delta_nse_vs_frac_snow.png)
 
-  **Figure 6.** Screening-batch ΔNSE versus catchment snow fraction (n=14, rep=200).
-  Data source: results/diagnostics/batch1_paired_metrics.csv.
+  **Figure 6.** Paired change in test-period Nash–Sutcliffe efficiency, ΔNSE = NSE(XAJ-Snow) − NSE(XAJ-MZ), versus catchment snow fraction (frac_snow) for the exploratory screening batch of 14 CAMELS (US) basins. The screening runs used the lighter SCE-UA calibration budget (rep = 200); positive ΔNSE indicates higher test-period NSE for XAJ-Snow.
+  Data source: Paired screening-batch metrics for the 14-basin batch.
 
 **Reading Figure 6.** Each point represents one CAMELS basin in the screening batch (`rep`=200).
 Positive ΔNSE indicates XAJ-Snow outperforming XAJ-MZ on the independent test window.
 The pattern is consistent with larger gains at higher snow fractions, but n=14 and the lighter budget preclude population inference.
 
-![Screening-batch ΔNSE by snow-fraction bin (n=14, rep=200)](../figures/fig_batch_delta_nse_by_snow_bin.png)
+![Box-and-whisker distributions of paired test-period ΔNSE = NSE(XAJ-Snow) − NSE(XAJ-MZ) across the snow bins of the 14-basin exploratory screening batch: S0 (frac_snow  0.3). The screening runs used the lighter SCE-UA calibration budget (rep = 200)](../figures/fig_batch_delta_nse_by_snow_bin.png)
 
-  **Figure 7.** Screening-batch ΔNSE by snow-fraction bin (n=14, rep=200).
-  Data source: results/diagnostics/batch1_paired_metrics.csv.
+  **Figure 7.** Box-and-whisker distributions of paired test-period ΔNSE = NSE(XAJ-Snow) − NSE(XAJ-MZ) across the snow bins of the 14-basin exploratory screening batch: S0 (frac_snow < 0.1), S1 (0.1–0.3), and S2 (> 0.3). The screening runs used the lighter SCE-UA calibration budget (rep = 200).
+  Data source: Paired screening-batch metrics for the 14-basin batch.
 
 **Reading Figure 7.** The figure summarizes ΔNSE by snow-fraction bin (defined in Section 2.1) for the same screening batch.
 Both the all-sample and stratified summaries are reported; stratification follows the prespecified snow-exposure hypothesis, not the observed all-sample median.
@@ -354,7 +354,7 @@ The next steps are to finish medium-budget calibration on the frozen sample, add
 
 Research code, curated figures, diagnostics notes, consultation briefings, and publication drafts are publicly available at
 [https://github.com/Coucou2016/hydromodel-xaj-snow](https://github.com/Coucou2016/hydromodel-xaj-snow)
-(branch `master`; generator snapshot commit `8f96318`).
+(branch `master`; generator snapshot commit `6d56f19`).
 Core modules include the snow accounting layer and XAJ-Snow wrapper registered in the hydromodel model dictionary; matched pilot configurations, unit tests, and the publication generator are included.
 The paired batch1 metrics table and the sanitized 14-basin sampling/attribute table (basin identity, coordinates, attributes, snow/aridity/regulation strata, and frozen-sample seed) are published under `results/diagnostics/`.
 Caravan / CAMELS forcing and discharge follow Kratzert et al. (2023) licensing; large NetCDF caches and portable hydrodata trees are **not** redistributed in the public snapshot.
@@ -409,4 +409,4 @@ This HTML is self-contained (CSS inline; figures as base64).
 After the matched SCE-UA+KGE runs, a local SciPy refine against NSE on 01013500 yields test NSE/KGE of 0.8779/0.9374 for XAJ-Snow versus 0.1393/0.0856 for XAJ-MZ.
 Because it changes both the optimization objective and the search stage, this contrast is supplementary objective-sensitivity evidence; it is not a replacement for the matched SCE-UA comparison and not a fairness proof.
 
-Generated 2026-08-18 03:46 from real CSV-backed metrics and figures. No fabricated metrics. Claims beyond completed evidence remain pending.
+Generated 2026-08-18 04:20 from real CSV-backed metrics and figures. No fabricated metrics. Claims beyond completed evidence remain pending.

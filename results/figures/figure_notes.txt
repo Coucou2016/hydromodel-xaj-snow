@@ -11,11 +11,11 @@ SciencePlots styles: science + no-latex; serif font in use: Times New Roman; PNG
 
 ## Produced stems
 
-- `fig_go_nogo_metrics_bar.{png,pdf}` — NSE/KGE bars for 2 basins × 2 models
-- `fig_01013500_hydrograph_mz_vs_snow.{png,pdf}` — full test hydrograph with spring shading
-- `fig_01013500_hydrograph_spring_zoom_2010_2012.{png,pdf}` — 2010–2012 zoom emphasizing spring peaks
-- `fig_14306500_hydrograph_mz_vs_snow.{png,pdf}` — negative-control hydrograph
-- `fig_01013500_obs_sim_scatter.{png,pdf}` — obs–sim scatter for 01013500
+- `fig_go_nogo_metrics_bar.{png,pdf,svg}` — NSE/KGE bars for 2 basins × 2 models
+- `fig_01013500_hydrograph_mz_vs_snow.{png,pdf,svg}` — full test hydrograph with spring shading
+- `fig_01013500_hydrograph_spring_zoom_2010_2012.{png,pdf,svg}` — 2010–2012 zoom emphasizing spring peaks
+- `fig_14306500_hydrograph_mz_vs_snow.{png,pdf,svg}` — negative-control hydrograph
+- `fig_01013500_obs_sim_scatter.{png,pdf,svg}` — obs–sim scatter for 01013500
 
 ## Notes
 

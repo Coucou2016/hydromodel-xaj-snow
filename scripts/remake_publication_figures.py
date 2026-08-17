@@ -101,7 +101,6 @@ def plot_metrics_bar(repo: Path, out_dir: Path) -> Path:
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
     ax.set_ylabel("Metric value")
-    ax.set_title("Go/no-go test-period metrics (medium, rep=800)")
     ax.legend(loc="upper left", ncol=3, columnspacing=0.8)
     ax.set_ylim(min(-0.35, min(nse) - 0.05), max(1.0, max(kge) + 0.08))
     for bars in (bars_n, bars_k):
@@ -170,7 +169,6 @@ def plot_paired_hydrograph(
     ax.plot(t, sim_mz, color=COLORS["mz"], lw=0.9, alpha=0.9, label="XAJ-MZ", zorder=2)
     ax.plot(t, sim_sn, color=COLORS["snow"], lw=0.9, alpha=0.9, label="XAJ-Snow", zorder=2)
     ax.set_ylabel("Streamflow (mm d$^{-1}$)")
-    ax.set_title(title)
     ax.legend(loc="upper right", ncol=2 if highlight_spring else 3)
     ax.xaxis.set_major_locator(mdates.YearLocator())
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
@@ -190,20 +188,30 @@ def plot_scatter_obs_sim(repo: Path, out_dir: Path) -> Path | None:
     # Same basin/obs expected; use MZ obs as reference.
     obs = obs_mz
     fig, axes = plt.subplots(1, 2, figsize=(7.2, 3.4), sharex=True, sharey=True)
-    for ax, sim, name, color in (
-        (axes[0], sim_mz, "XAJ-MZ", COLORS["mz"]),
-        (axes[1], sim_sn, "XAJ-Snow", COLORS["snow"]),
+    for ax, sim, name, color, panel in (
+        (axes[0], sim_mz, "XAJ-MZ", COLORS["mz"], "(a)"),
+        (axes[1], sim_sn, "XAJ-Snow", COLORS["snow"], "(b)"),
     ):
         ax.scatter(obs, sim, s=4, alpha=0.25, color=color, rasterized=True, edgecolors="none")
         lim = float(np.nanmax([obs.max(), sim.max()]) * 1.05)
-        ax.plot([0, lim], [0, lim], color="0.4", lw=0.8, ls="--")
+        ax.plot([0, lim], [0, lim], color="0.4", lw=0.8, ls="--", label="1:1")
         ax.set_xlim(0, lim)
         ax.set_ylim(0, lim)
         ax.set_aspect("equal", adjustable="box")
-        ax.set_title(f"{basin.replace('camels_', '')} {name}")
+        ax.set_title(name)
+        ax.legend(loc="lower right", fontsize=8)
+        ax.text(
+            0.03,
+            0.96,
+            panel,
+            transform=ax.transAxes,
+            ha="left",
+            va="top",
+            fontsize=9,
+            fontweight="bold",
+        )
         ax.set_xlabel("Observed (mm d$^{-1}$)")
     axes[0].set_ylabel("Simulated (mm d$^{-1}$)")
-    fig.suptitle("Test-period obs–sim scatter (from evaluation NetCDF)", y=1.02, fontsize=10)
     stem = out_dir / "fig_01013500_obs_sim_scatter"
     save_fig(fig, stem, formats=("png", "pdf", "svg"), close=True)
     return stem

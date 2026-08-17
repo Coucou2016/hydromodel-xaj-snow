@@ -1,6 +1,6 @@
 <!-- Markdown sibling of XAJ-Snow report. HTML/PDF are the fully self-contained deliverables (base64 figures + inline CSS). This Markdown keeps relative image paths for in-repo reading. -->
 
-Hydromodel 0.3.2 · XAJ-Snow 完整科研报告 · 2026-08-18 03:46 · 研究报告（可含工程细节）
+Hydromodel 0.3.2 · XAJ-Snow 完整科研报告 · 2026-08-18 04:20 · 研究报告（可含工程细节）
 
   完整科研报告 · 正式学术风格 · 自包含 HTML
 
@@ -215,7 +215,7 @@ smoke 曾用 rep=120 仅验证流水线。
 ![Go/no-go 成对样本外 NSE 与 KGE 柱状对比](../figures/fig_go_nogo_metrics_bar.png)
 
   **图 1.** Go/no-go 成对样本外 NSE 与 KGE 柱状对比.
-  Data source: paired go/no-go basins_metrics.csv (SCE-UA+KGE, rep=800).
+  Data source: Paired pilot metrics from the SCE-UA + KGE evaluation (training 1985–1995; testing 2005–2014).
 
 #### 图 1 超详细解读（来龙去脉）
 
@@ -234,7 +234,7 @@ smoke 曾用 rep=120 仅验证流水线。
 ![雪影响流域 01013500 全测试期水文过程线](../figures/fig_01013500_hydrograph_mz_vs_snow.png)
 
   **图 2.** 雪影响流域 01013500 全测试期水文过程线.
-  Data source: evaluation NetCDF for the test window after warmup.
+  Data source: Daily discharge from the test-window model evaluation.
 
 #### 图 2 超详细解读（来龙去脉）
 
@@ -253,7 +253,7 @@ smoke 曾用 rep=120 仅验证流水线。
 ![01013500 春季放大过程线（2010–2012）](../figures/fig_01013500_hydrograph_spring_zoom_2010_2012.png)
 
   **图 3.** 01013500 春季放大过程线（2010–2012）.
-  Data source: same evaluation series as Fig. 2; Mar–May spring shading.
+  Data source: Model evaluation series of the test window, restricted to 2010–2012.
 
 #### 图 3 超详细解读（来龙去脉）
 
@@ -272,7 +272,7 @@ smoke 曾用 rep=120 仅验证流水线。
 ![低雪负对照流域 14306500 水文过程线](../figures/fig_14306500_hydrograph_mz_vs_snow.png)
 
   **图 4.** 低雪负对照流域 14306500 水文过程线.
-  Data source: evaluation NetCDF for camels_14306500.
+  Data source: Daily discharge from the test-window model evaluation.
 
 #### 图 4 超详细解读（来龙去脉）
 
@@ -291,7 +291,7 @@ smoke 曾用 rep=120 仅验证流水线。
 ![01013500 观测–模拟散点图](../figures/fig_01013500_obs_sim_scatter.png)
 
   **图 5.** 01013500 观测–模拟散点图.
-  Data source: paired daily discharge from the evaluation series.
+  Data source: Paired daily discharge from the test-window model evaluation.
 
 #### 图 5 超详细解读（来龙去脉）
 
@@ -310,7 +310,7 @@ smoke 曾用 rep=120 仅验证流水线。
 ![Batch1 ΔNSE 随 frac_snow 散点（n=14，rep=200）](../figures/fig_batch_delta_nse_vs_frac_snow.png)
 
   **图 6.** Batch1 ΔNSE 随 frac_snow 散点（n=14，rep=200）.
-  Data source: results/diagnostics/batch1_paired_metrics.csv.
+  Data source: Paired screening-batch metrics for the 14-basin batch.
 
 #### 图 6 超详细解读（来龙去脉）
 
@@ -327,7 +327,7 @@ smoke 曾用 rep=120 仅验证流水线。
 ![Batch1 ΔNSE 按雪量分箱（n=14，rep=200）](../figures/fig_batch_delta_nse_by_snow_bin.png)
 
   **图 7.** Batch1 ΔNSE 按雪量分箱（n=14，rep=200）.
-  Data source: results/diagnostics/batch1_paired_metrics.csv.
+  Data source: Paired screening-batch metrics for the 14-basin batch.
 
 #### 图 7 超详细解读（来龙去脉）
 
@@ -382,7 +382,7 @@ Chen et al.（2025）已证明大样本上加 CemaNeige/可微学习可抬高中
 ## 12. 软件与可复现性
 
 公开快照：[https://github.com/Coucou2016/hydromodel-xaj-snow](https://github.com/Coucou2016/hydromodel-xaj-snow)
-（`master` @ 生成时 `8f96318`；含源码/docs/figures/publications/consultation/配置/测试与生成脚本；不含大体积 nc、`_portable_data`/hydrodata，亦不含完整 SpotPy 率定 dump 树）。
+（`master` @ 生成时 `6d56f19`；含源码/docs/figures/publications/consultation/配置/测试与生成脚本；不含大体积 nc、`_portable_data`/hydrodata，亦不含完整 SpotPy 率定 dump 树）。
 用户须本地准备 Caravan/CAMELS 数据；细节见 `docs/local/github_public_repo.md`。
 
 # after cloning the public snapshot and placing Caravan/CAMELS caches locally
@@ -457,4 +457,4 @@ python scripts/generate_publication_outputs.py
 
   - Git：本轮允许 commit/push 公开仓（不含大 nc / hydrodata）
 
-生成时间 2026-08-18 03:46。数字来自真实 evaluation CSV；待补充项已显式标注。
+生成时间 2026-08-18 04:20。数字来自真实 evaluation CSV；待补充项已显式标注。

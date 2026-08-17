@@ -139,4 +139,42 @@
 
 ### 备份与提交
 
+- 修改后备份：`results/publications/versions/v1.3_20260818_0347/`
+- Commit：`6d56f19`（已 push 至 origin/master）
+
+---
+
+## Round 4（2026-08-18 03:50–04:25）：图片格式与 Figure 规范审查
+
+- ChatGPT 对话：https://chatgpt.com/c/6a835077-8718-83ea-9c3f-6a66b9c39b1c（续用同一会话）
+- 原始回复：`docs/local/_chatgpt_raw_round5_figure_audit.txt`（18,115 字符，DOM 提取）
+- 交互方式：ChatGPT 无法读图 → 本地提供全部图注+图内容描述，ChatGPT 联网检索 HESS/Copernicus 现行规范逐条审计
+- 修改前状态：v1.3（Round 3 提交版 6d56f19）
+- 修改后备份：`results/publications/versions/v1.4_20260818_0420/`
+
+### 问题清单与处置
+
+| ID | ChatGPT 意见 | 本地核验 | 处置 |
+|----|--------------|----------|------|
+| R4-1 | 300 dpi / ≥8cm / PNG 格式 | 实测全部 PASS | **通过**，无需改 |
+| R4-2 | Fig.5 缺 panel label (a)/(b) | 属实（代码无 text 标注） | **采纳**：重绘加粗体 (a)/(b) |
+| R4-3 | Fig.5 缺 1:1 参考线图例 | 属实（代码 plot 无 label） | **采纳**：加 "1:1" 图例项 |
+| R4-4 | Fig.2/3 春季阴影缺图内图例 | **误判**：`_shade_spring()` 已有 "Mar–May" label | **否决**（代码证据） |
+| R4-5 | 图内标题与图注重复 | 属实 | **采纳**：Fig.1–4/6/7 删内部标题；Fig.5 简化为 panel 头 |
+| R4-6 | 图注含仓库文件名/go-no-go 术语 | 属实 | **采纳**：7 条图注全部重写为自包含学术表述 |
+| R4-7 | Fig.6/7 "dNSE (snow - mz)" 非规范记法 | 属实（代码如此） | **采纳**：改 "ΔNSE (XAJ-Snow − XAJ-MZ)"；分箱标签加 S0/S1/S2 |
+| R4-8 | 单位 mm/d → mm d⁻¹ | 代码核验已是 mm d⁻¹（$^{-1}$ 上标） | **已合规**，无需改 |
+| R4-9 | 字体 Times New Roman 非 Copernicus 偏好（建议 sans-serif） | 规范原文为 "consider"，非强制 | **延后**：单一字体族已满足；投稿前可选 |
+| R4-10 | 生产文件命名 f01–f07 | 属实（投稿要求） | **延后**：投稿打包时执行；仓库保留描述名 |
+| R4-11 | 图注缺流域角色/单位/时期 | 属实 | **采纳**：全部补齐 |
+
+### 数据防回归事件（重要）
+
+- 重跑 `analyze_applicability_first_look.py` 时默认 `--sample` 指向 `sample_frozen.csv`（80 站冻结样本，不含 2 pilot 站），导致 `applicability_first_look.csv` 中 01013500/14306500 属性列丢失。
+- **立即修复**：改用 `--sample results/sampling/sample_batch1.csv` 重跑，CSV 与已发布版逐字节一致；重跑生成的 `applicability_first_look.md` 含本地绝对路径，用 `git checkout` 恢复手工润色版。
+- 结论：任何诊断文件重跑后必须 diff 核验；本轮所有指标数字零改动。
+
+### 备份与提交
+
+- 修改后备份：`results/publications/versions/v1.4_20260818_0420/`
 - Commit：见下方 push 记录

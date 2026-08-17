@@ -1,0 +1,74 @@
+[ChatGPT Round 4 (figure formats & captions) raw response, saved 2026-08-18 ~04:10 UTC+8]
+[Conversation: https://chatgpt.com/c/6a835077-8718-83ea-9c3f-6a66b9c39b1c ("XAJ Snow Extensions Review")]
+[Response length: 18115 chars; extracted via browser DOM from last assistant message]
+[Task: audit captions + HESS/Copernicus figure compliance via web search (ChatGPT cannot see images)]
+
+1 HESS figure-requirement checklist
+
+I checked the current Copernicus manuscript-preparation guidance used by HESS and the commit-pinned 6d56f19 manuscript. Copernicus currently requires or recommends: 300 dpi, figure width ≥8 cm, separate numbered files such as f01, legends within the figure, lowercase bracketed panel labels, concise captions in the manuscript text, and appropriate file-size limits. Vector graphics are the first choice for line graphics.
+
+Item	Current Copernicus/HESS guidance	Your status	Action
+Resolution	Figures should have 300 dpi resolution.	PASS	Your measured PNGs are 300 dpi.
+Minimum width	Width should be not less than 8 cm.	PASS	You report all figures ≥8 cm.
+Raster format	PNG is appropriate for non-lossy line graphics; JPEG is discouraged for sharp-edged plots.	PASS	PNG is appropriate.
+Vector format	For line graphics, EPS/PDF is the first choice. Fonts must be embedded; PDFs should not contain hidden objects.	PASS / VERIFY	Use the vector PDF siblings for production if possible; verify embedded fonts and absence of hidden objects.
+Font family	Use one font family and consider a sans-serif family such as Arial or Helvetica.	ACCEPTABLE, NOT PREFERRED	Times New Roman is not prohibited, but Arial/Helvetica would align more closely with Copernicus guidance. If changing is easy, switch before final export.
+Panel labels	Multi-panel figures require lowercase letters in brackets: (a), (b), ....	PASS for Fig. 5	Your bold (a)/(b) labels satisfy the stated format. Bold is not prohibited.
+Panel labels on single panels	Guideline applies to panels in composite figures.	PASS	Do not add (a) to Figs. 1–4 or 6–7 merely for consistency.
+Composite figure	Multiple panels belonging to one figure should be combined into one file.	PASS	Fig. 5 is correctly one two-panel file.
+Legends	Symbols/line encodings should be explained inside the figure, rather than relying on caption descriptions.	PARTIAL / VERIFY	Figs. 1–4 have legends. Verify that Mar–May shading in Figs. 2–3 is represented in the legend. Fig. 5 should identify the 1:1 line inside the figure.
+Colour accessibility	Colour schemes should be interpretable for readers with colour-vision deficiencies; Copernicus explicitly asks authors to check them.	LIKELY PASS / VERIFY	Okabe–Ito is an appropriate choice, but still run the final rendered figures through a CVD simulator as requested by Copernicus.
+Figure file naming	Production figures should be numbered f01, f02, ..., f11.	CHANGE	Current descriptive filenames are useful in the repo but production copies should be f01.pdf … f07.pdf or corresponding PNG names.
+PNG/TIF/JPG size	Non-PDF individual figure files should be <5 MB.	VERIFY	Check each PNG.
+PDF size	Current detailed guidance gives <2 MB per PDF figure.	VERIFY	Important if submitting the vector siblings.
+Total production files	Overall submitted files excluding supplements should be <30 MB.	VERIFY	Check the final production archive.
+Review manuscript	Review PDF must include figures and captions near first mention; manuscript PDF must have embedded fonts.	VERIFY	Self-contained HTML is useful internally, but HESS still needs the prescribed manuscript PDF for review.
+Captions	Caption must be concise but descriptive; abbreviations should be defined unless common/already defined. Captions belong in manuscript text, not figure image.	PARTIAL	Placement is correct; several captions remain too repository-oriented and insufficiently self-contained.
+Units in figures	Units should use exponential notation, e.g. W m−2; spaces between values and units.	CHANGE	Replace mm/d with mm d−1 throughout Figs. 2–5.
+Ranges	Use en dashes with no spaces, e.g. 2010–2012.	CHANGE where needed	Replace 2010-2012 in Fig. 3 and internal titles.
+Figure headings/text capitalization	Only the first word in headers is normally capitalized, apart from proper nouns.	MOSTLY PASS	Current titles are broadly sentence case, but I recommend removing most internal titles anyway.
+
+One important distinction: 300 dpi PNG is compliant, but it is not preferable to a clean vector PDF for these seven scientific plots. If the PDF siblings are true vector files, have embedded fonts, contain no hidden objects, and remain below 2 MB each, I would use those as the final production figures.
+
+2 Caption-by-caption audit
+
+Figure 1 — REVISE. Problems: go/no-go engineering terminology; basins_metrics.csv repository filename; "pilot basins" does not identify roles; NSE/KGE/SCE-UA unexplained; rep=800 needs budget context; caption doesn't say both models shown.
+Recommended caption: "Figure 1. Test-period Nash–Sutcliffe efficiency (NSE) and Kling–Gupta efficiency (KGE) for XAJ-MZ and XAJ-Snow in the snow-affected pilot basin 01013500 and the low-snow negative-control basin 14306500. Both models were calibrated with the Shuffled Complex Evolution–University of Arizona (SCE-UA) algorithm against KGE using the matched nominal calibration budget (rep = 800)."
+
+Figure 2 — REVISE. Problems: doesn't state observed vs simulated; models not named; unit missing; "evaluation NetCDF" jargon; "after warmup" → "after the warm-up"; mm/d → mm d−1; spring shading needs in-figure key.
+Recommended caption: "Figure 2. Observed and simulated daily streamflow (mm d−1) for the snow-affected pilot basin 01013500 over the independent test period after the 365 d warm-up. Simulations are shown for XAJ-MZ and XAJ-Snow; March–May periods indicate the spring season examined in the hydrograph comparison."
+
+Figure 3 — REVISE. Problems: "zoom" informal; 2010-2012/Mar-May need en dashes; "same evaluation series as Fig. 2" violates self-containment; models/obs not identified; unit omitted.
+Recommended caption: "Figure 3. Spring-focused comparison of observed and simulated daily streamflow (mm d−1) for snow-affected pilot basin 01013500 during 2010–2012. Simulations are shown for XAJ-MZ and XAJ-Snow, with March–May periods identifying the spring seasons examined."
+
+Figure 4 — REVISE. Problems: curves unidentified; unit absent; test-period not specified; repository-oriented wording.
+Recommended caption: "Figure 4. Observed and simulated daily streamflow (mm d−1) for the low-snow negative-control basin 14306500 over the independent test period after the 365 d warm-up. Simulations are shown for XAJ-MZ and XAJ-Snow."
+
+Figure 5 — MINOR-MODERATE REVISION. Strengths: (a)/(b) panel labels compliant. Problems: "Observed-simulated" → "Observed versus simulated"; basin role missing; units missing; "evaluation series" vague; 1:1 dashed line needs in-figure identification; mm d−1.
+Recommended caption: "Figure 5. Observed versus simulated daily streamflow (mm d−1) for the snow-affected pilot basin 01013500 over the independent test period: (a) XAJ-MZ and (b) XAJ-Snow." Add in-panel/shared "1:1" label for dashed diagonal.
+
+Figure 6 — REVISE. Problems: dNSE → ΔNSE; axis "(snow - mz)" → "(XAJ-Snow − XAJ-MZ)"; connect snow fraction to canonical frac_snow; rep=200 needs "lighter calibration budget" context; repository path out of caption; state sign convention; n=14 → n = 14.
+Recommended caption: "Figure 6. Paired change in test-period Nash–Sutcliffe efficiency, ΔNSE = NSE(XAJ-Snow) − NSE(XAJ-MZ), versus catchment snow fraction (frac_snow) for the exploratory screening batch of 14 CAMELS (US) basins. The screening runs used the lighter SCE-UA calibration budget (rep = 200); positive ΔNSE indicates higher test-period NSE for XAJ-Snow."
+
+Figure 7 — REVISE. Problems: dNSE → ΔNSE; S0/S1/S2 thresholds not defined; rep=200 needs interpretation; repository path out of caption; x-axis clearer as "Snow bin (S0/S1/S2)".
+Recommended caption: "Figure 7. Box-and-strip distributions of paired test-period ΔNSE = NSE(XAJ-Snow) − NSE(XAJ-MZ) across the snow bins of the 14-basin exploratory screening batch: S0 (frac_snow < 0.1), S1 (frac_snow = 0.1–0.3), and S2 (frac_snow > 0.3). The screening runs used the lighter SCE-UA calibration budget (rep = 200)."
+
+3 In-figure title redundancy
+
+Recommend removing the Matplotlib title from every single-panel figure (Figs. 1–4, 6, 7): they duplicate caption/axes/legend information. Fig. 5 exception: keep short panel headers reduced to "XAJ-MZ"/"XAJ-Snow", remove repeated basin id, retain (a)/(b).
+Cleaner HESS figure reads: panel label if needed → axes → plotted data → in-figure legend → manuscript caption.
+
+4 Remaining compliance risks
+
+- Rename production files f01..f07 (keep descriptive repo names internally).
+- Use vector PDF siblings if clean (fonts embedded via fonttype=42; <2 MB each; PNG <5 MB).
+- Times New Roman acceptable but not Copernicus preference (Arial/Helvetica recommended); not a compliance failure.
+- Verify legend completeness: Mar–May shading key in Figs. 2–3; add "1:1" label in Fig. 5.
+- Change mm/d → mm d−1 (house style).
+- Standardize ΔNSE (never dNSE); XAJ-Snow − XAJ-MZ (never snow - mz); canonical frac_snow; S0/S1/S2 consistency.
+- En dashes in ranges (2010–2012, Mar–May).
+- Remove repository/debug provenance from final captions (keep in Data/Code availability).
+- No panel labels needed on single-panel figures.
+- Final export-level checks: PDF font embedding, size limits, CVD simulation of spring shading vs MZ blue, legibility at 8 cm width.
+
+Overall: figure formats close to HESS-ready. Substantive cleanup: ΔNSE notation, mm d−1, remove internal plot titles, eliminate go/no-go and repository filenames from captions, self-contained graphical keys for Figs. 2–3 and 5, clean f01–f07 vector production files.

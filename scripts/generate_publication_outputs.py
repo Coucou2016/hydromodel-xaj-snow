@@ -49,51 +49,80 @@ FIGURES = [
     {
         "id": "fig1",
         "file": "fig_go_nogo_metrics_bar.png",
-        "ms_title": "Paired out-of-sample NSE and KGE for the pilot basins",
+        "ms_title": (
+            "Test-period Nash–Sutcliffe efficiency (NSE) and Kling–Gupta efficiency (KGE) for XAJ-MZ and "
+            "XAJ-Snow in the snow-affected pilot basin 01013500 and the low-snow negative-control basin "
+            "14306500. Both models were calibrated with the Shuffled Complex Evolution–University of Arizona "
+            "(SCE-UA) algorithm against KGE using the matched nominal calibration budget (rep = 800)"
+        ),
         "rep_title": "Go/no-go 成对样本外 NSE 与 KGE 柱状对比",
-        "source": "paired go/no-go basins_metrics.csv (SCE-UA+KGE, rep=800)",
+        "source": "Paired pilot metrics from the SCE-UA + KGE evaluation (training 1985–1995; testing 2005–2014)",
     },
     {
         "id": "fig2",
         "file": "fig_01013500_hydrograph_mz_vs_snow.png",
-        "ms_title": "Full test-period hydrograph for snow-affected basin 01013500",
+        "ms_title": (
+            "Observed and simulated daily streamflow (mm d⁻¹) for the snow-affected pilot basin 01013500 "
+            "over the independent test period after the 365 d warm-up. Simulations are shown for XAJ-MZ and "
+            "XAJ-Snow; shaded periods indicate the spring season (March–May)"
+        ),
         "rep_title": "雪影响流域 01013500 全测试期水文过程线",
-        "source": "evaluation NetCDF for the test window after warmup",
+        "source": "Daily discharge from the test-window model evaluation",
     },
     {
         "id": "fig3",
         "file": "fig_01013500_hydrograph_spring_zoom_2010_2012.png",
-        "ms_title": "Spring zoom (2010–2012) for basin 01013500",
+        "ms_title": (
+            "Spring-focused comparison of observed and simulated daily streamflow (mm d⁻¹) for snow-affected "
+            "pilot basin 01013500 during 2010–2012. Simulations are shown for XAJ-MZ and XAJ-Snow; shaded "
+            "periods identify the March–May spring seasons"
+        ),
         "rep_title": "01013500 春季放大过程线（2010–2012）",
-        "source": "same evaluation series as Fig. 2; Mar–May spring shading",
+        "source": "Model evaluation series of the test window, restricted to 2010–2012",
     },
     {
         "id": "fig4",
         "file": "fig_14306500_hydrograph_mz_vs_snow.png",
-        "ms_title": "Negative-control hydrograph for low-snow basin 14306500",
+        "ms_title": (
+            "Observed and simulated daily streamflow (mm d⁻¹) for the low-snow negative-control basin "
+            "14306500 over the independent test period after the 365 d warm-up. Simulations are shown for "
+            "XAJ-MZ and XAJ-Snow"
+        ),
         "rep_title": "低雪负对照流域 14306500 水文过程线",
-        "source": "evaluation NetCDF for camels_14306500",
+        "source": "Daily discharge from the test-window model evaluation",
     },
     {
         "id": "fig5",
         "file": "fig_01013500_obs_sim_scatter.png",
-        "ms_title": "Observed–simulated scatter for basin 01013500",
+        "ms_title": (
+            "Observed versus simulated daily streamflow (mm d⁻¹) for the snow-affected pilot basin 01013500 "
+            "over the independent test period: (a) XAJ-MZ and (b) XAJ-Snow"
+        ),
         "rep_title": "01013500 观测–模拟散点图",
-        "source": "paired daily discharge from the evaluation series",
+        "source": "Paired daily discharge from the test-window model evaluation",
     },
     {
         "id": "fig6",
         "file": "fig_batch_delta_nse_vs_frac_snow.png",
-        "ms_title": "Screening-batch ΔNSE versus catchment snow fraction (n=14, rep=200)",
+        "ms_title": (
+            "Paired change in test-period Nash–Sutcliffe efficiency, ΔNSE = NSE(XAJ-Snow) − NSE(XAJ-MZ), "
+            "versus catchment snow fraction (frac_snow) for the exploratory screening batch of 14 CAMELS (US) "
+            "basins. The screening runs used the lighter SCE-UA calibration budget (rep = 200); positive ΔNSE "
+            "indicates higher test-period NSE for XAJ-Snow"
+        ),
         "rep_title": "Batch1 ΔNSE 随 frac_snow 散点（n=14，rep=200）",
-        "source": "results/diagnostics/batch1_paired_metrics.csv",
+        "source": "Paired screening-batch metrics for the 14-basin batch",
     },
     {
         "id": "fig7",
         "file": "fig_batch_delta_nse_by_snow_bin.png",
-        "ms_title": "Screening-batch ΔNSE by snow-fraction bin (n=14, rep=200)",
+        "ms_title": (
+            "Box-and-whisker distributions of paired test-period ΔNSE = NSE(XAJ-Snow) − NSE(XAJ-MZ) across "
+            "the snow bins of the 14-basin exploratory screening batch: S0 (frac_snow < 0.1), S1 (0.1–0.3), "
+            "and S2 (> 0.3). The screening runs used the lighter SCE-UA calibration budget (rep = 200)"
+        ),
         "rep_title": "Batch1 ΔNSE 按雪量分箱（n=14，rep=200）",
-        "source": "results/diagnostics/batch1_paired_metrics.csv",
+        "source": "Paired screening-batch metrics for the 14-basin batch",
     },
 ]
 

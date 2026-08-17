@@ -100,13 +100,12 @@ def main() -> int:
             edgecolors="none",
         )
         ax.set_xlabel("frac_snow")
-        ax.set_ylabel(r"$\Delta$NSE (snow $-$ mz)")
-        ax.set_title("Paired skill gain vs snow fraction")
+        ax.set_ylabel(r"$\Delta$NSE (XAJ-Snow $-$ XAJ-MZ)")
         save_fig(fig, fig_dir / "fig_batch_delta_nse_vs_frac_snow", close=True)
 
         # Binned
         bins = [-0.01, 0.1, 0.3, 1.01]
-        labels = ["<0.1", "0.1–0.3", ">0.3"]
+        labels = ["S0 (<0.1)", "S1 (0.1–0.3)", "S2 (>0.3)"]
         out["snow_bin_plot"] = pd.cut(out["frac_snow"], bins=bins, labels=labels)
         fig, ax = plt.subplots(figsize=(4.0, 3.2))
         data = [out.loc[out["snow_bin_plot"] == lab, "delta_NSE"].dropna().values for lab in labels]
@@ -119,9 +118,8 @@ def main() -> int:
             box.set_facecolor("#F0F0F0")
             box.set_edgecolor(COLORS["mz"])
         ax.axhline(0.0, color=COLORS["grid"], lw=0.8)
-        ax.set_xlabel("frac_snow bin")
-        ax.set_ylabel(r"$\Delta$NSE (snow $-$ mz)")
-        ax.set_title("ΔNSE by snow bin")
+        ax.set_xlabel("Snow bin (S0/S1/S2)")
+        ax.set_ylabel(r"$\Delta$NSE (XAJ-Snow $-$ XAJ-MZ)")
         save_fig(fig, fig_dir / "fig_batch_delta_nse_by_snow_bin", close=True)
 
         if "region_folder" in out.columns and out["region_folder"].nunique() > 1:
