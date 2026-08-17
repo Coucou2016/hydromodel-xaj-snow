@@ -1,6 +1,6 @@
 <!-- Markdown sibling of XAJ-Snow report. HTML/PDF are the fully self-contained deliverables (base64 figures + inline CSS). This Markdown keeps relative image paths for in-repo reading. -->
 
-Hydromodel 0.3.2 · XAJ-Snow 完整科研报告 · 2026-08-18 02:34 · 研究报告（可含工程细节）
+Hydromodel 0.3.2 · XAJ-Snow 完整科研报告 · 2026-08-18 03:19 · 研究报告（可含工程细节）
 
   完整科研报告 · 正式学术风格 · 自包含 HTML
 
@@ -382,7 +382,7 @@ Chen et al.（2025）已证明大样本上加 CemaNeige/可微学习可抬高中
 ## 12. 软件与可复现性
 
 公开快照：[https://github.com/Coucou2016/hydromodel-xaj-snow](https://github.com/Coucou2016/hydromodel-xaj-snow)
-（`master` @ 生成时 `2a464aa`；含源码/docs/figures/publications/consultation/配置/测试与生成脚本；不含大体积 nc、`_portable_data`/hydrodata，亦不含完整 SpotPy 率定 dump 树）。
+（`master` @ 生成时 `8ee24ad`；含源码/docs/figures/publications/consultation/配置/测试与生成脚本；不含大体积 nc、`_portable_data`/hydrodata，亦不含完整 SpotPy 率定 dump 树）。
 用户须本地准备 Caravan/CAMELS 数据；细节见 `docs/local/github_public_repo.md`。
 
 # after cloning the public snapshot and placing Caravan/CAMELS caches locally
@@ -406,6 +406,7 @@ python scripts/generate_publication_outputs.py
 - Husic, A., Hammond, J., Price, A. N., and Roundy, J. K.: Interrogating process deficiencies in large-scale hydrologic models with interpretable machine learning. HESS, 29, 4457–4472, https://doi.org/10.5194/hess-29-4457-2025, 2025.
 - Ju, J., et al.: Application of distributed Xin’anjiang model of melting ice and snow in Bahe River basin (DD-XAJ). Journal of Hydrology: Regional Studies, 42, 101638, https://doi.org/10.1016/j.ejrh.2023.101638, 2024.
 - Ke, H., et al.: Xinanjiang-based interval forecasting model for daily streamflow considering climate change impacts (with snowmelt module). Water Resources Management, https://doi.org/10.1007/s11269-024-03909-6, 2024.
+- Knoben, W. J. M., Freer, J. E., and Woods, R. A.: Technical note: Inherent benchmark or not? Comparing Nash–Sutcliffe and Kling–Gupta efficiency scores. HESS, 23, 4323–4331, https://doi.org/10.5194/hess-23-4323-2019, 2019.
 - Knoben, W. J. M., et al.: A quantitative assessment of 36 conceptual rainfall–runoff models across 559 catchments. WRR, https://doi.org/10.1029/2019WR025975, 2020.
 - Kratzert, F., et al.: Caravan — A global community dataset for large-sample hydrology. Scientific Data, https://doi.org/10.1038/s41597-023-01975-w, 2023.
 - Liu, W., Liu, P., Zhang, L., Zhang, X., Xu, H., Lei, X., et al.: Development of a conceptual hydrological model based on supply-demand relationship and its applications. Water Resources Research, 61(9), e2024WR038873, https://doi.org/10.1029/2024WR038873, 2025.
@@ -456,4 +457,4 @@ python scripts/generate_publication_outputs.py
 
   - Git：本轮允许 commit/push 公开仓（不含大 nc / hydrodata）
 
-生成时间 2026-08-18 02:34。数字来自真实 evaluation CSV；待补充项已显式标注。
+生成时间 2026-08-18 03:19。数字来自真实 evaluation CSV；待补充项已显式标注。

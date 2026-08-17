@@ -1,0 +1,9 @@
+Round 2 review: restructure logic chain, strengthen Methods reproducibility
+
+- Results reordered (paired pilot -> hydrograph diagnostics -> first-look screen -> budget sensitivity); SciPy refine moved to supplementary note; rep=2000 result promoted to Results 3.4.
+- Pending-results block moved from Results to Methods 2.6 as the study protocol.
+- Methods: frac_snow/snow bins/study design defined in 2.1; full parameter table (Table 2); rep/ngs/seed/stopping rules spelled out; Gthreshold train/test disclosure; snow-state initialization; prospective neutrality criterion (2.5).
+- KGE zero-interpretation corrected with Knoben et al. (2019) citation.
+- Discussion: circular attribution removed; batch1 and budget-sensitivity paragraphs added; footprint/stability claims softened.
+- RQs split into RQ1-RQ4; Abstract aligned (matched nominal budgets; refine sentence removed).
+- Publish sanitized batch1 sampling table results/diagnostics/batch1_sample_attributes.csv to close the reproducibility gap.

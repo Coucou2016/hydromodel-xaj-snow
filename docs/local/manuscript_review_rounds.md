@@ -45,4 +45,51 @@
 ### 备份与提交
 
 - 修改前备份：`results/publications/versions/v1.0_20260818_0210/`
+- Commit：`8ee24ad`（已 push 至 origin/master）
+
+---
+
+## Round 2（2026-08-18 02:39–03:30）：内容逻辑与结构审查
+
+- ChatGPT 对话：https://chatgpt.com/c/6a835077-8718-83ea-9c3f-6a66b9c39b1c（续用同一会话）
+- 原始回复：`docs/local/_chatgpt_raw_round3_content_logic.txt`
+- 修改前备份：`results/publications/versions/v1.1_20260818_0239/`（git tip 8ee24ad）
+- 修改后备份：`results/publications/versions/v1.2_20260818_0320/`
+
+### 问题清单与处置
+
+| ID | ChatGPT 意见 | 本地核验 | 处置 |
+|----|--------------|----------|------|
+| R2-1 | Intro 缺口后重复定位（L55/L58/L63–65 三次表达同一区分） | 属实 | **采纳**：三段 "Relative to..." 压缩为一句 |
+| R2-2 | Intro "mis-time spring peaks" 无对应定量时序诊断 | 属实（无峰值时序指标） | **采纳**：改 "can misrepresent seasonal storage and runoff timing" |
+| R2-3 | "necessary for structural adequacy" 过强；"high-capacity learner" 对比多余 | 属实 | **采纳**：删除，定位句重写 |
+| R2-4 | RQ2 无操作性中立定义；RQ3 混合两个推断问题 | 属实 | **采纳**：新增先验中立判据（\|ΔNSE\|≤0.05 且 \|ΔKGE\|≤0.05，§2.5）；RQ3 拆为 RQ3（预算/参数稳健）+ RQ4（适用域） |
+| R2-5 | Methods 缺 14 站采样协议；sample_batch1.csv 公开路径缺失（复现性缺口） | 属实：文件仅在本地 results/sampling/（被 .gitignore deny 规则排除） | **采纳**：§2.1 补采样设计；发布去本地路径的 `results/diagnostics/batch1_sample_attributes.csv` |
+| R2-6 | S2 分箱在 Results 才定义，太晚 | 属实 | **采纳**：S0/S1/S2 定义移入 Methods §2.1 |
+| R2-7 | Gthreshold 用测试期全段气候统计，train/test 独立性问题 | 代码核验属实（snow.py L159-160：g_threshold 为 None 时按当次调用序列估计） | **采纳**：如实披露 + 将"训练派生/冻结 Gthreshold"列为待做敏感性 |
+| R2-8 | rep/ngs/seed/停机规则无白话定义 | 属实（configs 有 rep/ngs/kstop=40/peps=0.1/pcento=0.1/seed=1234，正文未写） | **采纳**：§2.4 补全 |
+| R2-9 | 15 个基线参数及范围未列 | 属实（model_config.py 有全表） | **采纳**：新增 Table 2 |
+| R2-10 | 雪状态初始化/warm-up 未说明 | 代码核验：SWE/G 零初始化（snow.py L169-170），365d warm-up | **采纳**：§2.3 补写 |
+| R2-11 | Methods 混入完成结果（rep=2000 数值）；Results 中 refine 叙事权重过大 | 属实 | **采纳**：rep=2000 移至新 §3.4；refine 移入补充材料 |
+| R2-12 | §2.5 内"human footprint falsified human-disturbance explanation"是解释而非方法，且因果过强 | 属实 | **采纳**：移出 Methods；Discussion 改"降低但不排除" |
+| R2-13 | "KGE≈0 表示严重退化"是 NSE 式零基准误用 | 属实；Knoben et al. 2019 (HESS 23:4323–4331) 证明均值流基准 KGE=1−√2≈−0.41（DOI 已核验） | **采纳**：改写 KGE 解释并新增 Knoben 2019 引用 |
+| R2-14 | Results 顺序不利；batch1 标题未显示探索性+降预算 | 属实 | **采纳**：重排 3.1–3.4；新标题 "First-look multi-basin screening under a reduced calibration budget" + 改写引导段 |
+| R2-15 | "emphasis therefore stays on stratified summaries" 是结果导向论证 | 属实 | **采纳**：删除；分层依据改为预设雪暴露假设，全样本中位数并列报告 |
+| R2-16 | Fig.2 "systematically misplaces" 超出完成证据 | 属实 | **采纳**：改为定性过程线描述 |
+| R2-17 | "Pending Results" 不应留在 Results | 同意框架要求 | **采纳**：移入 Methods §2.6 "Planned full-sample analyses" |
+| R2-18 | Discussion 循环论证（改善→归因缺雪）；缺 batch1 与 rep=2000 两段 | 属实 | **采纳**：改写首段为 "consistent with, but not diagnostic of"；新增两段证据讨论 |
+| R2-19 | "Interior values support numerical stability" 过度推断 | 属实 | **采纳**：改为"未触及边界；稳定性需多 seed/收敛证据（待做）" |
+| R2-20 | Abstract "matched budgets" 可读成公平性问题已解决；refine 句应随移补充材料 | 属实 | **采纳**："matched nominal calibration budgets"；Abstract 删 refine 句；interior 句加限定 |
+| R2-21 | Fig.5 冗余，建议终稿只留最具诊断图 | 部分同意 | **延后**：batch1/80 站完成后再定图取舍（当前 7 图均有明确角色） |
+| R2-22 | Gthreshold 训练派生冻结版应作为主协议 | 合理但需新实验 | **延后**：列入 §2.6 待做敏感性；不虚构已完成 |
+
+### 数据核验记录（全部通过）
+
+- batch1 分层中位数复算：snow≥0.1 med ΔNSE +0.5461（n=9）；<0.1 −0.0068（n=5）；S2 +0.5835（n=5）；全样本 0.0088 —— 与 `batch1_paired_metrics.csv` 一致。
+- batch1 与冻结样本关系：14 站 = 2 pilot + 12 冻结 CAMELS（脚本核验）。
+- 冻结样本：80 站、seed=20260816、snow 分档 S0=27/S1=35/S2=18 —— 与 `large_n_round_delivery.md` 一致。
+- rep=2000@010：mz −0.3106 / snow 0.7318 —— 与 `rep_budget_sensitivity.csv` 一致。
+
+### 备份与提交
+
 - Commit：（本轮提交后回填 hash）
