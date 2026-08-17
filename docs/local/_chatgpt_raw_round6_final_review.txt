@@ -1,0 +1,45 @@
+[ChatGPT Round 5 (comprehensive HESS-referee final review) raw response, saved 2026-08-18 ~04:40 UTC+8]
+[Conversation: https://chatgpt.com/c/6a835077-8718-83ea-9c3f-6a66b9c39b1c ("XAJ Snow Extensions Review")]
+[Response length: 25660 chars; extracted via browser DOM; reviewed manuscript = commit 212b697 manuscript.md]
+
+RECOMMENDATION: MAJOR REVISION (pilot-stage paper; framing/prose/numerical discipline/captions near submission quality; remaining barrier is evidentiary completeness + reproducibility, not presentation)
+
+Numerical consistency: PASS (all Abstract/Table/Results values cross-checked against public CSVs; rep=200 vs rep=800 distinction correctly labeled)
+
+MAJOR issues
+1. Central HESS contribution is a protocol whose decisive evidence is pending (RQ1-RQ4 answers incomplete). Fix: complete Sect. 2.6 analyses before final HESS Research Article; or narrow RQs/title accordingly. [cannot fix by text; documented as submission gate]
+2. Test-period Gthreshold weakens "independent test period" purity (not discharge leakage). Fix: complete promised training-derived/frozen Gthreshold sensitivity; until then retain disclosure, do not strengthen out-of-sample language.
+3. Calibration fairness unresolved: 17 vs 15 params; nominal rep equality insufficient; SPOTPY SCE-UA convergence controls mean realized effort not fully characterized by rep ceiling. Fix: complete multi-seed/higher-budget/fixed-snow-parameter ablations; report realized evaluation counts. Keep "matched nominal calibration budgets" wording.
+4. Frozen stratified design not fully reproducible from manuscript: seven regions unnamed; aridity/regulation bin thresholds missing; seed for full sample, within-stratum allocation, Caravan version/frac_snow source field missing. Fix: canonical sampling specification + published frozen 80-basin manifest.
+5. 14-basin screen NOT independent of pilot (contains both pilot basins): "reproduces the directional specificity" too strong. Fix: "extends the pilot pattern across the partially overlapping screening sample".
+6. Snow module partly schematic: exact form of partition(P,T;Ts,Tr), G≈0 condition, tiny-floor value implicit. Fix: exact implemented equations in Methods/supplement.
+7. Data/metric traceability not final: Table 1 internal source path; Code/Data points to mutable master; generator snapshot commit lags; Zenodo DOI pending. Fix: immutable snapshot + minted DOI + final commit/tag before submission.
+
+MINOR issues (adopted unless noted)
+- Intro: "motivating the completed multi-basin assessment" -> "motivating completion of the planned multi-basin assessment" [ADOPT]
+- 2.1 PET: imprecise "attributes"; FAO PM PET is Caravan forcing variable (v1.5+). [ADOPT: clarify wording]
+- 2.1 attribute sentence fragment. [ADOPT]
+- Tables numbered out of first-citation order (Table 2 before Table 1). [ADOPT: renumber]
+- Table 1 Bias undefined; config uses PBIAS. [ADOPT: verify implementation, define in 2.4]
+- Kf "~2-6 commonly reported" uncited. [ADOPT: remove comparative range]
+- Neutrality thresholds lack rationale/freeze record. [ADOPT: add rationale sentence]
+- "Reading Figure X" blocks research-report character. [PARTIAL: retain structure; formalize slash prose]
+- Fig.5 "higher correlation / lower error" slash construction. [ADOPT]
+- Discussion footprint "less likely" causal ranking. [ADOPT: descriptive formulation]
+- Conclusions "multi-region/global applicability map" conflicts with ledger term applicability domain and reintroduces "global". [ADOPT]
+- References: Ju et al. volume 42 -> verify (J. Hydrol. Reg. Stud. 2024 is vol 51, art. 101638); Tan/Premier titles paraphrased not published titles; Valéry 2014a/b labels missing; Ouyang 2021 & Yeste 2024 appear uncited. [ADOPT after verification]
+- Status badges render concatenated ("pilot completescreening"). [ADOPT: add spacing]
+- Front-matter placeholders. [keep until authors finalized]
+
+Boundary check: MOSTLY PASS with 3 corrections (the "completed multi-basin assessment" slip; "reproduces"; footprint causal weight)
+Terminology ledger: all PASS except applicability map -> applicability domain (Conclusions)
+Caption self-containment: PASS (no substantive rewrite needed)
+
+Hostile-reviewer survival: probably NOT as final Research Article in pilot state. Five weakest points:
+1. "Why submit before RQ1-RQ4 experiment is complete?"
+2. "Is evaluation truly independent with test-period Gthreshold?"
+3. "Process correction vs optimization freedom (17 vs 15 parameters)?"
+4. "Where is the reproducible large-sample applicability experiment?"
+5. "Why call the 14-basin screen corroboration when it contains the pilot pair at rep=200?"
+
+Bottom line: do not submit at 212b697 as finished Research Article; major revision via completion of already-promised analyses, not new claims.

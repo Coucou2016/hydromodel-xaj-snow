@@ -1,0 +1,356 @@
+{
+  "seed": 20260816,
+  "n_candidates_total": 15960,
+  "n_ts_exists": 15960,
+  "n_frozen": 80,
+  "n_paper_target_note": 500,
+  "train_period": [
+    "1985-10-01",
+    "1995-09-30"
+  ],
+  "test_period": [
+    "2005-10-01",
+    "2014-09-30"
+  ],
+  "max_miss": 0.15,
+  "nc_check_n": 60,
+  "nc_checked_ok": 20,
+  "per_region_cap": 20,
+  "snow_bins": "<0.1 / 0.1-0.3 / >0.3",
+  "arid_bins": "<0.75 / 0.75-1.25 / >=1.25 (FAO_PM preferred)",
+  "dor_bins": "<0.1 / >=0.1",
+  "expansion_path": "Re-run with --n-freeze 300..500 after first batch metrics land; keep same --seed for nested expansion, or bump seed and document.",
+  "region_counts_frozen": {
+    "hysets": 38,
+    "camels": 17,
+    "lamah": 8,
+    "camelscl": 7,
+    "camelsbr": 6,
+    "camelsaus": 2,
+    "camelsgb": 2
+  },
+  "snow_bin_counts_frozen": {
+    "S1_0.1_0.3": 35,
+    "S0_lt0.1": 27,
+    "S2_gt0.3": 18
+  },
+  "stratum_region_counts": [
+    {
+      "snow_bin": "S0_lt0.1",
+      "arid_bin": "A0_humid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "camels",
+      "n": 1
+    },
+    {
+      "snow_bin": "S0_lt0.1",
+      "arid_bin": "A0_humid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "camelsbr",
+      "n": 2
+    },
+    {
+      "snow_bin": "S0_lt0.1",
+      "arid_bin": "A0_humid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "camelsgb",
+      "n": 1
+    },
+    {
+      "snow_bin": "S0_lt0.1",
+      "arid_bin": "A0_humid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "hysets",
+      "n": 1
+    },
+    {
+      "snow_bin": "S0_lt0.1",
+      "arid_bin": "A0_humid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "camels",
+      "n": 1
+    },
+    {
+      "snow_bin": "S0_lt0.1",
+      "arid_bin": "A0_humid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "camelsbr",
+      "n": 1
+    },
+    {
+      "snow_bin": "S0_lt0.1",
+      "arid_bin": "A0_humid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "camelscl",
+      "n": 1
+    },
+    {
+      "snow_bin": "S0_lt0.1",
+      "arid_bin": "A0_humid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "hysets",
+      "n": 1
+    },
+    {
+      "snow_bin": "S0_lt0.1",
+      "arid_bin": "A0_humid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "lamah",
+      "n": 1
+    },
+    {
+      "snow_bin": "S0_lt0.1",
+      "arid_bin": "A1_subhumid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "camelsaus",
+      "n": 1
+    },
+    {
+      "snow_bin": "S0_lt0.1",
+      "arid_bin": "A1_subhumid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "hysets",
+      "n": 6
+    },
+    {
+      "snow_bin": "S0_lt0.1",
+      "arid_bin": "A1_subhumid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "camels",
+      "n": 1
+    },
+    {
+      "snow_bin": "S0_lt0.1",
+      "arid_bin": "A1_subhumid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "camelscl",
+      "n": 1
+    },
+    {
+      "snow_bin": "S0_lt0.1",
+      "arid_bin": "A2_arid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "camelsbr",
+      "n": 2
+    },
+    {
+      "snow_bin": "S0_lt0.1",
+      "arid_bin": "A2_arid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "camels",
+      "n": 1
+    },
+    {
+      "snow_bin": "S0_lt0.1",
+      "arid_bin": "A2_arid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "camelsaus",
+      "n": 1
+    },
+    {
+      "snow_bin": "S0_lt0.1",
+      "arid_bin": "A2_arid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "camelsbr",
+      "n": 1
+    },
+    {
+      "snow_bin": "S0_lt0.1",
+      "arid_bin": "A2_arid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "camelscl",
+      "n": 1
+    },
+    {
+      "snow_bin": "S0_lt0.1",
+      "arid_bin": "A2_arid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "hysets",
+      "n": 2
+    },
+    {
+      "snow_bin": "S1_0.1_0.3",
+      "arid_bin": "A0_humid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "camels",
+      "n": 1
+    },
+    {
+      "snow_bin": "S1_0.1_0.3",
+      "arid_bin": "A0_humid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "camelsgb",
+      "n": 1
+    },
+    {
+      "snow_bin": "S1_0.1_0.3",
+      "arid_bin": "A0_humid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "hysets",
+      "n": 3
+    },
+    {
+      "snow_bin": "S1_0.1_0.3",
+      "arid_bin": "A0_humid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "lamah",
+      "n": 2
+    },
+    {
+      "snow_bin": "S1_0.1_0.3",
+      "arid_bin": "A0_humid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "camels",
+      "n": 1
+    },
+    {
+      "snow_bin": "S1_0.1_0.3",
+      "arid_bin": "A0_humid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "hysets",
+      "n": 3
+    },
+    {
+      "snow_bin": "S1_0.1_0.3",
+      "arid_bin": "A0_humid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "lamah",
+      "n": 2
+    },
+    {
+      "snow_bin": "S1_0.1_0.3",
+      "arid_bin": "A1_subhumid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "hysets",
+      "n": 6
+    },
+    {
+      "snow_bin": "S1_0.1_0.3",
+      "arid_bin": "A1_subhumid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "camels",
+      "n": 1
+    },
+    {
+      "snow_bin": "S1_0.1_0.3",
+      "arid_bin": "A1_subhumid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "hysets",
+      "n": 3
+    },
+    {
+      "snow_bin": "S1_0.1_0.3",
+      "arid_bin": "A1_subhumid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "lamah",
+      "n": 1
+    },
+    {
+      "snow_bin": "S1_0.1_0.3",
+      "arid_bin": "A2_arid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "camels",
+      "n": 1
+    },
+    {
+      "snow_bin": "S1_0.1_0.3",
+      "arid_bin": "A2_arid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "camelscl",
+      "n": 2
+    },
+    {
+      "snow_bin": "S1_0.1_0.3",
+      "arid_bin": "A2_arid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "hysets",
+      "n": 3
+    },
+    {
+      "snow_bin": "S1_0.1_0.3",
+      "arid_bin": "A2_arid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "camels",
+      "n": 3
+    },
+    {
+      "snow_bin": "S1_0.1_0.3",
+      "arid_bin": "A2_arid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "hysets",
+      "n": 2
+    },
+    {
+      "snow_bin": "S2_gt0.3",
+      "arid_bin": "A0_humid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "camels",
+      "n": 1
+    },
+    {
+      "snow_bin": "S2_gt0.3",
+      "arid_bin": "A0_humid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "hysets",
+      "n": 2
+    },
+    {
+      "snow_bin": "S2_gt0.3",
+      "arid_bin": "A0_humid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "lamah",
+      "n": 1
+    },
+    {
+      "snow_bin": "S2_gt0.3",
+      "arid_bin": "A0_humid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "lamah",
+      "n": 1
+    },
+    {
+      "snow_bin": "S2_gt0.3",
+      "arid_bin": "A1_subhumid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "hysets",
+      "n": 3
+    },
+    {
+      "snow_bin": "S2_gt0.3",
+      "arid_bin": "A1_subhumid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "hysets",
+      "n": 2
+    },
+    {
+      "snow_bin": "S2_gt0.3",
+      "arid_bin": "A2_arid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "camels",
+      "n": 3
+    },
+    {
+      "snow_bin": "S2_gt0.3",
+      "arid_bin": "A2_arid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "camelscl",
+      "n": 2
+    },
+    {
+      "snow_bin": "S2_gt0.3",
+      "arid_bin": "A2_arid",
+      "dor_bin": "D0_lt0.1",
+      "region_folder": "hysets",
+      "n": 1
+    },
+    {
+      "snow_bin": "S2_gt0.3",
+      "arid_bin": "A2_arid",
+      "dor_bin": "D1_ge0.1",
+      "region_folder": "camels",
+      "n": 2
+    }
+  ],
+  "frozen_sample_file": "results/diagnostics/sample_frozen_attributes.csv",
+  "caravan_variable_note": "frac_snow, aridity (aridity_FAO_PM preferred), and degree-of-regulation taken from Caravan basin attribute tables; FAO Penman-Monteith PET forcing (Caravan >= v1.5) used for modeling."
+}

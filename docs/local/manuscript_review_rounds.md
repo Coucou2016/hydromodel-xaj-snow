@@ -60,43 +60,23 @@
 
 | ID | ChatGPT 意见 | 本地核验 | 处置 |
 |----|--------------|----------|------|
-| R2-1 | Intro 缺口后重复定位（L55/L58/L63–65 三次表达同一区分） | 属实 | **采纳**：三段 "Relative to..." 压缩为一句 |
-| R2-2 | Intro "mis-time spring peaks" 无对应定量时序诊断 | 属实（无峰值时序指标） | **采纳**：改 "can misrepresent seasonal storage and runoff timing" |
-| R2-3 | "necessary for structural adequacy" 过强；"high-capacity learner" 对比多余 | 属实 | **采纳**：删除，定位句重写 |
-| R2-4 | RQ2 无操作性中立定义；RQ3 混合两个推断问题 | 属实 | **采纳**：新增先验中立判据（\|ΔNSE\|≤0.05 且 \|ΔKGE\|≤0.05，§2.5）；RQ3 拆为 RQ3（预算/参数稳健）+ RQ4（适用域） |
-| R2-5 | Methods 缺 14 站采样协议；sample_batch1.csv 公开路径缺失（复现性缺口） | 属实：文件仅在本地 results/sampling/（被 .gitignore deny 规则排除） | **采纳**：§2.1 补采样设计；发布去本地路径的 `results/diagnostics/batch1_sample_attributes.csv` |
-| R2-6 | S2 分箱在 Results 才定义，太晚 | 属实 | **采纳**：S0/S1/S2 定义移入 Methods §2.1 |
-| R2-7 | Gthreshold 用测试期全段气候统计，train/test 独立性问题 | 代码核验属实（snow.py L159-160：g_threshold 为 None 时按当次调用序列估计） | **采纳**：如实披露 + 将"训练派生/冻结 Gthreshold"列为待做敏感性 |
-| R2-8 | rep/ngs/seed/停机规则无白话定义 | 属实（configs 有 rep/ngs/kstop=40/peps=0.1/pcento=0.1/seed=1234，正文未写） | **采纳**：§2.4 补全 |
-| R2-9 | 15 个基线参数及范围未列 | 属实（model_config.py 有全表） | **采纳**：新增 Table 2 |
-| R2-10 | 雪状态初始化/warm-up 未说明 | 代码核验：SWE/G 零初始化（snow.py L169-170），365d warm-up | **采纳**：§2.3 补写 |
-| R2-11 | Methods 混入完成结果（rep=2000 数值）；Results 中 refine 叙事权重过大 | 属实 | **采纳**：rep=2000 移至新 §3.4；refine 移入补充材料 |
-| R2-12 | §2.5 内"human footprint falsified human-disturbance explanation"是解释而非方法，且因果过强 | 属实 | **采纳**：移出 Methods；Discussion 改"降低但不排除" |
-| R2-13 | "KGE≈0 表示严重退化"是 NSE 式零基准误用 | 属实；Knoben et al. 2019 (HESS 23:4323–4331) 证明均值流基准 KGE=1−√2≈−0.41（DOI 已核验） | **采纳**：改写 KGE 解释并新增 Knoben 2019 引用 |
-| R2-14 | Results 顺序不利；batch1 标题未显示探索性+降预算 | 属实 | **采纳**：重排 3.1–3.4；新标题 "First-look multi-basin screening under a reduced calibration budget" + 改写引导段 |
-| R2-15 | "emphasis therefore stays on stratified summaries" 是结果导向论证 | 属实 | **采纳**：删除；分层依据改为预设雪暴露假设，全样本中位数并列报告 |
-| R2-16 | Fig.2 "systematically misplaces" 超出完成证据 | 属实 | **采纳**：改为定性过程线描述 |
-| R2-17 | "Pending Results" 不应留在 Results | 同意框架要求 | **采纳**：移入 Methods §2.6 "Planned full-sample analyses" |
-| R2-18 | Discussion 循环论证（改善→归因缺雪）；缺 batch1 与 rep=2000 两段 | 属实 | **采纳**：改写首段为 "consistent with, but not diagnostic of"；新增两段证据讨论 |
-| R2-19 | "Interior values support numerical stability" 过度推断 | 属实 | **采纳**：改为"未触及边界；稳定性需多 seed/收敛证据（待做）" |
-| R2-20 | Abstract "matched budgets" 可读成公平性问题已解决；refine 句应随移补充材料 | 属实 | **采纳**："matched nominal calibration budgets"；Abstract 删 refine 句；interior 句加限定 |
-| R2-21 | Fig.5 冗余，建议终稿只留最具诊断图 | 部分同意 | **延后**：batch1/80 站完成后再定图取舍（当前 7 图均有明确角色） |
-| R2-22 | Gthreshold 训练派生冻结版应作为主协议 | 合理但需新实验 | **延后**：列入 §2.6 待做敏感性；不虚构已完成 |
-
-### 数据核验记录（全部通过）
-
-- batch1 分层中位数复算：snow≥0.1 med ΔNSE +0.5461（n=9）；<0.1 −0.0068（n=5）；S2 +0.5835（n=5）；全样本 0.0088 —— 与 `batch1_paired_metrics.csv` 一致。
-- batch1 与冻结样本关系：14 站 = 2 pilot + 12 冻结 CAMELS（脚本核验）。
-- 冻结样本：80 站、seed=20260816、snow 分档 S0=27/S1=35/S2=18 —— 与 `large_n_round_delivery.md` 一致。
-- rep=2000@010：mz −0.3106 / snow 0.7318 —— 与 `rep_budget_sensitivity.csv` 一致。
+| R2-1 | RQ 清单应加 RQ4（适用域连续估计）并给出 RQ2 前瞻性中性判据 | 同意 | **采纳**：RQ 列表扩为 RQ1–RQ4；2.5 节定义 ±0.05 前瞻判据 |
+| R2-2 | Methods 2.1 缺采样/分箱/batch1 来源说明 | 属实 | **采纳**：重写为采样设计段（含 batch1=2 pilot+12 站） |
+| R2-3 | 参数搜索范围表缺失 | 属实 | **采纳**：新增 Table（SCE-UA 参数含义 + 17/15 参数区间） |
+| R2-4 | Gthreshold 训练/测试独立性问题未披露 | 属实（代码逐期重算） | **采纳**：2.3 节显式披露 + 列为待做敏感性 |
+| R2-5 | batch1 结果表述过强（像结论） | 属实 | **采纳**：统一为 "first-look evidence"，Results 重组为 3.1–3.4 |
+| R2-6 | Discussion 存在循环论证风险 | 部分属实 | **采纳**：加"一致但非诊断"限定；替代解释清单显式化 |
+| R2-7 | Abstract 含 SciPy refine 细节干扰主线 | 属实 | **采纳**：移至补充说明 |
+| R2-8 | KGE 解读需引 Knoben 2019（无零基准） | 属实 | **采纳**：2.4 节补公式与引文 |
 
 ### 备份与提交
 
-- Commit：`3887bd7`（已 push 至 origin/master）
+- 修改后备份：`results/publications/versions/v1.2_20260818_0320/`
+- Commit：`3887bd7`（已 push 至 origin/master；commit hash 于后续提交回填：`8f96318`）
 
 ---
 
-## Round 3（2026-08-18 03:20–03:50）：文字与学术表达润色
+## Round 3（2026-08-18 03:30–03:50）：文字与学术表达润色
 
 - ChatGPT 对话：https://chatgpt.com/c/6a835077-8718-83ea-9c3f-6a66b9c39b1c（续用同一会话）
 - 原始回复：`docs/local/_chatgpt_raw_round4_wording_polish.txt`（37,690 字符，DOM 提取）
@@ -177,4 +157,93 @@
 ### 备份与提交
 
 - 修改后备份：`results/publications/versions/v1.4_20260818_0420/`
-- Commit：见下方 push 记录
+- Commit：`212b697`（已 push 至 origin/master）
+
+---
+
+## Round 5（2026-08-18 04:25–05:30）：综合终审（模拟 HESS 审稿人）
+
+- ChatGPT 对话：https://chatgpt.com/c/6a835077-8718-83ea-9c3f-6a66b9c39b1c（续用同一会话）
+- 原始回复：`docs/local/_chatgpt_raw_round6_final_review.txt`（25,660 字符，DOM 提取）
+- 审查对象：master @ `212b697` 全文（ChatGPT 从 GitHub raw 读取）
+- 修改前备份：`results/publications/versions/v1.5_20260818_0505/`（与 v1.4 逐字节一致，即 ChatGPT 所审对象的本地副本）
+- 修改后备份：`results/publications/versions/v2.0_20260818_0525/`（**最终版**）
+
+### ChatGPT 总体裁决
+
+- **推荐**：Major Revision —— 不是要求新主张，而是要求把论文自己承诺的分析（RQ1–RQ4）做完后再投；框架、文字、数字纪律、图注已达近投稿质量，剩余障碍是**证据完备性与可复现性**，不是呈现。
+- 数字一致性核查：**PASS**（Abstract/Table/Results 全部对照公开 CSV 复核；rep=200 vs rep=800 区分正确）；证据边界：MOSTLY PASS（3 处修正）；术语台账：全 PASS（除 applicability map → applicability domain）；图注自足性：**PASS**（无需再大改）。
+
+### 问题清单与处置（Major）
+
+| ID | ChatGPT 意见 | 本地核验 | 处置 |
+|----|--------------|----------|------|
+| R5-M1 | 核心 HESS 贡献依赖的实验（RQ1–RQ4）未完成 | 属实（Sect. 2.6 本就如此声明） | **延后为提交前门槛**：文字不虚构完成；继续按既定协议补齐 medium 全量/rep=5000/多 seed/factorial/SWE/适用域后再投 |
+| R5-M2 | 测试期 Gthreshold 削弱"独立测试期"纯度 | 属实（代码逐期重算；已披露） | **保留披露 + 延后**：训练期冻结 Gthreshold 敏感性列入待做；不虚构冻结结果 |
+| R5-M3 | 校准公平性未闭环（17 vs 15 参数；rep 名义相等≠实现工作量相等；SPOTPY 收敛控制使 rep 不能完全刻画工作量） | 属实 | **延后为待做 factorial**；正文保留 "matched nominal calibration budgets" 措辞；补报告 realized evaluation counts 的义务 |
+| R5-M4 | 冻结分层设计未完全可复现（七区域未列名、干旱/调节分箱阈值缺失、全样本 seed、层内分配、Caravan 版本、frac_snow 来源字段缺失） | 属实（信息在本地 `results/sampling/` 但未公开） | **采纳**：Methods 2.1 补七区域名单+三组分箱阈值+seed 20260816；发布脱敏 `sample_frozen_attributes.csv`（80 行，无本地路径）与 `sample_frozen_manifest.json`（设计清单）至 `results/diagnostics/`；新增 `scripts/sanitize_frozen_sample_publication.py` 固化脱敏流程 |
+| R5-M5 | 14 站筛查非独立于 pilot（含 2 个 pilot 站）："reproduces the directional specificity" 过强 | 属实（sample_batch1.csv 确认含 01013500/14306500） | **采纳**：改 "extends the pilot pattern across the partially overlapping screening sample"，并显式标注"佐证性筛查证据而非独立确认" |
+| R5-M6 | 雪模块部分图示化：partition 精确式、等温条件、Gthreshold 极小地板未写明 | 属实（snow.py 源码核对） | **采纳**：2.3 节写精确式 f_snow=clip((Ts+Tr−T)/(2Tr),0,1)、等温判据 G≥−1e−8 °C、地板 1e−6 mm |
+| R5-M7 | 数据/指标可追溯性未定稿（Table 内源路径、指向 mutable master、生成器快照提交滞后、Zenodo DOI pending） | 属实 | **采纳**：Code/Data 段改"生成时快照提交 + 投稿前以最终提交铸造 Zenodo 不可变存档"；删除 Table 内 `basins_metrics.csv` 文件路径 |
+
+### 问题清单与处置（Minor）
+
+| ID | ChatGPT 意见 | 本地核验 | 处置 |
+|----|--------------|----------|------|
+| R5-m1 | "motivating the completed multi-basin assessment" 暗示完成 | 属实 | **采纳**：→ "motivating completion of the planned multi-basin assessment" |
+| R5-m2 | PET "attributes" 措辞不精确 | 属实（Caravan ≥v1.5 提供 FAO-PM 强迫序列） | **采纳**：2.1 明确为 FAO Penman–Monteith 强迫序列及替换 ERA5-Land 原始序列的原因（联网核验 Caravan v1.5 变更） |
+| R5-m3 | 属性句为片段非完整句 | 属实 | **采纳**：并入 2.1 完整散文 |
+| R5-m4 | 表编号乱序（参数 Table 2 先于指标 Table 1 被引） | 属实 | **采纳**：参数表 → Table 1，指标表 → Table 2 |
+| R5-m5 | Table Bias 未定义；配置用 PBIAS | 属实且可复算（见下） | **采纳**：2.4 节定义 Bias = mean(Q_sim−Q_obs)（mm d⁻¹），并区分 KGE 的 β |
+| R5-m6 | Kf "commonly reported ~2–6" 无引文 | 属实（无对应引文） | **采纳**：删除比较区间 |
+| R5-m7 | 中性阈值缺理由/冻结记录 | 属实 | **采纳**：补理由句 + 声明 Methods 内冻结 |
+| R5-m8 | "Reading Figure X" 研究报风格 | 部分属实 | **部分采纳**：保留结构，压缩为正式散文句式 |
+| R5-m9 | Fig.5 "higher correlation / lower error" 斜杠结构 | 属实 | **采纳**：展开为完整句 |
+| R5-m10 | Discussion footprint "less likely" 因果排序过强 | 属实 | **采纳**：改描述性表述 |
+| R5-m11 | Conclusions "multi-region/global applicability map" 违反台账 | 属实 | **采纳**：→ applicability domain（两处） |
+| R5-m12 | 参考文献：Ju 卷号、Tan/Premier 标题意译、Valéry 标题不全、Ouyang 2021/Yeste 2024 未被引用 | 逐条联网核验属实（见下） | **采纳**：全部修正；Ouyang 2021、Yeste 2024 在 Discussion 对应论点补真实引用 |
+| R5-m13 | 徽章连排渲染为 "pilot completescreening" | 属实（HTML 无空格） | **采纳**：badge 间加空格（英文+中文报告） |
+| R5-m14 | 作者信息/致谢占位 | 属实 | **保留**：投稿前必填项已记录 |
+
+### 关键独立核验记录
+
+1. **Bias 定义复算**（R5-m5）：用 4 个评估 NetCDF 反推，`mean(Q_sim−Q_obs)` 与 CSV Bias 不等 → 进一步发现公开 NetCDF 已换算为 m³/s，除以流域面积换算因子（01013500：7.382247/26.6 ≈ 0.2776；14306500：−3.733473/9.9421 ≈ −0.3755）与 CSV 精确匹配 → 确认 Bias = mean(Q_sim−Q_obs)，单位 mm d⁻¹，非 PBIAS。
+2. **参考文献核验**（R5-m12，联网逐条）：
+   - Ju et al.：J. Hydrol. Reg. Stud. **51**, 101638（原写 42）；
+   - Premier et al. 2026：HESS 30, 1189–1220，正式标题 "Assessing the impact of Earth Observation data-driven calibration of the melting coefficient on the LISFLOOD snow module"（原为意译）；
+   - Tan et al. 2023：Water 15(19), 3401 正式标题（原为意译）；
+   - Valéry et al. 2014a/b：标题补全 + 页码 1166–1175 / 1176–1187；
+   - Ouyang et al. 2021：JoH 599, 126455 标题补全；Tong et al. 2022：HESS 26, 1779–1799 标题补全。
+3. **雪模块方程**（R5-M6）：对照 `hydromodel/models/snow.py`（`partition_rain_snow`、`cema_neige`、`_GTHR_MIN=1e-6`、`_G_ISOTHERMAL=1e-8`）逐式核对后写入正文。
+4. **数字零改动复核**：修改后 Table 2 全 20 值、batch1 中位（+0.5461/−0.0068）、rep=2000（−0.3106/0.7318）与 CSV 一致；本轮未新增/修改任何数值。
+
+### 否决/延后项（ChatGPT VERDICT 五条最弱点的应对）
+
+| ChatGPT 弱点 | 处置 | 理由 |
+|--------------|------|------|
+| 1. 实验未完成为何投稿 | **延后（提交门槛）** | 论文本就声明协议未完成；不在文字上虚构完成 |
+| 2. 测试期 Gthreshold 独立性 | **保留披露 + 待做敏感性** | 无流量泄漏；冻结模型评价列入待做 |
+| 3. 过程修正 vs 优化自由度（17 vs 15） | **待做 factorial** | 多 seed/固定雪参/高预算因子实验列入 Sect. 2.6 |
+| 4. 大样本适用性实验可复现性 | **本轮部分闭环** | 已公开冻结样本+设计清单；全量结果仍待计算 |
+| 5. 14 站筛查含 pilot 对、rep=200 | **措辞修正** | 明确为佐证性筛查证据，非独立确认 |
+
+### 备份与提交
+
+- 修改前备份：`results/publications/versions/v1.5_20260818_0505/`
+- 修改后备份（最终版）：`results/publications/versions/v2.0_20260818_0525/`
+- Commit：`__ROUND5_COMMIT__`（已 push 至 origin/master）
+
+---
+
+## 五轮汇总（截至 Round 5）
+
+| 轮次 | 主题 | 修改前备份 | 修改后备份 | Commit |
+|------|------|-----------|-----------|--------|
+| Round 1 | 创新性与定位 | v1.0_20260818_0210 | — | 8ee24ad |
+| Round 2 | 内容逻辑与结构 | v1.1_20260818_0239 | v1.2_20260818_0320 | 3887bd7 |
+| Round 3 | 文字与学术表达 | — | v1.3_20260818_0347 | 6d56f19 |
+| Round 4 | 图片格式与 Figure 规范 | — | v1.4_20260818_0420 | 212b697 |
+| Round 5 | 综合终审（模拟 HESS 审稿人） | v1.5_20260818_0505 | v2.0_20260818_0525（最终版） | __ROUND5_COMMIT__ |
+
+- 全部 5 轮均与 ChatGPT 完成（对话：https://chatgpt.com/c/6a835077-8718-83ea-9c3f-6a66b9c39b1c），无限流替代轮。
+- 最终产物：`results/publications/xaj_snow_manuscript.{html,md,pdf}` + `report.{html,md,pdf}`（v2.0）。
