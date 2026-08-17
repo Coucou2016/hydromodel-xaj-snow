@@ -231,7 +231,7 @@
 
 - 修改前备份：`results/publications/versions/v1.5_20260818_0505/`
 - 修改后备份（最终版）：`results/publications/versions/v2.0_20260818_0525/`
-- Commit：`__ROUND5_COMMIT__`（已 push 至 origin/master）
+- Commit：`060f393`（已 push 至 origin/master）
 
 ---
 
@@ -243,7 +243,7 @@
 | Round 2 | 内容逻辑与结构 | v1.1_20260818_0239 | v1.2_20260818_0320 | 3887bd7 |
 | Round 3 | 文字与学术表达 | — | v1.3_20260818_0347 | 6d56f19 |
 | Round 4 | 图片格式与 Figure 规范 | — | v1.4_20260818_0420 | 212b697 |
-| Round 5 | 综合终审（模拟 HESS 审稿人） | v1.5_20260818_0505 | v2.0_20260818_0525（最终版） | __ROUND5_COMMIT__ |
+| Round 5 | 综合终审（模拟 HESS 审稿人） | v1.5_20260818_0505 | v2.0_20260818_0525（最终版） | 060f393 |
 
 - 全部 5 轮均与 ChatGPT 完成（对话：https://chatgpt.com/c/6a835077-8718-83ea-9c3f-6a66b9c39b1c），无限流替代轮。
 - 最终产物：`results/publications/xaj_snow_manuscript.{html,md,pdf}` + `report.{html,md,pdf}`（v2.0）。
