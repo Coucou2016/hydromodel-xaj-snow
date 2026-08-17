@@ -1,0 +1,477 @@
+[ChatGPT Round 3 (wording & academic expression) raw response, saved 2026-08-18 ~02:10 UTC+8]
+[Conversation: https://chatgpt.com/c/6a835077-8718-83ea-9c3f-6a66b9c39b1c ("XAJ Snow Extensions Review")]
+[Response length: 37690 chars; extracted via browser DOM from last assistant message]
+
+Polish below is based on the commit-pinned 3887bd7 manuscript, which contains the Round 2 restructuring, prospective neutrality criterion, explicit incomplete-analysis block, and bounded rep=2000 sensitivity. 
+raw.githubusercontent.com
++2
+raw.githubusercontent.com
++2
+
+Abstract
+
+OVERWRITE:
+
+Conceptual rainfall–runoff models remain central to large-sample hydrology, yet their structural adequacy can collapse in regimes that they do not represent. The Xin’anjiang model (XAJ) in its Muskingum–Zhao routing form (XAJ-MZ) treats precipitation as liquid input and therefore cannot store snowfall or release meltwater. Regional studies have already coupled snow and related cold-region processes to XAJ (Tan et al., 2023; Ju et al., 2024; Dong et al., 2024; Wu et al., 2025). A large-sample CAMELS study has also coupled CemaNeige to XAJ under differentiable parameter learning across 531 catchments (Chen et al., 2025). What remains under-documented in the HESS-facing literature is a diagnosis-first protocol that (i) maps where unmodified XAJ-MZ fails along snow/hydroclimate gradients, (ii) tests a deliberately minimal non-ML snow correction under matched nominal calibration budgets, (iii) requires neutrality on snow-free controls, and (iv) designs—rather than yet establishes—an applicability-domain estimate with fairness checks, instead of proposing another high-performing XAJ–snow family.
+
+Here, we implement XAJ-Snow, a single-band, CemaNeige-style degree-day layer with two free parameters—degree-day factor Kf (mm °C−1 d−1) and cold-content coefficient CTG [-]—placed upstream of an otherwise unchanged XAJ-MZ core. We report a pilot evaluation using identical Shuffled Complex Evolution–University of Arizona (SCE-UA) calibration against the Kling–Gupta efficiency (KGE), with a matched medium budget (rep=800, ngs=15). On snow-affected basin 01013500 (fraction of precipitation falling as snow ≈ 0.37), out-of-sample Nash–Sutcliffe efficiency (NSE) rises from -0.232 (XAJ-MZ) to 0.732 (XAJ-Snow), while KGE rises from 0.210 to 0.776. On low-snow negative-control basin 14306500, NSE changes only from 0.711 to 0.704 (Δ ≈ -0.006). Calibrated snow parameters on 01013500 remain interior to their search ranges (Kf ≈ 3.50, CTG ≈ 0.116), although interiority alone does not identify a physical melt coefficient without SWE constraints. An exploratory paired batch of 14 CAMELS basins at a lighter budget (rep=200) yields median ΔNSE ≈ 0.55 for snow-affected basins (frac_snow ≥ 0.1, n=9) and ≈ -0.007 for low-snow basins (n=5).
+
+Pending (do not treat as completed Results): full calibration of the frozen stratified sample (currently 80 basins frozen; longer-term target ~500); snow-water-equivalent (SWE) auxiliary consistency; complete optimizer-budget / parameter-freedom factorial (including rep=5000 and multi-seed; only a partial rep=2000 check on 01013500 is available); cross-region applicability regression. Until those experiments finish, do not extrapolate to a global claim.
+
+CHANGES:
+
+Replaced “engineering go/no-go pilot” with the more journal-appropriate “pilot evaluation.”
+
+Split the prior-art sentence to reduce information density without changing its claims or citations.
+
+Recast the pilot metrics as complete sentences rather than a colon/semicolon sequence.
+
+Replaced one instance of “first-look” with “exploratory” while retaining the preliminary-evidence boundary.
+
+Preserved all explicit pending analyses and the prohibition on global extrapolation.
+
+Retained all numbers, symbols, citations, and qualification boundaries unchanged.
+
+Introduction
+
+OVERWRITE:
+
+Large-sample evaluations have shown that “average skill” hides regime-dependent structural failure (Knoben et al., 2020; Santos et al., 2025). Snow-affected catchments are a recurring stress test: models that cannot partition precipitation into rain and snow, or cannot delay melt, can misrepresent seasonal storage and runoff timing even when annual water balance looks plausible.
+
+The Xin’anjiang model is widely used in humid and semi-humid settings. Existing variants include coupled snowmelt–XAJ applications (Tan et al., 2023; Ke et al., 2024), distributed degree-day XAJ with ice/snow melt (Ju et al., 2024), and conceptual XAJ with snowmelt plus soil freeze–thaw (Dong et al., 2024). Other developments include the graded-complexity GXAJ-S / GXAJ-S-SF formulation with SNOW17 (Wu et al., 2025) and a CAMELS-scale (531 basins) differentiable XAJ–CemaNeige system (dMXAJ) with local and regional parameter learning (Chen et al., 2025). Differentiable XAJ formulations further explore optimizer and parameter-sharing design (Ouyang et al., 2025). More broadly, coupling established snow routines to parsimonious conceptual models is now routine methodology in multi-catchment HESS-facing work (Muñoz-Castro et al., 2026). Event-type diagnostics already isolate snow-related process limitations at large scale (Wang et al., 2026), and large-sample studies already relate conceptual-model adequacy to the fraction of precipitation falling as snow (Liu et al., 2025; Bohl et al., 2026). This manuscript does not claim the first XAJ snow extension, nor the first XAJ–CemaNeige coupling, nor the first large-sample XAJ–snow evaluation.
+
+These studies demonstrate the value of representing snow processes and, increasingly, of controlling model complexity, but they leave a narrower model-evaluation question unresolved: when does adding a minimal snow process to an otherwise unchanged XAJ formulation provide evidence of correcting a process deficiency rather than simply increasing model flexibility? Addressing this question requires paired evaluation across a snow gradient, comparable calibration effort, and a specificity check in catchments where snow processes should exert little influence.
+
+Rather than proposing a new snow formulation, this study therefore examines when an established, parsimonious snow representation is warranted within the XAJ-MZ framework. We formulate a diagnosis-first protocol in which the baseline and snow-enabled models retain the same rainfall–runoff and routing backbone, are calibrated under controlled computational budgets, and are evaluated jointly against snow-influenced basins and snow-poor negative controls. The planned large-sample analysis is designed to relate the paired model response to catchment snow exposure, test whether apparent discharge gains are accompanied by consistent snow behavior, and assess their robustness to calibration-fairness choices (Valéry et al., 2014a,b; Premier et al., 2026; Husic et al., 2025; Santos et al., 2025). The current 14-basin experiment is treated only as preliminary screening evidence motivating the completed multi-basin assessment, rather than as evidence for a general applicability threshold.
+
+Relative to the studies above—whether they demonstrate XAJ–snow skill (Tan et al., 2023; Chen et al., 2025), deepen cold-region process complexity (Ju et al., 2024; Dong et al., 2024; Wu et al., 2025), or diagnose model limitations across large samples (Wang et al., 2026; Liu et al., 2025; Bohl et al., 2026)—the distinctive element here is a controlled intervention experiment. The same backbone is evaluated with and without one specific snow process, using snow-poor basins as explicit negative controls and matched calibration effort.
+
+Research questions guiding the full study are:
+
+RQ1 — Where does XAJ-MZ fail out of sample as a function of snow influence and related attributes?
+
+RQ2 — Does a two-parameter, single-band CemaNeige-style layer selectively improve snow-affected basins while remaining neutral on negative controls, where neutrality is defined prospectively (Section 2.5) rather than chosen after seeing the results?
+
+RQ3 — Are the paired gains robust to optimizer budget and to the two extra parameters (multi-seed runs and fixed-snow-parameter ablations)?
+
+RQ4 — Can an applicability domain be estimated as a continuous relationship with uncertainty from catchment attributes?
+
+The present draft reports the pilot used to motivate stratified sampling, together with a cautious preliminary multi-basin screen at reduced calibration budget. Full answers to RQ1–RQ4 on the frozen stratified sample remain incomplete.
+
+CHANGES:
+
+Reduced the literature-review paragraph into shorter citation-centered sentences.
+
+Removed the colloquial “unlocked the go decision” wording without changing the role of the pilot.
+
+Reduced repeated use of “first-look” by using “preliminary screening evidence.”
+
+Separated the unresolved question, study design, and comparative positioning into distinct paragraphs.
+
+Retained the explicit non-novelty statement and all RQ qualification boundaries.
+
+Preserved the incomplete status of RQ1–RQ4 exactly in substance.
+
+Methods 2.1 — Caravan data and basin sampling
+
+OVERWRITE:
+
+2.1 Caravan data and basin sampling
+
+Forcing and discharge come from the Caravan community dataset (Kratzert et al., 2023). Caravan harmonizes multi-source CAMELS-family basins, but its meteorological forcing is not identical to the original CAMELS products; this difference can change conceptual-model skill and must be stated explicitly (Clerc-Schwarzenbach et al., 2024). Potential evapotranspiration (PET) uses FAO Penman–Monteith attributes supplied with Caravan.
+
+The snow-exposure covariate frac_snow is the basin-level fraction of precipitation falling as snow, taken from the Caravan attribute table (attributes_other_*) for each region. It is a catchment attribute, not a model output. All basins are drawn from a reproducible stratified design over seven Caravan regions (snow bin × aridity bin × regulation bin, 3×3×2 strata) frozen at a fixed seed. The frozen first batch contains 80 basins, and the paper-scale target is ~500.
+
+Two pilot basins had fixed roles assigned a priori. A separate 14-basin CAMELS (US) screening subset (batch1), consisting of the two pilot basins plus 12 CAMELS basins from the frozen stratified sample, was used for preliminary screening. The full basin list and attributes are published in the repository diagnostics. The snow bins S0 (frac_snow < 0.1), S1 (0.1–0.3), and S2 (> 0.3) are defined here in Methods and used consistently in Results.
+
+Basin	Role	frac_snow	Area (km²)	Aridity (FAO-PM)	Human footprint
+camels_01013500	Snow-affected diagnosis target	≈0.37	2298	0.49	30.6
+camels_14306500	Low-snow negative control	≈0.0	859	0.49	34.3
+
+The catchment attributes are from the Caravan attribute table used in the public diagnostic note for this basin pair. Attributes are listed for context; their interpretive use is deferred to the Discussion.
+
+Periods are identical for both models and both basins: training 1985-10-01–1995-09-30; testing 2005-10-01–2014-09-30; warmup length 365 days. Daily variables are precipitation P, PET, discharge Q, and, for XAJ-Snow, 2 m air temperature T.
+
+CHANGES:
+
+Converted sentence fragments describing attributes, periods, and variables into complete academic prose.
+
+Split sampling design from the batch1 description so that each paragraph has one main function.
+
+Replaced “first-look screening” with “preliminary screening.”
+
+Retained the a priori pilot roles and frozen-sampling language.
+
+Preserved S0/S1/S2 definitions and every sampling number exactly.
+
+Kept frac_snow explicitly defined as an attribute rather than a model output.
+
+Methods 2.2 — XAJ-MZ baseline
+
+OVERWRITE:
+
+2.2 XAJ-MZ baseline
+
+XAJ-MZ denotes the hydromodel implementation of Xin’anjiang with Muskingum–Zhao routing and fifteen calibrated parameters (no snow store). All precipitation enters the production module as rainfall-equivalent forcing. XAJ-Snow shares this backbone exactly and adds only the two snow parameters described below, for seventeen total. The same fifteen base parameters are calibrated for both models under identical search ranges (Table 2).
+
+Table 2. Calibrated parameter search ranges (identical for XAJ-MZ and XAJ-Snow; XAJ-Snow adds Kf and CTG).
+
+Parameter	Role	Range
+K	PET ratio to reference crop evaporation	[0.1, 1.0]
+B	Exponent of tension water capacity curve	[0.1, 0.4]
+IM	Impervious area fraction	[0.01, 0.1]
+UM, LM, DM	Tension water capacity: upper / lower / deep (mm)	[0, 20] / [60, 90] / [60, 120]
+C	Deep evapotranspiration coefficient	[0, 0.2]
+SM, EX	Mean free-water storage (mm); curve exponent	[1, 100] / [1.0, 1.5]
+KI, KG	Interflow / groundwater outflow coefficients	[0, 0.7] each
+A, THETA	mizuRoute channel parameters	[0, 2.9] / [0, 6.5]
+CI, CG	Recession constants: lower interflow / groundwater	[0, 0.9] / [0.98, 0.998]
+Kf	Degree-day melt factor (mm °C−1 d−1) — XAJ-Snow only	[0, 10]
+CTG	Snow thermal-state weight [-] — XAJ-Snow only	[0, 1]
+
+CHANGES:
+
+Split the seventeen-parameter comparison into a separate sentence for readability.
+
+Replaced “below” dependence with a direct reference to the two snow parameters.
+
+Kept the “shares this backbone exactly” comparison unchanged in strength.
+
+Left all parameter names, roles, ranges, units, and counts unchanged.
+
+Methods 2.3 — XAJ-Snow: CemaNeige-style single-band layer
+
+OVERWRITE:
+
+2.3 XAJ-Snow: CemaNeige-style single-band layer
+
+XAJ-Snow places a lumped, one-elevation-band snow-accounting module inspired by CemaNeige (Valéry et al., 2014b) and related airGR documentation upstream of the XAJ-MZ core. The same XAJ-MZ core then receives effective liquid input (rain + melt). Fixed thresholds in this implementation are the rain/snow threshold Ts = 0 °C and linear mix half-width Tr = 1 °C.
+
+The free snow parameters are:
+
+Kf — degree-day melt factor (mm °C−1 d−1), search range [0, 10]; larger values melt faster for a given positive temperature.
+
+CTG — dimensionless cold-content / thermal-state inertia in [0, 1]; larger CTG increases memory of prior cold conditions and delays melt onset.
+
+Mass symbols used in the module are precipitation P, temperature T, snow water equivalent SWE, thermal state G, melt potential MeltPot, snow-cover factor Gratio, and melt M. A schematic daily update is:
+
+rain, snow ← partition(P, T; Ts, Tr)
+
+SWE ← SWE + snow; G ← min(0, CTG·G + (1−CTG)·T)
+
+MeltPot ← min(SWE, max(0, Kf·T)) only if the pack is isothermal (G ≈ 0); else MeltPot = 0
+
+Gratio ← min(1, SWE / Gthreshold); M ← min(SWE, (0.9·Gratio + 0.1)·MeltPot)
+
+Unless an external array is supplied, Gthreshold is estimated inside each snow-module call as 0.9 × mean annual snowfall from the snowfall series of that same call (CemaNeige-style default; tiny floor for snow-free basins). Because train and test periods are loaded separately, the pilot therefore recomputes Gthreshold from each period’s forcing rather than freezing a training-derived value into evaluation.
+
+This is not a fitted degree of freedom, but it does make the test simulation depend on a climatological statistic of the complete test-period forcing. We disclose it explicitly here, and a training-derived/frozen Gthreshold protocol is listed as a pending sensitivity check rather than yet completed. Snow states are initialized at zero SWE and G = 0 °C and run through the same 365-day warm-up as the XAJ soil states; states are not carried across the train/test boundary.
+
+We describe the layer as CemaNeige-style / single-band, not as a strict airGR reproduction (airGR defaults use multiple elevation bands and different temperature bands). Kf ≈ 3.5 mm °C−1 d−1 on the snow pilot is interior to the search range and within commonly reported degree-day magnitudes (~2–6), but without SWE constraints it remains an effective parameter rather than a physically identified melt coefficient.
+
+CHANGES:
+
+Replaced the programming-oriented verb “prepends” with a hydrologically clearer upstream-placement description.
+
+Separated architecture, parameters, state equations, Gthreshold handling, and model-identification caveats.
+
+Preserved the complete-test-period-forcing disclosure and its exact inferential limitation.
+
+Retained the pending training-derived/frozen Gthreshold sensitivity explicitly.
+
+Preserved zero-state initialization, warm-up treatment, and lack of state transfer.
+
+Left every equation, number, unit, symbol, and parameter interpretation unchanged.
+
+Methods 2.4 — Calibration and metrics
+
+OVERWRITE:
+
+2.4 Calibration and metrics
+
+We use SCE-UA (Shuffled Complex Evolution–University of Arizona), implemented through SpotPy, to maximize KGE on the training window. In this implementation, rep caps the total number of model evaluations (the SCE-UA “repetitions” budget), and ngs is the number of complexes into which the population is split. Both models and both basins use the same random seed (1234), so repeated runs of the same basin–model–budget cell are deterministic. Convergence criteria (kstop = 40, peps = pcento = 0.1) are also identical across all runs.
+
+The pilot medium protocol uses rep=800 and ngs=15 for both models and both basins (matched nominal budgets by configuration). The preliminary multi-basin batch uses the same objective, periods, and seed but a lighter budget (rep=200) for screening. A partial higher-budget sensitivity on snow-affected 01013500 at rep=2000 was also conducted. Its numerical outcome is reported in Section 3.4, and rep=5000 and the control basin at rep=2000 remain incomplete.
+
+Important: matched budgets support controlled comparison; they do not yet constitute a full fairness proof versus multi-seed searches or fixed-snow-parameter ablations. Those checks must precede any claim that gains are independent of optimization budget or the two extra degrees of freedom (17 vs 15 parameters).
+
+Reported skill uses the independent test window. NSE and KGE are defined in the conventional forms:
+
+NSE = 1 − Σ(Qsim−Qobs)2 / Σ(Qobs−Q̅obs)2
+
+KGE = 1 − √[ (r−1)2 + (α−1)2 + (β−1)2 ]
+
+where r is correlation, α a variability ratio, and β a bias ratio (hydromodel implementation). NSE = 1 is perfect; NSE = 0 matches the mean-flow benchmark and negative NSE is worse than the mean. KGE = 1 is optimal and lower values indicate increasing departure in its correlation, variability, and bias components. Unlike NSE, KGE has no inherent zero benchmark: the mean-flow predictor corresponds to KGE = 1 − √2 ≈ −0.41, so KGE values must not be read with the NSE zero-threshold convention (Knoben et al., 2019).
+
+CHANGES:
+
+Converted the optimizer label into a complete methods sentence.
+
+Defined rep, ngs, seed handling, and convergence settings in one calibration-protocol paragraph.
+
+Replaced “first-look multi-basin batch” with “preliminary multi-basin batch.”
+
+Separated the incomplete higher-budget work from the fairness warning.
+
+Preserved the explicit statement that matched budgets are not a full fairness proof.
+
+Left both metric equations and all benchmark interpretations unchanged.
+
+Methods 2.5 — Negative-control design and the neutrality criterion
+
+OVERWRITE:
+
+2.5 Negative-control design and the neutrality criterion
+
+Basin 14306500 (frac_snow ≈ 0) is the negative control. A useful snow layer should not create large spurious skill gains when snow storage is irrelevant. To keep the test prospective rather than post hoc, we define neutrality operationally before examining multi-basin results: XAJ-Snow is considered neutral on a negative-control basin when its test-period ΔNSE lies within ±0.05 and the absolute ΔKGE within 0.05. Larger movements in either direction trigger inspection rather than dismissal.
+
+The completed pilot control satisfies this criterion; whether the wider zero-snow cohort of the frozen sample does is part of the planned analysis.
+
+CHANGES:
+
+Split the negative-control rationale from the operational neutrality definition.
+
+Reduced the length of the criterion sentence without altering either threshold.
+
+Retained “prospective rather than post hoc” exactly in inferential meaning.
+
+Preserved the explicit uncertainty about the wider zero-snow cohort.
+
+Methods 2.6 — Planned full-sample analyses (not yet completed)
+
+OVERWRITE:
+
+2.6 Planned full-sample analyses (not yet completed)
+
+The following analyses answer RQ1–RQ4 but are incomplete at the time of writing and are listed here as the study protocol rather than as results. They include full medium-budget calibration of the frozen stratified sample (80 basins frozen; expansion toward ~500 planned) and snow-water-equivalent (SWE) auxiliary consistency diagnostics against ERA5-Land (consistency only, not independent ground validation). The complete optimizer-budget and parameter-freedom factorial remains to be completed and includes rep=5000, multi-seed runs, the control basin at higher budget, and fixed-snow-parameter ablations. Attribute-based applicability-domain models with region-grouped cross-validation are also not yet completed.
+
+CHANGES:
+
+Split the original long inventory into four sentences.
+
+Preserved the explicit “incomplete” and “study protocol rather than results” status.
+
+Retained the distinction between SWE consistency and independent ground validation.
+
+Kept all pending optimizer, parameter-freedom, and applicability analyses.
+
+Preserved the frozen-sample and planned-expansion numbers exactly.
+
+Results 3.1 — Paired pilot performance and negative control
+
+OVERWRITE:
+
+3.1 Paired pilot performance and negative control
+
+Table 1 reports paired test-period metrics read directly from basins_metrics.csv.
+
+Table 1. Out-of-sample metrics for the pilot evaluation (SCE-UA + KGE, rep=800).
+
+Basin	Model	NSE	KGE	RMSE	Bias	Corr
+01013500	XAJ-MZ	-0.2321	0.2096	2.2446	0.2776	0.2550
+01013500	XAJ-Snow	0.7318	0.7764	1.0473	0.1665	0.9031
+14306500	XAJ-MZ	0.7106	0.7815	3.0565	-0.3755	0.8461
+14306500	XAJ-Snow	0.7043	0.7795	3.0895	-0.2792	0.8410
+
+Source files: results/xaj_snow_go_nogo/.../evaluation_test/basins_metrics.csv; protocol SCE-UA+KGE, rep=800; train 1985-10-01–1995-09-30; test 2005-10-01–2014-09-30; warmup=365.
+
+On 01013500, XAJ-Snow improves NSE by Δ = +0.964 and KGE by Δ = +0.567. On 14306500, ΔNSE = -0.006 and ΔKGE = -0.002. Both changes are within a few thousandths—inside the prospective neutrality band of Section 2.5.
+
+The denormalized snow parameters on 01013500 are Kf = 3.5006 mm °C−1 d−1 and CTG = 0.115624 (interior of [0,10]×[0,1]). Interiority only shows that the optimum is not pinned at a bound and is not evidence of physical identification or search stability.
+
+A supplementary local refine of the SCE-UA optimum against NSE on 01013500 (different objective and search stage) is reported in the Supplementary note as an objective/search sensitivity, not as part of the matched comparison.
+
+CHANGES:
+
+Replaced “go/no-go pilot” with “pilot evaluation.”
+
+Separated performance, parameter values, and supplementary sensitivity into distinct paragraphs.
+
+Removed “i.e.” in favor of a complete sentence.
+
+Preserved the prospective-neutrality interpretation exactly.
+
+Retained the explicit non-identification/non-stability qualification for interior parameter values.
+
+Kept the local refine outside the matched comparison exactly as stated.
+
+Results 3.2 — Pilot hydrograph diagnostics
+
+OVERWRITE:
+
+3.2 Pilot hydrograph diagnostics
+
+Figures 1–5 document the two-basin pilot. They support the decision to proceed with the stratified analysis and indicate method readiness; they are not a substitute for stratified population inference.
+
+Figure 1. Paired out-of-sample NSE and KGE for the pilot basins.
+Data source: paired go/no-go basins_metrics.csv (SCE-UA+KGE, rep=800).
+
+Reading Figure 1. Grouped bars compare NSE (blue family) and KGE (green family) for each basin–model pair. For 01013500, the XAJ-Snow bars show the selective skill recovery relative to the short/negative XAJ-MZ bars. For 14306500, the near-equal bars show that the negative control remains nearly unchanged. The figure cannot prove causality beyond the paired protocol, nor generalize beyond two basins.
+
+Figure 2. Full test-period hydrograph for snow-affected basin 01013500.
+Data source: evaluation NetCDF for the test window after warmup.
+
+Reading Figure 2. Black denotes observed discharge, blue XAJ-MZ, and orange XAJ-Snow over the full test window after warmup. Spring shading marks March–May. In this basin, XAJ-MZ visibly displaces or attenuates snow-season peaks relative to observations, while XAJ-Snow tracks volume and timing more closely. This is a qualitative hydrograph pattern, since no formal peak-timing metric is included in the completed evidence. Summer/autumn residuals should not be interpreted as snow-process proof; they may reflect soil/routing parameter trade-offs.
+
+Figure 3. Spring zoom (2010–2012) for basin 01013500.
+Data source: same evaluation series as Fig. 2; Mar–May spring shading.
+
+Reading Figure 3. The 2010–2012 zoom isolates consecutive snowmelt seasons and permits inspection of peak timing, multi-peak structure, and whether XAJ-Snow overshoots individual events. It cannot separate temperature-forcing error from structural melt error.
+
+Figure 4. Negative-control hydrograph for low-snow basin 14306500.
+Data source: evaluation NetCDF for camels_14306500.
+
+Reading Figure 4. On the negative control, the XAJ-MZ and XAJ-Snow hydrographs nearly overlap, matching the near-zero Δ metrics. This comparison guards against “any extra parameters help everywhere” interpretations.
+
+Figure 5. Observed–simulated scatter for basin 01013500.
+Data source: paired daily discharge from the evaluation series.
+
+Reading Figure 5. The panel compares daily observed and simulated discharge for 01013500, with the 1:1 line as the reference. XAJ-Snow points lie closer to the diagonal (higher correlation / lower error), while XAJ-MZ shows larger scatter and bias. Because scatter plots compress timing information, this panel should be interpreted alongside Figures 2–3 for hydrograph timing.
+
+CHANGES:
+
+Replaced “engineering GO decision” with “decision to proceed with the stratified analysis.”
+
+Replaced informal visual language such as “hug the diagonal” with conventional quantitative-description prose.
+
+Converted color-key fragments into complete sentences.
+
+Recast imperative instructions (“Do not read…”, “Use it…”, “pair with…”) into manuscript-style interpretation.
+
+Preserved all causality, generalization, peak-timing, and forcing-error limitations.
+
+Left figure files, periods, and all technical references unchanged.
+
+Results 3.3 — Exploratory multi-basin screening under a reduced calibration budget
+
+OVERWRITE:
+
+3.3 Exploratory multi-basin screening under a reduced calibration budget
+
+To assess whether the two-basin pilot warranted completion of the planned stratified experiment, we conducted an exploratory paired screening of 14 CAMELS (US) basins. We used the same training and test periods and the same SCE-UA–KGE objective as in the pilot, but with a lighter calibration budget (rep = 200 rather than rep = 800). These runs are therefore treated as screening evidence rather than as budget-equivalent replication or population-level inference.
+
+Within this screening sample, the median test-period ΔNSE (XAJ-Snow − XAJ-MZ) was 0.5461 for basins with frac_snow ≥ 0.1 (n = 9) and -0.0068 for basins with frac_snow < 0.1 (n = 5). For the S2 subset (frac_snow > 0.3, n = 5), the median ΔNSE was 0.5835. The all-sample median ΔNSE was 0.0088. We report both the overall and snow-stratified summaries because snow stratification follows the prespecified snow-exposure hypothesis of Section 2.1, and because both models fail on a minority of basins in every bin.
+
+These descriptive contrasts motivate completion of the frozen stratified sample and calibration-fairness analyses, but they do not establish an applicability threshold or population-level snow-response relationship. Figures 6–7 visualize ΔNSE against snow fraction and by bin.
+
+Figure 6. Screening-batch ΔNSE versus catchment snow fraction (n=14, rep=200).
+Data source: results/diagnostics/batch1_paired_metrics.csv.
+
+Reading Figure 6. Each point represents one CAMELS basin in the screening batch (rep=200). Positive ΔNSE indicates XAJ-Snow outperforming XAJ-MZ on the independent test window. The pattern is consistent with larger gains at higher snow fractions, but n=14 and the lighter budget preclude population inference.
+
+Figure 7. Screening-batch ΔNSE by snow-fraction bin (n=14, rep=200).
+Data source: results/diagnostics/batch1_paired_metrics.csv.
+
+Reading Figure 7. The figure summarizes ΔNSE by snow-fraction bin (defined in Section 2.1) for the same screening batch. Both the all-sample and stratified summaries are reported; stratification follows the prespecified snow-exposure hypothesis, not the observed all-sample median.
+
+CHANGES:
+
+Replaced repeated “first-look” language with “exploratory” and “screening.”
+
+Split the calibration-design sentence before presenting the evidence-status limitation.
+
+Separated the two stratified medians from the all-sample median for readability.
+
+Replaced “forbid population inference” with the more conventional “preclude population inference,” preserving the boundary.
+
+Retained the prespecified-stratification justification exactly in substance.
+
+Preserved the explicit statement that these data do not establish an applicability threshold or population relationship.
+
+Results 3.4 — Partial optimizer-budget sensitivity (01013500, rep=2000)
+
+OVERWRITE:
+
+3.4 Partial optimizer-budget sensitivity (01013500, rep=2000)
+
+On snow-affected 01013500, increasing the available SCE-UA budget from rep=800 to rep=2000 does not reverse the pilot contrast. XAJ-MZ test NSE moves from -0.2321 to -0.3106, while XAJ-Snow remains at 0.7318.
+
+This single completed higher-budget cell is a bounded sensitivity result. It does not establish budget robustness, because the negative-control basin at rep=2000, any rep=5000 run, and multi-seed replicates remain incomplete (Section 2.6).
+
+CHANGES:
+
+Split the performance result from its evidentiary limitation.
+
+Retained “does not reverse” rather than strengthening the outcome to robustness.
+
+Preserved “bounded sensitivity result.”
+
+Kept every incomplete higher-budget and multi-seed element explicit.
+
+Discussion
+
+OVERWRITE:
+
+The pilot evidence is consistent with, but not diagnostic of, an omitted snow-process limitation on 01013500. A large paired recovery on one snow-affected basin plus a near-neutral response on one low-snow basin is what the snow-deficiency hypothesis predicts, yet the intervention also changes parameter dimensionality and no SWE consistency check is completed. An alternative explanation based on human disturbance alone is less likely given comparable footprint indices across the pair, but similar footprints do not causally exclude anthropogenic effects (Section 2.1), and they lie outside the performance evidence itself. The near-zero change on 14306500 reduces—but does not eliminate—concern that the increase from fifteen to seventeen parameters alone produces skill gains across all basins; a single negative control cannot replace a stratified zero-snow cohort or a fixed-snow-parameter ablation.
+
+The 14-basin preliminary screen (Section 3.3) reproduces the directional specificity of the pilot at a lighter budget (rep=200, not the pilot’s rep=800): stratified medians are positive and large for snow-exposed basins and near zero for low-snow basins. At n = 14 this supports continuing the controlled structural-diagnosis experiment; it does not identify an applicability threshold or a population-level snow-response relationship. Likewise, the one completed higher-budget cell (Section 3.4) shows that the pilot contrast was not reversed on 01013500 at rep=2000, but cannot demonstrate optimizer robustness without the remaining control-basin, rep=5000, and multi-seed cells.
+
+Relative to the existing XAJ–snow literature (Tan et al., 2023; Ju et al., 2024; Dong et al., 2024; Wu et al., 2025; Chen et al., 2025), multi-catchment snow-routine comparisons (Muñoz-Castro et al., 2026), and large-sample diagnostic studies (Wang et al., 2026; Liu et al., 2025; Bohl et al., 2026), the contribution targeted here is methodological: a paired, control-based intervention experiment with matched nominal budgets and a prospectively defined neutrality criterion. Whether that combination yields information the individual studies do not provide will be decided by the completed stratified sample, not by the current evidence. Relative to Premier et al. (2026), future work should isolate melt-factor effects more tightly (e.g. freeze non-snow parameters) once the stratified sample exists.
+
+Alternative explanations that remain open include Caravan forcing biases (Clerc-Schwarzenbach et al., 2024), PET product choice, single-band temperature representativeness, equifinality among soil parameters absorbing snow errors, and residual anthropogenic regulation not captured by footprint indices. SWE was not used as a calibration target here; without snow-state constraints, Kf and CTG remain effective parameters (Ruelland, 2023, 2024; Tong et al., 2022). Interior Kf/CTG values show only that the selected optimum is not pinned to the parameter bounds; establishing search or numerical stability would require repeated seeds and convergence diagnostics, which remain pending.
+
+CHANGES:
+
+Split the opening causal-attribution sentence while preserving “consistent with, but not diagnostic of.”
+
+Replaced “seventeen versus fifteen parameters alone buy universal skill” with formal statistical-model language.
+
+Replaced another “first-look” occurrence with “preliminary screen.”
+
+Reduced repetition in the literature-positioning paragraph without removing any comparison or citation.
+
+Converted the limitations fragment into a complete sentence.
+
+Preserved all alternatives, pending tests, non-causal boundaries, and non-identification statements.
+
+Conclusions
+
+OVERWRITE:
+
+Under a paired SCE-UA+KGE protocol, a two-parameter CemaNeige-style layer converts a strongly negative out-of-sample NSE on snow-affected basin 01013500 into a clearly positive score, while leaving a low-snow control essentially unchanged. A preliminary 14-basin CAMELS batch at lighter budget shows the same directional pattern in stratified medians, without authorizing a multi-region applicability map.
+
+These results support proceeding with completion of the frozen stratified sample. They do not yet establish a global applicability map, independent SWE validation, or optimizer-versus-complexity attribution.
+
+The next steps are to finish medium-budget calibration on the frozen sample, add SWE consistency and fairness controls, and then rewrite Abstract/Results without pilot-only extrapolation.
+
+CHANGES:
+
+Replaced “first-look” with “preliminary.”
+
+Replaced “engineering GO” with formal decision language.
+
+Separated completed evidence, evidentiary limits, and next steps into three paragraphs.
+
+Preserved the explicit “do not yet establish” boundary.
+
+Retained all pending SWE, fairness, calibration, and attribution work.
+
+Added no result, metric, citation, or broader applicability claim.
+
+TERMINOLOGY LEDGER
+Canonical term	Variants to eliminate
+XAJ-MZ	baseline XAJ; original XAJ; plain XAJ when specifically referring to the tested baseline
+XAJ-Snow	snow-enabled XAJ; modified XAJ; XAJ–snow learner when referring specifically to the present model
+CemaNeige-style single-band layer	CemaNeige module when wording could imply a strict airGR reproduction; snow correction when the architecture is being described technically
+frac_snow	snow fraction; snowfall fraction; fraction snow, except when spelling out the definition at first occurrence
+snow exposure	snow influence when referring specifically to the frac_snow gradient
+snow bins S0/S1/S2	low/high-snow groups; high-snow bin; snow classes after S0/S1/S2 have been defined
+negative control	control basin; low-snow control; snow-free control after the formal role has been introduced
+pilot evaluation	engineering pilot; go/no-go pilot; go/no-go experiment
+decision to proceed with the stratified analysis	engineering GO; GO decision; go decision; unlocked the go decision
+exploratory multi-basin screening	first-look extension; first-look batch; first-look screen; extended pilot
+screening batch	first-look batch; batch1 in narrative prose; retain batch1 only where it is a repository/file identifier
+screening evidence	first-look evidence; early evidence where the screening status is what matters
+matched nominal calibration budgets	matched budgets when a full fairness interpretation could be inferred; identical budget
+calibration-fairness analyses	fairness proof when the analyses remain incomplete
+optimizer-budget sensitivity	optimizer robustness when robustness has not yet been established
+prospectively defined neutrality criterion	control stays flat; near-zero control rule; post hoc neutrality
+applicability domain	applicability map; applicability boundary when referring to the planned continuous attribute relationship
+applicability-domain model	applicability regression/model interchangeably within the same subsection
+population-level inference	population inference; generalization when the specific issue is sample-to-population inference
+SWE auxiliary consistency	SWE validation; independent SWE validation, except where explicitly stating that such validation is not claimed
+effective parameter	physically calibrated parameter; physically identified parameter unless physical identification has actually been demonstrated
+structural-diagnosis experiment	process-necessity proof; structural-proof experiment
+paired, control-based intervention experiment	intervention test; controlled intervention; falsifiable intervention experiment when these are being used merely as stylistic variants
+independent test window	evaluation period; out-of-sample window when referring to the formally defined test period
+medium calibration budget	medium protocol; medium-budget run, unless needed to distinguish rep=800 operationally

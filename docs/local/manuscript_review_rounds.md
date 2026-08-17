@@ -93,3 +93,50 @@
 ### 备份与提交
 
 - Commit：`3887bd7`（已 push 至 origin/master）
+
+---
+
+## Round 3（2026-08-18 03:20–03:50）：文字与学术表达润色
+
+- ChatGPT 对话：https://chatgpt.com/c/6a835077-8718-83ea-9c3f-6a66b9c39b1c（续用同一会话）
+- 原始回复：`docs/local/_chatgpt_raw_round4_wording_polish.txt`（37,690 字符，DOM 提取）
+- 修改前状态：v1.2（即 Round 2 提交版 3887bd7）
+- 修改后备份：`results/publications/versions/v1.3_20260818_0347/`
+
+### 任务设定（发给 ChatGPT 的约束）
+
+- 仅润色英文表达（句式、hedging、主动/被动、去口语化），**禁止**改动数字、符号、引文、事实边界与 pending 状态；每节给 OVERWRITE + CHANGES；末尾给全局 TERMINOLOGY LEDGER。
+
+### 问题清单与处置
+
+| ID | ChatGPT 意见 | 本地核验 | 处置 |
+|----|--------------|----------|------|
+| R3-1 | "engineering go/no-go pilot" 非期刊用语 | 属实 | **采纳**：全篇 → "pilot evaluation" |
+| R3-2 | Abstract 先前文献单句信息密度过高 | 属实 | **采纳**：拆为两句 |
+| R3-3 | Abstract 指标为冒号/分号堆叠 | 属实 | **采纳**：改完整陈述句 |
+| R3-4 | Intro 文献综述长句堆砌；"unlocked the go decision" 口语 | 属实 | **采纳**：拆短句；删除口语 |
+| R3-5 | Methods 片段式描述（属性/时期/变量）非完整散文 | 属实 | **采纳**：2.1 改完整句并分段 |
+| R3-6 | 2.3 "prepends" 编程化动词 | 属实 | **采纳**：改 "places … upstream of" |
+| R3-7 | 2.5 中性判据与理由混在一句 | 属实 | **采纳**：拆句，阈值不变 |
+| R3-8 | 3.2 图解读含口语（"hug the diagonal"）与祈使句 | 属实 | **采纳**：改论文式描述 |
+| R3-9 | "forbid population inference" 非常规搭配 | 属实 | **采纳**：→ "preclude population inference" |
+| R3-10 | Discussion "parameters alone buy universal skill" 口语 | 属实 | **采纳**：改正式统计表述 |
+| R3-11 | Conclusions "engineering GO" | 属实 | **采纳**：→ "decision to proceed" |
+| R3-12 | Supplementary "headroom evidence" 工程俚语 | 属实 | **采纳**：→ "objective-sensitivity evidence" |
+| R3-13 | 25 组术语台账统一（pilot evaluation / screening batch / matched nominal calibration budgets 等） | 与台账一致 | **采纳**：全篇执行 |
+
+### 否决/保留项
+
+| ChatGPT 建议 | 处置 | 证据 |
+|--------------|------|------|
+| Fig.1 数据源标注含 "paired go/no-go basins_metrics.csv" | **保留原样**（非否决，属例外） | 这是仓库目录/文件名标识；ChatGPT 自己的 OVERWRITE 亦保留该行 |
+| 报告中文正文中的 go/no-go/first-look | **保留** | 台账仅约束论文；报告允许工程语境（论文/报告边界规则） |
+
+### 独立核验
+
+- 润色稿与 OVERWRITE 逐节比对：数字（−0.2321/0.7318/0.7106/0.7043/0.5461/−0.0068/0.5835/0.0088/−0.3106 等）零改动；引文集合零增减；pending 清单与中性阈值（±0.05）原样保留。
+- 重新生成 6 文件：HTML 校验 OK；manuscript.md 复查无 first-look/engineering GO/headroom 残留（唯一 "go/no-go" 为 Fig.1 文件标识）。
+
+### 备份与提交
+
+- Commit：见下方 push 记录
