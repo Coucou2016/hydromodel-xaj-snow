@@ -1,0 +1,39 @@
+# ChatGPT FOLLOW-UP (GitHub public snapshot) — raw capture
+# Thread: https://chatgpt.com/c/6a815caf-d6ac-83ea-8e50-9d8250f07bba
+# Date: 2026-08-16
+# Note: Final assistant bubbles repeatedly collapsed to citation chips only
+# after “请求过于频繁” / rate-limit interruptions. Content below is from the
+# expanded “思考了 2m 22s” panel + user prompts (DOM-accessible). Formal
+# Major/Minor bullets were never fully emitted in the visible answer body.
+
+## User FOLLOW-UP (submitted; web search ON; no attachments)
+
+FOLLOW-UP: please browse https://github.com/Coucou2016/hydromodel-xaj-snow (master 5da6a04). Does this public snapshot change any Major Concern from your prior HESS review? List remaining Code/Data Availability gaps. Keep: 2-basin pilot is not large-sample; cite Chen et al. 2025 as 10.14042/j.cnki.32.1309.2025.02.003. Major/Minor only. Concise.
+
+## Thinking panel (partial; English)
+
+I’ll inspect the public snapshot at commit 5da6a04 rather than the moving master, focusing on whether code, configs, tests, outputs, and provenance materially resolve any earlier reproducibility/fairness concerns. I’ll keep the two-basin inferential limitation unchanged unless the repository contains evidence beyond the stated pilot.
+
+The snapshot materially improves my prior reproducibility assessment: the exact 17-parameter wrapper, phase partition, thermal-state/melt equations, fixed Ts/Tr, matched pilot configs, lockfile, tests, and publication-generation scripts are public at the pinned commit.
+
+One implementation detail does need explicit treatment in the paper/repository record: when g_threshold is not supplied, the code estimates it from the snowfall series passed into each snow-model call. I am checking whether evaluation therefore recomputes that climatological threshold from the held-out test forcing rather than carrying a training-derived value forward.
+
+## Visible final answer body (truncated)
+
+Only citation chips (“GitHub +2 …”) — no Major/Minor text.
+
+## User CONTINUE (after truncation)
+
+CONTINUE: your last answer ended after citation chips only (likely rate-limited). Please finish Major/Minor for the GitHub FOLLOW-UP now: (1) does 5da6a04 change any prior Major Concern? (2) remaining Code/Data Availability gaps. Keep 2-basin pilot limitation; cite Chen et al. 2025 DOI 10.14042/j.cnki.32.1309.2025.02.003. Concise Major/Minor only.
+
+## CONTINUE visible final answer
+
+Again truncated to citation chips only. No complete Major/Minor list recovered from DOM.
+
+## Local independent verification (not ChatGPT invention)
+
+- Public README + docs/local/github_public_repo.md confirm include/exclude policy matching user facts.
+- snow.py: if g_threshold is None → estimate_g_threshold(snow of that call); apply_snow_to_forcing never passes a frozen threshold.
+- Train/test periods load separately → threshold recomputed per period (matches Dialogue A prior advice).
+- Remaining availability gaps still true: no hydrodata/_portable_data/large nc; no full SpotPy dump trees; Zenodo pending.
+- Public snapshot does NOT remove prior Major Concerns on 2-basin inference, Chen et al. 2025 novelty boundary, or unmatched fairness experiments.

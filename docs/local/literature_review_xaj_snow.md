@@ -1,6 +1,6 @@
 # XAJ-Snow 文献清单与核验状态
 
-更新日期：2026-08-16  
+更新日期：2026-08-18（审稿迭代 Round 1 新增 H 节）  
 检索来源：ChatGPT 联网对话（URL 见 `chatgpt_consultation_xaj_snow.md`）+ Cursor 独立 WebSearch/出版社页面核验  
 工作流：`nature-academic-search` 意图 = citation-verification + multi-source-search（本机 Crossref/OpenAlex SSL 失败，以出版社/DOI 解析与检索摘要交叉核验）
 
@@ -88,3 +88,19 @@
 | dXAJ 未研究优化机制 | dXAJ **已讨论** optimizer；缺口是**非因子设计**，未干净分离 optimizer vs sharing |
 | SWE 独立验证 | 改为 **snow-state consistency / auxiliary evaluation** |
 | 全球 XAJ 空白 | 改为 **缺乏统一多区域协议下的 XAJ 结构失效—修正—边界评估** |
+
+---
+
+## H. 2026-08-18 审稿迭代 Round 1 新增（ChatGPT 联网检索提出，Cursor 独立核验）
+
+| ID | 文献（一句话作用） | 年 | DOI | 核验 |
+|----|-------------------|----|-----|------|
+| N1 | Bohl et al.：LSTM/HBV/hybrid 暖期泛化；雪区所有模型均退化 —— 收窄"雪控制模型适用性"这类宽主张 | 2026 | [10.5194/hess-30-4667-2026](https://doi.org/10.5194/hess-30-4667-2026) | **已核验**（HESS 30, 4667–4698；出版社页面逐字核对） |
+| N2 | Muñoz-Castro et al.：GR4J/GR5J/GR6J+CemaNeige/TUW 63 流域（智利+瑞士）极端/旱转涝 —— 多流域 CemaNeige 对比已是常规 HESS 题材 | 2026 | [10.5194/hess-30-825-2026](https://doi.org/10.5194/hess-30-825-2026) | **已核验**（HESS 30, 825–848；出版社页面逐字核对） |
+| N3 | Wang, Tarasova & Merz：事件类型多维诊断框架，340 德国流域，雪事件量级误差 —— "diagnosis-first" 本身不再是新颖性 | 2026 | [10.1029/2025WR040264](https://doi.org/10.1029/2025WR040264) | **已核验**（WRR 62(2), e2025WR040264；UFZ 索引页核对） |
+| N4 | Liu et al.（Weibo Liu 等）：供需关系概念模型 SDM，640 CAMELS-US + 171 CAMELS-AUS；雪比例升高性能退化 —— 大样本雪梯度诊断已有先例 | 2025 | [10.1029/2024WR038873](https://doi.org/10.1029/2024WR038873) | **已核验**（WRR 61(9)；摘要含 snow fraction 分层） |
+| N5 | Mohammadi et al.：GR6J-CemaNeige + 小波梯度增强混合日径流预报 —— CemaNeige+概念模型为常规方法（背景性，未入正文引用） | 2025 | [10.1016/j.jhydrol.2025.133114](https://doi.org/10.1016/j.jhydrol.2025.133114) | **已核验**（JoH 657, 133114） |
+| N6 | Ouyang et al. dXAJ：**版本记录为 2025**（JoH vol 649, art. 132471；DOI 字符串含 2024 系出版流程分配）—— 原引用年份 2024 **已修正为 2025** | 2025 | [10.1016/j.jhydrol.2024.132471](https://doi.org/10.1016/j.jhydrol.2024.132471) | **已核验**（ScienceDirect vol 649, March 2025） |
+| N7（监控） | Wang & Gupta 2026 arXiv 预印本：雪水质量守恒感知器，513 CAMELS-US 流域复杂度选择 —— 未入引用，投稿前需复查是否已发表 | 2026 | arXiv（URL 未本地固化） | **未入文**；仅监控 |
+
+**对定位的影响（Round 1 结论）：** "minimal XAJ snow extension" 本身不再构成新颖性；贡献必须落在**受控过程必要性实验**（同骨架±一个已知雪模块、匹配预算、无雪负对照、公平性因子设计、连续适用域估计）。N1–N4 已入正文引用。

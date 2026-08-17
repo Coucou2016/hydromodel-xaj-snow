@@ -149,3 +149,6 @@ results/**
 results/diagnostics/rep_budget/
 results/diagnostics/*.log
 results/diagnostics/*.cmd
+
+# Versioned pre-round backups of the 6 publication files (local-only; bulky PDFs)
+results/publications/versions/

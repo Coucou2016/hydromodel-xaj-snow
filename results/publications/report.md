@@ -1,6 +1,6 @@
 <!-- Markdown sibling of XAJ-Snow report. HTML/PDF are the fully self-contained deliverables (base64 figures + inline CSS). This Markdown keeps relative image paths for in-repo reading. -->
 
-Hydromodel 0.3.2 · XAJ-Snow 完整科研报告 · 2026-08-17 01:21 · 研究报告（可含工程细节）
+Hydromodel 0.3.2 · XAJ-Snow 完整科研报告 · 2026-08-18 02:34 · 研究报告（可含工程细节）
 
   完整科研报告 · 正式学术风格 · 自包含 HTML
 
@@ -382,7 +382,7 @@ Chen et al.（2025）已证明大样本上加 CemaNeige/可微学习可抬高中
 ## 12. 软件与可复现性
 
 公开快照：[https://github.com/Coucou2016/hydromodel-xaj-snow](https://github.com/Coucou2016/hydromodel-xaj-snow)
-（`master` @ 生成时 `f44426c`；含源码/docs/figures/publications/consultation/配置/测试与生成脚本；不含大体积 nc、`_portable_data`/hydrodata，亦不含完整 SpotPy 率定 dump 树）。
+（`master` @ 生成时 `2a464aa`；含源码/docs/figures/publications/consultation/配置/测试与生成脚本；不含大体积 nc、`_portable_data`/hydrodata，亦不含完整 SpotPy 率定 dump 树）。
 用户须本地准备 Caravan/CAMELS 数据；细节见 `docs/local/github_public_repo.md`。
 
 # after cloning the public snapshot and placing Caravan/CAMELS caches locally
@@ -399,6 +399,7 @@ python scripts/generate_publication_outputs.py
 
 仅纳入本地已核验 DOI（docs/local/literature_review_xaj_snow.md）。
 
+- Bohl, J. P., Wood, R. R., Frank, C., Astagneau, P. C., Peters, J., and Brunner, M. I.: Hybrid models generalize better to warmer climate conditions than process-based and purely data-driven models. HESS, 30, 4667–4698, https://doi.org/10.5194/hess-30-4667-2026, 2026.
 - Clerc-Schwarzenbach, F., et al.: Technical note: How many times can you afford to change hydrologic forcing? HESS, 28, 4219–4235, https://doi.org/10.5194/hess-28-4219-2024, 2024.
 - Chen, Z., Zhao, T., et al.: Incorporating snow accumulation and melting into the Xin’anjiang model using differentiable parameter learning (dMXAJ / CemaNeige; 531 CAMELS catchments). Advances in Water Science, https://doi.org/10.14042/j.cnki.32.1309.2025.02.003, 2025.
 - Dong, N., Wang, H., Yang, M., Zhang, J., and Xu, S.: An improved Xin’anjiang model with snow melting and soil freeze–thaw processes (Upper Yalongjiang). Advances in Water Science, https://doi.org/10.14042/j.cnki.32.1309.2024.04.002, 2024.
@@ -407,8 +408,10 @@ python scripts/generate_publication_outputs.py
 - Ke, H., et al.: Xinanjiang-based interval forecasting model for daily streamflow considering climate change impacts (with snowmelt module). Water Resources Management, https://doi.org/10.1007/s11269-024-03909-6, 2024.
 - Knoben, W. J. M., et al.: A quantitative assessment of 36 conceptual rainfall–runoff models across 559 catchments. WRR, https://doi.org/10.1029/2019WR025975, 2020.
 - Kratzert, F., et al.: Caravan — A global community dataset for large-sample hydrology. Scientific Data, https://doi.org/10.1038/s41597-023-01975-w, 2023.
+- Liu, W., Liu, P., Zhang, L., Zhang, X., Xu, H., Lei, X., et al.: Development of a conceptual hydrological model based on supply-demand relationship and its applications. Water Resources Research, 61(9), e2024WR038873, https://doi.org/10.1029/2024WR038873, 2025.
+- Muñoz-Castro, E., Anderson, B. J., Astagneau, P. C., Swain, D. L., Mendoza, P. A., and Brunner, M. I.: How well do hydrological models simulate streamflow extremes and drought-to-flood transitions? HESS, 30, 825–848, https://doi.org/10.5194/hess-30-825-2026, 2026.
 - Ouyang, W., et al.: Continental-scale streamflow modeling with LSTM under reservoir influences. Journal of Hydrology, https://doi.org/10.1016/j.jhydrol.2021.126455, 2021.
-- Ouyang, W., et al.: Differentiable Xinanjiang models (dXAJ / dXAJnn). Journal of Hydrology, https://doi.org/10.1016/j.jhydrol.2024.132471, 2024.
+- Ouyang, W., Ye, L., Chai, Y., Ma, H., Chu, J., Peng, Y., and Zhang, C.: A differentiable, physics-based hydrological model and its evaluation for data-limited basins (dXAJ / dXAJnn). Journal of Hydrology, 649, 132471, https://doi.org/10.1016/j.jhydrol.2024.132471, 2025.
 - Premier, V., et al.: Isolating snowmelt-coefficient effects by fixing remaining parameters. HESS, https://doi.org/10.5194/hess-30-1189-2026, 2026.
 - Ruelland, D.: SIAR and parsimonious snow accounting under limited degrees of freedom. Journal of Hydrology, https://doi.org/10.1016/j.jhydrol.2023.129867, 2023.
 - Ruelland, D.: Snow data improve consistency and robustness of semi-distributed models. Journal of Hydrology, https://doi.org/10.1016/j.jhydrol.2024.130820, 2024.
@@ -417,6 +420,7 @@ python scripts/generate_publication_outputs.py
 - Tong, R., et al.: Multi-objective calibration with satellite snow cover and soil moisture. HESS, https://doi.org/10.5194/hess-26-1779-2022, 2022.
 - Valéry, A., Andréassian, V., and Perrin, C.: As simple as possible but not simpler (Part 1). Journal of Hydrology, https://doi.org/10.1016/j.jhydrol.2014.04.059, 2014.
 - Valéry, A., Andréassian, V., and Perrin, C.: As simple as possible but not simpler (Part 2): CemaNeige. Journal of Hydrology, https://doi.org/10.1016/j.jhydrol.2014.04.058, 2014.
+- Wang, Z., Tarasova, L., and Merz, R.: Event-type-based multi-dimensional diagnostics of process limitations in hydrological models. Water Resources Research, 62(2), e2025WR040264, https://doi.org/10.1029/2025WR040264, 2026.
 - Wu, N., Zhang, K., Naghibi, A., Hashemi, H., Ning, Z., Zhang, Q., Yi, X., Wang, H., Liu, W., Gao, W., and Jarsjö, J.: Predicting snow cover and frozen ground impacts on large basin runoff: developing appropriate model complexity (GXAJ / GXAJ-S / GXAJ-S-SF). HESS, 29, 3703–3725, https://doi.org/10.5194/hess-29-3703-2025, 2025.
 - Yeste, P., García-Valdecasas Ojeda, M., Gámiz-Fortis, S. R., Castro-Díez, Y., Bronstert, A., and Esteban-Parra, M. J.: A large-sample modelling approach towards integrating streamflow and evaporation data for the Spanish catchments. HESS, 28, 5331–5352, https://doi.org/10.5194/hess-28-5331-2024, 2024.
 
@@ -452,4 +456,4 @@ python scripts/generate_publication_outputs.py
 
   - Git：本轮允许 commit/push 公开仓（不含大 nc / hydrodata）
 
-生成时间 2026-08-17 01:21。数字来自真实 evaluation CSV；待补充项已显式标注。
+生成时间 2026-08-18 02:34。数字来自真实 evaluation CSV；待补充项已显式标注。

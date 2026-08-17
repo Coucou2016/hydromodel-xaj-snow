@@ -1,0 +1,92 @@
+# ChatGPT Round 1 raw response (novelty & positioning) — 2026-08-18
+
+- Conversation: https://chatgpt.com/c/6a835077-8718-83ea-9c3f-6a66b9c39b1c
+- Mode: text-only, web search active (Pro plan). No attachments.
+- Prompt asked for: 2024–2026 literature scan on XAJ+snow / CemaNeige+conceptual / large-sample snow diagnostics; novelty verdict vs Chen 2025 / Wu 2025; rewritten contribution statement + Intro gap paragraph; verification flags.
+
+## 1 Recent work found
+
+I searched the 2024–2026 literature around three boundaries: XAJ snow extensions, CemaNeige coupled to conceptual rainfall–runoff models, and large-sample/process-diagnostic studies. The literature has moved enough that the manuscript should not position XAJ-Snow itself as the innovation.
+
+XAJ + snow / snowmelt extensions
+
+Chen and Zhao (2025), Advances in Water Science, "Incorporating snow accumulation and melting into the Xin'anjiang model using differentiable parameter learning." This is the closest prior art. Their dMXAJ explicitly couples CemaNeige to XAJ, uses differentiable/LSTM-based parameter learning, and evaluates four model variants across 531 CAMELS catchments. This directly removes novelty from both "XAJ + CemaNeige" and the general proposition that snow representation improves XAJ over a large sample. DIRECT THREAT to component-level novelty. DOI: https://doi.org/10.14042/j.cnki.32.1309.2025.02.003
+
+Wu et al. (2025), Hydrology and Earth System Sciences, "Predicting snow cover and frozen ground impacts on large basin runoff: developing appropriate model complexity." They extend Grid-XAJ to GXAJ-S and GXAJ-S-SF, using SNOW17 for snow and adding freeze–thaw representation, explicitly framing the work around appropriate process/model complexity. It is a distributed, large-basin cold-region study rather than a CAMELS applicability-gradient experiment, but it removes any claim that adding computationally efficient snow physics to XAJ, or asking whether additional cold-region complexity is warranted, is new. DIRECT THREAT to the "appropriate complexity" framing. DOI: https://doi.org/10.5194/hess-29-3703-2025
+
+Ju et al. (2024), Journal of Hydrology: Regional Studies, "Application of distributed Xin'anjiang model of melting ice and snow in Bahe River basin." DD-XAJ adds a degree-day description of snow and glacier melt to distributed XAJ and evaluates it in a Tibetan Plateau basin. This establishes degree-day XAJ enhancement as prior art, although it is a single-region process-extension study rather than an applicability-diagnosis experiment. DOI: https://doi.org/10.1016/j.ejrh.2023.101638
+
+Dong et al. (2024), Advances in Water Science, 35(4), 530–542. The paper adds snowmelt and soil freeze–thaw processes to XAJ for the Upper Yalongjiang River basin. Together with Ju and Wu, this makes "cold-region XAJ extension" an established line of work rather than a novelty claim available to the present manuscript. DOI reported as https://doi.org/10.14042/j.cnki.32.1309.2024.04.002
+
+Ouyang et al. (2025), Journal of Hydrology, "A differentiable, physics-based hydrological model and its evaluation for data-limited basins." This is not a snow-extension paper, but it is relevant to the modern XAJ landscape: dXAJ retains the physical XAJ backbone while differentiable learning changes parameter estimation, with explicit attention to training-data limitations. Consequently, your paper should avoid presenting conventional calibration of a modified XAJ as methodologically novel. DOI: https://doi.org/10.1016/j.jhydrol.2024.132471
+
+Tan et al. (2023) remains an important immediate precursor even though it lies just outside the requested 2024–2026 window: it added a snowmelt module to XAJ and optimized parameters with SCE-UA. DOI: https://doi.org/10.3390/w15193401
+
+CemaNeige + conceptual models
+
+Mohammadi et al. (2025), Journal of Hydrology, "Enhancing daily runoff prediction: A hybrid model combining GR6J-CemaNeige with wavelet-based gradient boosting technique." GR6J-CemaNeige is the process-based component of their hybrid framework. This is further evidence that coupling the established CemaNeige snow representation to a parsimonious conceptual rainfall–runoff model is routine methodology rather than a contribution in itself. DOI: https://doi.org/10.1016/j.jhydrol.2025.133114
+
+Muñoz-Castro et al. (2026), HESS, "How well do hydrological models simulate streamflow extremes and drought-to-flood transitions?" The study compares conceptual models across 63 Chilean and Swiss catchments; GR4J, GR5J, and GR6J are coupled to CemaNeige, and snow-related catchment characteristics enter the multi-catchment analysis. It is important because it shows that multi-catchment comparisons involving CemaNeige and different conceptual-model complexities are already normal HESS territory. DOI: https://doi.org/10.5194/hess-30-825-2026
+
+The longer lineage is even stronger. INRAE describes CemaNeige as a two-parameter snow module developed specifically for hydrological modelling and notes testing with several lumped hydrological models, including GR4J and GRP. The original Valéry et al. work evaluated the snow routine over hundreds of catchments. Thus neither "two-parameter snow routine" nor "testing a parsimonious snow routine over many catchments" can carry novelty.
+
+Large-sample/process-applicability diagnostics
+
+Wang, Tarasova, and Merz (2026), Water Resources Research, "Event-type-based multi-dimensional diagnostics of process limitations in hydrological models." This is particularly important for your positioning. They introduce an explicit diagnostic framework for process limitations, distinguish snow-related and other event types, use a conceptual hydrological model over 340 German catchments, and analyze drivers of timing and magnitude errors. Therefore, "diagnosis-first" alone is no longer a sufficiently specific novelty statement. NARROWS the diagnostic niche. DOI: https://doi.org/10.1029/2025WR040264
+
+Liu et al. (2025), Water Resources Research, "Development of a Conceptual Hydrological Model Based on Supply-Demand Relationship and Its Applications." Across 640 CAMELS-US and 171 CAMELS-AUS catchments, they explicitly relate model behavior to catchment characteristics and report degradation associated with increasing fraction of precipitation falling as snow; they also stratify inter-model performance differences by snow fraction. This directly demonstrates that large-sample diagnosis of conceptual-model performance along a snow gradient already exists. What it does not provide is your proposed paired base-XAJ versus snow-enabled-XAJ intervention with a snow-poor specificity/neutrality control. DOI: https://doi.org/10.1029/2024WR038873
+
+Bohl et al. (2026), HESS, "Hybrid models generalize better to warmer climate conditions than process-based and purely data-driven models." Their evaluation explicitly distinguishes snow-dominated and rainfall-dominated catchments and diagnoses regime-dependent model generalization. This further narrows any broad claim around discovering that snow regime controls model adequacy, although it addresses climate generalization rather than the necessity of adding one specific process module. DOI: https://doi.org/10.5194/hess-30-4667-2026
+
+Wang and Gupta (2026), arXiv preprint, "From Conceptual Hydrologic Models to Conceptually Interpretable Neural Networks: A Snow-Water Mass-Conserving-Perceptron Framework…" This very recent preprint evaluates snow-water model architectures over 513 CAMELS-US basins and explicitly considers the trade-off between predictive skill and model complexity. It is not XAJ or CemaNeige and is not yet a peer-reviewed journal article, but it is evidence that "which amount of snow/process complexity is warranted across basins?" is an active 2026 research direction. NARROWS broad complexity-selection claims. (arXiv; URL pending local verification)
+
+The key result of this search is therefore quite specific: I did not identify a 2024–2026 peer-reviewed study that combines all of your proposed controls—paired XAJ backbone, deliberately minimal established snow intervention, matched computational calibration effort, explicit snow-poor negative control, and estimation of an applicability boundary—but essentially every individual ingredient already has substantial prior art. That distinction should govern the paper's claims.
+
+## 2 Novelty verdict
+
+Conditional yes: the proposed contribution is defensible for HESS in 2026, but only as an experimental/diagnostic contribution, not as a model-development contribution.
+
+Chen et al. (2025) is the strongest challenge. An editor can reasonably say: XAJ has already been coupled to CemaNeige, the coupling has already been tested across 531 CAMELS catchments, and differentiable learning is methodologically more sophisticated than adding two conventionally calibrated parameters. If the eventual manuscript's main result reduces to "adding CemaNeige improves XAJ in snowy CAMELS basins," I would expect an HESS editor to regard it as incremental relative to Chen et al.
+
+Wu et al. (2025) creates a second problem. Their paper already frames snow/freeze–thaw additions to XAJ in terms of obtaining appropriate model complexity, so phrases such as "we determine the appropriate complexity of XAJ for snow-dominated catchments" would overlap substantially with an existing HESS article. Your distinction must be that Wu asks what cold-region processes improve GXAJ in a specific large cold-region setting, whereas you ask a different experimental question: under otherwise controlled conditions, where along a broad hydroclimatic gradient does a specific additional process become empirically necessary, and where should it remain effectively neutral?
+
+That narrower question is stronger because the snow-poor control is scientifically useful. A model extension should not merely improve favorable cases; if the supposed mechanism is specifically snow storage and melt, its incremental effect ought to diminish where that mechanism is negligible. Treating snow-poor basins as negative controls therefore changes the inference from "the augmented model sometimes scores better" to "the intervention behaves with the expected process specificity." I did not find that exact control logic in the closest XAJ papers. Chen evaluates large-sample gains, while Wu evaluates snow/frozen-ground process additions; neither, from the material located here, makes snow-free neutrality the central falsification criterion.
+
+The matched-budget/fairness component can also matter, but it must be more rigorous than "both models used SCE-UA." XAJ-Snow has two additional free parameters, so identical optimizer settings or function-evaluation budgets do not by themselves eliminate the advantage/disadvantage associated with dimensionality. The pending fairness factorial is therefore not supplementary decoration; it is part of what makes your claimed protocol credible.
+
+For HESS, I would separate the evidence status as follows:
+
+- The two-basin pilot is a mechanistic sanity check, not novelty evidence.
+- The 14-basin batch is first-look evidence only. Its snow-stratified pattern is encouraging, but n=9 versus n=5 cannot establish an applicability boundary.
+- The planned 80-basin experiment is what can convert the story into a large-sample diagnosis.
+- The pending applicability regression is essential if you use the term "applicability boundary." Prefer a continuous relationship with uncertainty rather than selecting a favorable snow-fraction cutoff after seeing performance.
+- The pending SWE analysis is important because HESS reviewers can reasonably ask whether improved discharge is achieved through the intended snow-storage/melt mechanism rather than compensating parameter errors.
+- The pending fairness factorial is needed because otherwise the editor can interpret the result simply as "17-parameter model versus 15-parameter model."
+- Snow-free neutrality is potentially your most distinctive design element, but define neutrality statistically rather than as "ΔNSE is close to zero" by inspection.
+
+Accordingly, I would not currently claim "we establish the applicability boundary." Until the 80-basin calibration, regression, SWE consistency, and fairness analyses are complete, use "we evaluate/design a protocol to estimate the applicability domain". If those pending analyses survive, the HESS-level contribution becomes defensible as: not a new XAJ snow model, but a controlled process-necessity experiment showing when a known minimal snow representation is warranted, when it is unnecessary, and whether the apparent gain survives calibration and process-consistency controls.
+
+## 3 Proposed texts
+
+### Contribution statement (proposed)
+
+Rather than proposing a new snow formulation, this study examines when an established, parsimonious snow representation is warranted within the XAJ-MZ framework. We formulate a diagnosis-first protocol in which the baseline and snow-enabled models retain the same rainfall–runoff and routing backbone, are calibrated under controlled computational budgets, and are evaluated jointly against snow-influenced basins and snow-poor negative controls. The planned large-sample analysis is designed to relate the paired model response to catchment snow exposure, test whether apparent discharge gains are accompanied by consistent snow behavior, and assess their robustness to calibration-fairness choices. The current 14-basin experiment is therefore treated only as first-look evidence motivating the completed multi-basin assessment, rather than as evidence for a general applicability threshold.
+
+### Introduction gap paragraph (proposed)
+
+Recent studies have substantially extended the cold-region capability of Xin'anjiang-type models. Degree-day, snowmelt, and freeze–thaw formulations have been incorporated into distributed XAJ variants, while CemaNeige has recently been coupled directly with XAJ and evaluated across a large CAMELS sample (Ju et al., 2024; Dong et al., 2024; Chen and Zhao, 2025; Wu et al., 2025). These studies demonstrate the value of representing snow processes and, increasingly, of controlling model complexity, but leave a narrower model-evaluation question unresolved: when does adding a minimal snow process to an otherwise unchanged XAJ formulation provide evidence of correcting a process deficiency rather than simply increasing model flexibility? Addressing this question requires paired evaluation across a snow gradient, comparable calibration effort, and a specificity check in catchments where snow processes should exert little influence. We therefore use XAJ-MZ and a minimally augmented XAJ-Snow formulation as controlled model hypotheses, with the aim of diagnosing the hydroclimatic conditions under which the additional process representation is supported and identifying conditions under which it should remain effectively neutral.
+
+## 4 Verification flags
+
+- Ouyang et al. year: version of record likely 2025 (JoH vol 649, art. 132471); DOI string contains 2024. Cite as 2025 unless using online-first 2024.
+- Ju et al.: JoH:RS 51 (2024) 101638 but DOI is 10.1016/j.ejrh.2023.101638; do not infer year from DOI string.
+- Chen and Zhao (2025): Adv Water Sci 36(2), p. 204+; DOI 10.14042/j.cnki.32.1309.2025.02.003; describe as XAJ+CemaNeige explicitly, not merely "differentiable XAJ".
+- Wu et al. (2025): HESS 29, 3703–3725 confirmed; avoid "appropriate model complexity" as novelty banner.
+- Tan et al. (2023): Water 15(19), 3401 confirmed; XAJ snowmelt + SCE-UA already combined there.
+- Dong et al. (2024): re-verify BibTeX against journal record (Adv Water Sci 35(4), 530–542).
+- CemaNeige terminology: keep "CemaNeige-style"; state exactly which equations inherited / simplified / fixed.
+- Matched optimizer budget ≠ full complexity fairness (two extra free params); spell out what is held constant.
+- SciPy NSE refine = objective-function/optimizer sensitivity check, not a replicate of the matched KGE experiment.
+- Do not retrospectively pick frac_snow=0.1 as applicability boundary; estimate continuous relation with uncertainty.
+- SWE consistency remains pending; discharge gains alone do not prove snow-process realism.
+- Watch Wang–Gupta 2026 arXiv preprint (513 CAMELS-US snow-water complexity selection).
